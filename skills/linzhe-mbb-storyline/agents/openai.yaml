@@ -1,0 +1,4 @@
+interface:
+  display_name: "林哲 MBB Storyline"
+  short_description: "构建与审阅MBB式Ghost Deck、证据链和演讲故事线"
+  default_prompt: "Use $linzhe-mbb-storyline to turn my materials into a decision-led ghost deck before any slide production."

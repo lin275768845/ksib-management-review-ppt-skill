@@ -1,0 +1,442 @@
+{
+  "version": 8,
+  "source": "locked storyline proof contracts + likaku/Mck-ppt-design-skill references/layout-matrix.yaml + user-provided BCG management review layout benchmark",
+  "overrides": [
+    "KSIB/Kwai color palette",
+    "PingFang SC font family",
+    "customer body sizes 16/14/12 pt; 10 pt only for footnotes or approved compact appendices",
+    "BCG-derived lower action-title baseline and evidence-led layout contracts",
+    "optional content-page subtitle extension",
+    "semantic hierarchy contract for title, subtitle, and takeaway",
+    "editable OOXML normalization",
+    "canonical layout aliases and renderer contracts"
+  ],
+  "global": {
+    "slideWidthIn": 13.333,
+    "slideHeightIn": 7.5,
+    "leftMarginIn": 0.8,
+    "rightMarginIn": 0.8,
+    "contentWidthIn": 11.733,
+    "eyebrowTopIn": 0.15,
+    "eyebrowFontPt": 10,
+    "actionTitleTopIn": 0.55,
+    "actionTitleFontPt": 22,
+    "subtitleTopIn": 0.99,
+    "subtitleFontPt": 14,
+    "titleSubtitleGapIn": 0.04,
+    "dividerYIn": 1.3,
+    "contentStartIn": 1.44,
+    "headerModes": {
+      "titleOnly": { "actionTitleTopIn": 0.55, "actionTitleHeightIn": 0.4, "dividerYIn": 1.1, "contentStartIn": 1.3 },
+      "titleSubtitle": { "actionTitleTopIn": 0.55, "actionTitleHeightIn": 0.4, "subtitleTopIn": 0.99, "subtitleHeightIn": 0.24, "dividerYIn": 1.3, "contentStartIn": 1.44 },
+      "twoLineTitle": { "actionTitleTopIn": 0.55, "actionTitleHeightIn": 0.72, "subtitleAllowed": false, "dividerYIn": 1.38, "contentStartIn": 1.52 }
+    },
+    "sourceYIn": 7.05,
+    "pageNumberYIn": 7.1,
+    "panelPaddingIn": 0.15,
+    "columnGapIn": 0.35,
+    "bottomBarGapIn": 0.15,
+    "bottomBarYMinIn": 6.1,
+    "bottomBarYMaxIn": 6.4,
+    "titleChars": 40,
+    "subtitleChars": 64,
+    "sourceChars": 100,
+    "takeawayChars": 72,
+    "subtitlePurposes": [
+      "scope",
+      "period",
+      "method",
+      "definition",
+      "boundary",
+      "comparison_frame"
+    ],
+    "takeawayPurposes": [
+      "decision_implication",
+      "action",
+      "risk",
+      "cross_evidence_synthesis"
+    ],
+    "hierarchySimilarityWarning": 0.5,
+    "hierarchySimilarityFail": 0.68,
+    "maxTakeawayShare": 0.25,
+    "takeawayForbiddenLayouts": [
+      "cover",
+      "toc",
+      "agenda",
+      "section",
+      "sectionDivider",
+      "appendixDivider",
+      "evidenceInsight",
+      "singleExhibit",
+      "issueTree",
+      "recommendationRoadmap",
+      "appendixProject",
+      "appendixTable",
+      "appendixQA",
+      "styleboardSystem",
+      "styleboardDensity"
+    ],
+    "takeawayShareExcludedLayouts": [
+      "cover",
+      "toc",
+      "agenda",
+      "section",
+      "sectionDivider",
+      "appendixDivider",
+      "appendixProject",
+      "appendixTable",
+      "appendixQA",
+      "styleboardSystem",
+      "styleboardDensity"
+    ],
+    "maxMetrics": 4,
+    "maxHighlightBoxes": 1,
+    "allowedBodyPointSizes": [12, 14, 16],
+    "allowedCompactPointSizes": [10, 12, 14],
+    "allowedFootnotePointSizes": [9, 10],
+    "storylineContractVersion": 1,
+    "rendererDefaults": {
+      "provider": "system-presentations-artifact-tool-or-validated-project-builder",
+      "canonicalRendererStrategy": "canonical-layout-name",
+      "editableNative": true,
+      "fallbackRequiresReason": true
+    },
+    "roleLayoutPolicy": {
+      "contentRoles": [
+        "context",
+        "diagnosis",
+        "evidence",
+        "recommendation",
+        "plan",
+        "organization",
+        "reflection",
+        "closing",
+        "executive_summary",
+        "methodology",
+        "scope_boundary",
+        "legal_disclaimer"
+      ],
+      "restrictedLayouts": {
+        "cover": ["cover"],
+        "toc": ["navigator"],
+        "agenda": ["navigator"],
+        "section": ["navigator"],
+        "sectionDivider": ["navigator"],
+        "appendixDivider": ["appendix"],
+        "appendixProject": ["appendix"],
+        "appendixTable": ["appendix", "methodology", "scope_boundary"],
+        "appendixQA": ["appendix", "methodology", "scope_boundary", "legal_disclaimer"],
+        "styleboardSystem": ["navigator"],
+        "styleboardDensity": ["navigator"]
+      }
+    },
+    "layoutAliases": {
+      "single-exhibit": "singleExhibit",
+      "evidence-insight": "evidenceInsight",
+      "issue-tree": "issueTree",
+      "problem-solution-map": "problemSolutionMap",
+      "value-chain": "valueChain",
+      "recommendation-roadmap": "recommendationRoadmap",
+      "roadmap": "recommendationRoadmap",
+      "action-items": "recommendationRoadmap",
+      "phase-playbook": "phasePlaybook",
+      "horizontal-evolution": "horizontalEvolution",
+      "layered-operating-model": "layeredOperatingModel",
+      "table-insight": "tableInsight",
+      "side-by-side": "twoColumn",
+      "before-after": "businessShift",
+      "section-divider": "sectionDivider",
+      "section_divider": "sectionDivider",
+      "appendix-divider": "appendixDivider",
+      "appendix_divider": "appendixDivider"
+    }
+  },
+  "proofShapeToLayouts": {
+    "comparison": ["twoColumn", "horizontalMatrix", "tableInsight", "businessShift", "casePortfolio", "threeColumn", "fourColumn", "processModeMatrix", "reflectionEvolution", "scorecard", "appendixTable"],
+    "trend": ["singleExhibit", "timeline", "evidenceInsight"],
+    "causal-chain": ["issueTree", "problemSolutionMap", "valueChain", "funnel", "orgManagement", "strategyEnablers"],
+    "stages": ["recommendationRoadmap", "phasePlaybook", "horizontalEvolution", "timeline", "businessShift", "threeColumn", "fourColumn", "funnel", "productCommercialization", "reflectionEvolution"],
+    "system": ["layeredOperatingModel", "valueChain", "orgManagement", "processModeMatrix", "productCommercialization", "strategyEnablers"],
+    "portfolio": ["horizontalMatrix", "tableInsight", "casePortfolio", "threeColumn", "fourColumn", "scorecard", "appendixTable"],
+    "decision-to-impact": ["campaign", "recommendationRoadmap", "evidenceInsight", "casePortfolio", "productCommercialization", "scorecard", "appendixProject"],
+    "single-exhibit": ["singleExhibit", "evidenceInsight", "appendixProject", "appendixTable", "appendixQA"]
+  },
+  "layouts": {
+    "cover": {
+      "requiredFields": ["title"],
+      "maxItems": {},
+      "charBudget": { "title": 40, "subtitle": 60, "statement": 72 }
+    },
+    "toc": {
+      "requiredFields": ["title", "sections[]"],
+      "maxItems": { "sections": 8 },
+      "charBudget": { "sections[].title": 28, "sections[].description": 48 }
+    },
+    "agenda": {
+      "requiredFields": ["title", "items[]"],
+      "maxItems": { "items": 8 },
+      "charBudget": { "items[].title": 28, "items[].description": 48 }
+    },
+    "section": {
+      "requiredFields": ["title"],
+      "maxItems": {},
+      "charBudget": { "title": 40, "statement": 72 }
+    },
+    "sectionDivider": {
+      "requiredFields": ["title"],
+      "maxItems": {},
+      "charBudget": { "title": 40, "statement": 72 }
+    },
+    "appendixDivider": {
+      "requiredFields": ["title"],
+      "maxItems": {},
+      "charBudget": { "title": 40, "statement": 72 }
+    },
+    "valueChain": {
+      "proofShape": ["causal-chain", "system"],
+      "requiredFields": ["title", "supply.title", "hub.title", "delivery.title"],
+      "maxItems": { "signals": 2, "flywheel": 5 },
+      "charBudget": { "signals[]": 32, "supply.title": 28, "hub.title": 20, "hub.definition": 52, "delivery.title": 30, "feedback": 60, "flywheel[]": 18 }
+    },
+    "timeline": {
+      "proofShape": ["trend", "stages"],
+      "requiredFields": ["title", "stages[]", "stages[].title"],
+      "maxItems": { "stages": 4, "capabilityBands": 4 },
+      "charBudget": { "stages[].time": 12, "stages[].title": 18, "stages[].project": 42, "stages[].capability": 32, "stages[].result": 18, "capabilityBands[]": 36 }
+    },
+    "businessShift": {
+      "proofShape": ["comparison", "stages"],
+      "requiredFields": ["title", "shifts[]", "shifts[].before", "shifts[].after"],
+      "maxItems": { "shifts": 4 },
+      "charBudget": { "shifts[].before": 24, "shifts[].after": 30, "judgement": 72 }
+    },
+    "campaign": {
+      "proofShape": ["decision-to-impact"],
+      "requiredFields": ["title", "goal", "challenges[]", "decisions[]"],
+      "maxItems": { "challenges": 4, "decisions": 4, "metrics": 4 },
+      "charBudget": { "goal": 72, "challenges[].lead": 10, "challenges[].text": 42, "decisions[].title": 20, "decisions[].judgement": 44, "decisions[].tradeoff": 44, "decisions[].impact": 34, "metrics[].label": 18, "metrics[].value": 16, "reflection": 72 }
+    },
+    "productCommercialization": {
+      "proofShape": ["stages", "system", "decision-to-impact"],
+      "requiredFields": ["title", "pains[]", "evolution[]", "value.merchant", "value.platform"],
+      "maxItems": { "pains": 4, "evolution": 5, "metrics": 4, "cycle": 5 },
+      "charBudget": { "pains[].text": 42, "evolution[].label": 16, "evolution[].detail": 26, "evolutionInsight": 72, "value.merchant": 56, "value.platform": 56, "bottleneck": 58, "cycle[]": 18, "metrics[].label": 18, "metrics[].value": 16 }
+    },
+    "casePortfolio": {
+      "proofShape": ["comparison", "portfolio", "decision-to-impact"],
+      "requiredFields": ["title", "cases[]", "cases[].judgement"],
+      "maxItems": { "cases": 3 },
+      "charBudget": { "cases[].type": 16, "cases[].judgement": 54, "cases[].path": 52, "cases[].action": 52, "cases[].mechanism": 46, "cases[].metrics": 4, "conclusion": 72 }
+    },
+    "orgManagement": {
+      "proofShape": ["causal-chain", "system"],
+      "requiredFields": ["title", "leader.title", "branches[]"],
+      "maxItems": { "branches": 3, "mechanisms": 4, "delegations": 2 },
+      "charBudget": { "leader.title": 28, "branches[].title": 24, "branches[].items": 5, "mechanisms[].title": 18, "mechanisms[].detail": 42, "delegations[].title": 38, "orgResult": 64 }
+    },
+    "scorecard": {
+      "proofShape": ["comparison", "portfolio", "decision-to-impact"],
+      "requiredFields": ["title", "totalScore.display", "scores[]"],
+      "maxItems": { "scores": 4, "reflections": 4 },
+      "charBudget": { "totalScore.display": 16, "scores[].label": 20, "reflections[].title": 24, "reflections[].detail": 70, "closing": 72 }
+    },
+    "twoColumn": {
+      "proofShape": ["comparison"],
+      "requiredFields": ["title", "leftItems[]", "rightItems[]"],
+      "maxItems": { "leftItems": 6, "rightItems": 6 },
+      "charBudget": { "leftItems[]": 52, "rightItems[]": 52, "takeaway": 72 }
+    },
+    "threeColumn": {
+      "proofShape": ["comparison", "portfolio", "stages"],
+      "requiredFields": ["title", "columns[]", "columns[].title"],
+      "maxItems": { "columns": 3 },
+      "charBudget": { "columns[].title": 22, "columns[].why": 52, "columns[].mechanism": 64, "columns[].result": 46, "takeaway": 72 }
+    },
+    "fourColumn": {
+      "proofShape": ["comparison", "portfolio", "stages"],
+      "requiredFields": ["title", "columns[]", "columns[].title"],
+      "maxItems": { "columns": 4 },
+      "charBudget": { "columns[].title": 20, "columns[].problem": 42, "columns[].decision": 62, "columns[].evidence": 34, "takeaway": 72 }
+    },
+    "horizontalMatrix": {
+      "proofShape": ["comparison", "portfolio"],
+      "requiredFields": ["title", "headers[]", "rows[]", "rows[].cells[]"],
+      "maxItems": { "rows": 6, "columns": 5 },
+      "charBudget": { "headers[]": 18, "rows[].cells[]": 54, "takeaway": 72 }
+    },
+    "tableInsight": {
+      "proofShape": ["comparison", "portfolio"],
+      "requiredFields": ["title", "headers[]", "rows[]", "rows[].cells[]", "insight"],
+      "maxItems": { "rows": 6 },
+      "charBudget": { "headers[]": 18, "rows[].cells[]": 44, "insight": 72 }
+    },
+    "funnel": {
+      "proofShape": ["causal-chain", "stages"],
+      "requiredFields": ["title", "stages[]", "stages[].title"],
+      "maxItems": { "stages": 6, "metrics": 4 },
+      "charBudget": { "stages[].title": 18, "stages[].question": 34, "metrics[].label": 18, "metrics[].value": 16, "takeaway": 72 }
+    },
+    "horizontalEvolution": {
+      "proofShape": ["stages"],
+      "requiredFields": ["title", "stages[]", "stages[].title"],
+      "maxItems": { "stages": 4 },
+      "charBudget": { "stages[].title": 20, "stages[].role": 30, "stages[].detail": 60, "takeaway": 72 }
+    },
+    "evidenceInsight": {
+      "proofShape": ["trend", "decision-to-impact", "single-exhibit"],
+      "requiredFields": ["title", "evidenceBlocks[]", "evidenceBlocks[].title", "insights[]"],
+      "maxItems": { "evidenceBlocks": 2, "insights": 4, "metrics": 4 },
+      "charBudget": { "evidenceBlocks[].title": 22, "evidenceBlocks[].note": 44, "insights[]": 48 }
+    },
+    "singleExhibit": {
+      "proofShape": ["single-exhibit", "trend"],
+      "rendererContract": {
+        "canonicalRenderer": "singleExhibit",
+        "fallbackRenderer": "evidenceInsight",
+        "primaryVisualCount": 1,
+        "editableNative": true
+      },
+      "requiredFields": [
+        "title",
+        "proofShape",
+        "exhibit.type",
+        "exhibit.title",
+        "exhibit.sourceRef",
+        "findings[].text"
+      ],
+      "maxItems": {
+        "exhibit.annotations": 4,
+        "findings": 3
+      },
+      "charBudget": {
+        "exhibit.title": 38,
+        "exhibit.unit": 16,
+        "exhibit.annotations[].label": 22,
+        "exhibit.annotations[].detail": 40,
+        "exhibit.sourceRef": 80,
+        "findings[].text": 48
+      }
+    },
+    "issueTree": {
+      "proofShape": ["causal-chain"],
+      "rendererContract": {
+        "canonicalRenderer": "decisionTree",
+        "fallbackRenderer": "problemSolutionMap",
+        "maxDepth": 3,
+        "editableNative": true
+      },
+      "requiredFields": [
+        "title",
+        "proofShape",
+        "root.question",
+        "branches[].question",
+        "branches[].children[].question",
+        "branches[].children[].validationPath"
+      ],
+      "maxItems": {
+        "branches": 4,
+        "branches[].children": 3
+      },
+      "charBudget": {
+        "root.question": 44,
+        "branches[].question": 30,
+        "branches[].metric": 16,
+        "branches[].children[].question": 34,
+        "branches[].children[].validationPath": 38,
+        "branches[].children[].evidenceRef": 42,
+        "rightPanel.title": 20,
+        "rightPanel.points[]": 38
+      }
+    },
+    "recommendationRoadmap": {
+      "proofShape": ["stages", "decision-to-impact"],
+      "rendererContract": {
+        "canonicalRenderer": "recommendationRoadmap",
+        "fallbackRenderer": "phasePlaybook",
+        "timelineRenderer": "timeline",
+        "editableNative": true
+      },
+      "requiredFields": [
+        "title",
+        "proofShape",
+        "recommendation",
+        "keyConditions[]",
+        "milestones[].period",
+        "milestones[].title",
+        "milestones[].action",
+        "milestones[].owner",
+        "milestones[].successCriterion"
+      ],
+      "maxItems": {
+        "keyConditions": 4,
+        "milestones": 4
+      },
+      "charBudget": {
+        "recommendation": 64,
+        "keyConditions[]": 40,
+        "milestones[].period": 12,
+        "milestones[].title": 20,
+        "milestones[].action": 48,
+        "milestones[].owner": 18,
+        "milestones[].successCriterion": 34,
+        "risk": 48
+      }
+    },
+    "phasePlaybook": {
+      "proofShape": ["stages"],
+      "requiredFields": ["title", "phases[]", "phases[].title"],
+      "maxItems": { "phases": 4 },
+      "charBudget": { "phases[].title": 20, "phases[].logic": 48, "phases[].metric": 30, "phases[].action": 60, "phases[].unresolved": 42, "takeaway": 72 }
+    },
+    "problemSolutionMap": {
+      "proofShape": ["causal-chain"],
+      "requiredFields": ["title", "rows[]", "rows[].problem", "rows[].solution"],
+      "maxItems": { "rows": 5 },
+      "charBudget": { "rows[].problem": 42, "rows[].cause": 48, "rows[].solution": 56, "takeaway": 72 }
+    },
+    "processModeMatrix": {
+      "proofShape": ["comparison", "system"],
+      "requiredFields": ["title", "stages[]", "modes[]", "modes[].cells[]"],
+      "maxItems": { "stages": 6, "modes": 3 },
+      "charBudget": { "stages[].title": 18, "modes[].title": 18, "modes[].cells[]": 32, "recommendation": 64, "takeaway": 72 }
+    },
+    "layeredOperatingModel": {
+      "proofShape": ["system"],
+      "requiredFields": ["title", "layers[]", "layers[].title", "layers[].nodes[]"],
+      "maxItems": { "layers": 3, "layers[].nodes": 5 },
+      "charBudget": { "layers[].title": 20, "layers[].nodes[].title": 20, "layers[].nodes[].detail": 38, "targetState": 64, "takeaway": 72 }
+    },
+    "strategyEnablers": {
+      "proofShape": ["causal-chain", "system"],
+      "requiredFields": ["title", "thesis", "core", "enablers[]"],
+      "maxItems": { "enablers": 4 },
+      "charBudget": { "thesis": 72, "core": 56, "enablers[].title": 22, "enablers[].detail": 46, "takeaway": 72 }
+    },
+    "reflectionEvolution": {
+      "proofShape": ["comparison", "stages"],
+      "requiredFields": ["title", "stages[]", "stages[].title"],
+      "maxItems": { "stages": 3, "stages[].evidence": 2 },
+      "charBudget": { "stages[].title": 20, "stages[].mindset": 46, "stages[].behavior": 50, "stages[].evidence[]": 36, "takeaway": 72 }
+    },
+    "appendixProject": {
+      "proofShape": ["decision-to-impact", "single-exhibit"],
+      "requiredFields": ["title", "modules"],
+      "maxItems": {},
+      "charBudget": { "modules.background.content": 110, "modules.goal.content": 90, "modules.decisions.items[]": 70, "modules.collaboration.items[]": 40, "modules.reflection.content": 70, "modules.evidence": 100 }
+    },
+    "appendixTable": {
+      "proofShape": ["comparison", "portfolio", "single-exhibit"],
+      "requiredFields": ["title", "table.values"],
+      "maxItems": { "table.values": 8 },
+      "charBudget": { "unitNote": 60, "table.values[][]": 40 }
+    },
+    "appendixQA": {
+      "proofShape": ["single-exhibit"],
+      "requiredFields": ["title", "question", "directAnswer"],
+      "maxItems": {},
+      "charBudget": { "question": 70, "boundary": 110, "directAnswer": 90, "evidence.case": 80 }
+    },
+    "styleboardSystem": { "exempt": true },
+    "styleboardDensity": { "exempt": true }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "packageName": "KSIB_PPT_Skill",
+  "packageVersion": "2026.07.23",
+  "generatedDate": "2026-07-23",
+  "distributionNotice": "DISTRIBUTION_NOTICE.md",
+  "primarySkill": "ksib-management-review-ppt",
+  "bundledSkills": [
+    {
+      "name": "ksib-management-review-ppt",
+      "path": "skills/ksib-management-review-ppt",
+      "role": "primary"
+    },
+    {
+      "name": "linzhe-mbb-storyline",
+      "path": "skills/linzhe-mbb-storyline",
+      "role": "required-for-build-review-repair-lock"
+    }
+  ],
+  "thirdPartyDependencies": [
+    {
+      "name": "mck-ppt-design",
+      "path": "third_party/mck-ppt-design",
+      "role": "layout-and-capacity-method-reference",
+      "license": "Apache-2.0",
+      "licenseFiles": [
+        "third_party/mck-ppt-design/LICENSE",
+        "third_party/mck-ppt-design/NOTICE"
+      ]
+    }
+  ],
+  "notBundled": [
+    "Codex system Presentations skill",
+    "@oai/artifact-tool runtime",
+    "Microsoft PowerPoint",
+    "PingFang SC or Microsoft YaHei fonts"
+  ],
+  "validationBaseline": {
+    "automatedRegressionCount": 175,
+    "layoutMatrixVersion": 8,
+    "layoutCount": 36,
+    "proofShapeCount": 8
+  }
+}
