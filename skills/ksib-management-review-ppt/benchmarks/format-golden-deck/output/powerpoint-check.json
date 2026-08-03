@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "ksib-powerpoint-check/1.0",
+  "passed": true,
+  "checkedBy": "Codex with Microsoft PowerPoint 365 for macOS",
+  "checkedAt": "2026-07-31T05:52:28Z",
+  "pptxSha256": "bf446ccf5219032df1ea920a4cbe038277690671f5c5a74e3b3f2c75174462f5",
+  "checks": {
+    "noRepairPrompt": true,
+    "textEditUndo": true,
+    "textColorChangeUndo": true,
+    "boldToggleUndo": true,
+    "fontFamilyChangeUndo": true,
+    "shapeFillChangeUndo": true,
+    "groupUngroup": true,
+    "fontDisplay": true,
+    "finalSlideAndPageNumber": true,
+    "tableCellFormatUndo": true,
+    "chartTextFormatUndo": true,
+    "chartDataEditUndo": true
+  },
+  "notes": "使用两个与基准SHA一致的独立副本：save-only副本仅在PowerPoint中保存、关闭和重开；interaction副本完成局部文字、颜色、加粗、字体、Shape填充、组合/取消组合、表格单元格、图表文字、图表Edit Data和连接器检查后不保存关闭。图表数据B2从18改为99再撤销至18。末页状态栏为6/6且页内页码为6。interaction副本关闭后SHA仍与基准一致。夹具不含SmartArt，因此未要求smartArtTextFormatUndo。"
+}

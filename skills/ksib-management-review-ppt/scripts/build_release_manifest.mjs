@@ -8,9 +8,10 @@ import process from "node:process";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 
-const SCHEMA_VERSION = "ksib-release-manifest/3.0";
+const SCHEMA_VERSION = "ksib-release-manifest/3.2";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const MATRIX_PATH = path.resolve(HERE, "../references/layout-matrix.json");
+const DESIGN_TOKENS_PATH = path.resolve(HERE, "../references/design-tokens.json");
 const CODEX_HOME = process.env.CODEX_HOME
   ? path.resolve(process.env.CODEX_HOME)
   : path.join(os.homedir(), ".codex");
@@ -489,9 +490,10 @@ function validateGateContract(name, report) {
     requireValue(Boolean(report.inputHashes?.matrixSha256), "handoff.inputHashes.matrixSha256缺失");
   } else if (name === "fingerprint") {
     requireValue(
-      report.schemaVersion === "ksib-pptx-semantic-compare/3.0"
+      report.schemaVersion === "ksib-pptx-semantic-compare/3.2"
         && report.mode === "format-only"
-        && ["allow", "preserve"].includes(report.fontPolicy),
+        && ["allow", "preserve"].includes(report.fontPolicy)
+        && ["allow", "preserve"].includes(report.stylePolicy),
       "fingerprint必须来自format-only语义比较脚本",
     );
     requireValue(Boolean(report.baseline?.archiveSha256), "fingerprint.baseline.archiveSha256缺失");
@@ -678,6 +680,7 @@ async function buildManifest(options) {
     rendererUsageArtifact,
     powerpointCheck,
     currentMatrixSha256,
+    currentDesignTokensSha256,
   ] = await Promise.all([
     inputPath ? artifactRecord(inputPath) : Promise.resolve(null),
     artifactRecord(finalPath),
@@ -689,6 +692,7 @@ async function buildManifest(options) {
     rendererUsagePath ? artifactRecord(rendererUsagePath) : Promise.resolve(null),
     readJson(powerpointPath, "PowerPoint check"),
     sha256File(MATRIX_PATH),
+    sha256File(DESIGN_TOKENS_PATH),
   ]);
   const finalArtifact = {
     ...finalArtifactRecord,
@@ -1179,6 +1183,7 @@ async function buildManifest(options) {
     deliveryMode,
     artifacts: {
       inputArtifact,
+      parentArtifactSha256: inputArtifact?.sha256 ?? null,
       contentArtifact,
       evidenceArtifact,
       finalPptx: finalArtifact,
@@ -1203,6 +1208,7 @@ async function buildManifest(options) {
     },
     skillContract: {
       layoutMatrixSha256: currentMatrixSha256,
+      designTokensSha256: currentDesignTokensSha256,
     },
     manualPowerPointCheck: {
       fileName: path.basename(powerpointPath),
@@ -1613,9 +1619,10 @@ async function selfTest() {
       "powerpoint-check": stalePowerpointPath,
     });
     const fingerprintGate = await write("fingerprint.json", {
-      schemaVersion: "ksib-pptx-semantic-compare/3.0",
+      schemaVersion: "ksib-pptx-semantic-compare/3.2",
       mode: "format-only",
       fontPolicy: "allow",
+      stylePolicy: "preserve",
       passed: true,
       errorCount: 0,
       errors: [],
@@ -1644,9 +1651,10 @@ async function selfTest() {
       "required-gates": "ooxml,visual",
     });
     const staleFingerprintBaselinePath = await write("stale-fingerprint-baseline.json", {
-      schemaVersion: "ksib-pptx-semantic-compare/3.0",
+      schemaVersion: "ksib-pptx-semantic-compare/3.2",
       mode: "format-only",
       fontPolicy: "allow",
+      stylePolicy: "preserve",
       passed: true,
       errorCount: 0,
       errors: [],
@@ -2096,6 +2104,14 @@ async function selfTest() {
 
     const tests = {
       valid_manifest_passes: valid.status === "passed",
+      parent_artifact_is_hash_bound: (
+        valid.artifacts?.parentArtifactSha256
+        === valid.artifacts?.inputArtifact?.sha256
+      ),
+      design_tokens_are_hash_bound: (
+        valid.skillContract?.designTokensSha256
+        === await sha256File(DESIGN_TOKENS_PATH)
+      ),
       valid_gate_validators_are_hash_bound: valid.gates.every(
         (gate) => gate.validator?.matched === true,
       ),

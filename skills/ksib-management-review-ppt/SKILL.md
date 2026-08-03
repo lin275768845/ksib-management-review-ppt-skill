@@ -17,7 +17,7 @@ description: Build, revise, evidence-check, format, and QA serious, editable Chi
 4. 不替用户决定最终故事线，不补写未经提供的业务事实、数字、排名、归因或承诺。新建／重构Deck必须先使用`linzhe-mbb-storyline`；只改格式时必须跳过Storyline重构，并用语义指纹证明文字、数字、页序、颜色和加粗语义未漂移。
 5. 示例内容统一显式标记 `[占位]`；模板内容统一显式标记 `[替换]`。
 6. 外部发布、发送、提交、品牌 Logo 使用和不可逆修改仍需人工确认。
-7. 正式制作或交付前，完整读取 `references/production-standard.md`、`references/layout-system.md` 与 `references/bcg-layout-patterns.md`；含外部事实、数据、市场或竞品判断时还必须读取`references/evidence-contract.md`，交付前读取`references/delivery-contract.md`。
+7. 正式制作或交付前，完整读取 `references/production-standard.md`、`references/design-tokens.json`、`references/layout-system.md`、`references/bcg-layout-patterns.md`、`references/format-engineering-contract.md`与`references/chrome-alignment-contract.md`；页面包含图表或表格时还必须读取`references/mbb-exhibit-style-contract.md`；需要选择或研发Waterfall、Mekko、Gantt、自动标签避让等高级组件时读取`references/think-cell-open-source-landscape.md`；含外部事实、数据、市场或竞品判断时读取`references/evidence-contract.md`，交付前读取`references/delivery-contract.md`。
 8. 在选Layout和填内容前读取本地已安装的`mck-ppt-design` skill及其`references/layout-matrix.yaml`；只吸收其咨询版式方法和容量边界，不调用其`python-pptx`生产路径。本 skill 的`references/layout-matrix.json`补充KSIB页面别名、增强Layout与机读容量，不得凭感觉决定栏目数、节点数或字符容量。
 9. 新建或重构Deck时读取`references/storyline-layout-handoff.md`，并以已通过门禁且由用户锁定的`storyline.json`作为Governing Thought、2–4个支撑论点、页面顺序、Action Title和证据含义的真相源。
 10. 使用参考Deck时，先抽取页面功能类型、内容Schema、标题节奏和几何合同，再选择性复用；不得只按截图逐页模仿，也不得把参考Deck的业务结论带入当前材料。
@@ -28,17 +28,22 @@ description: Build, revise, evidence-check, format, and QA serious, editable Chi
 
 设计、结构、留白、页面体例、容量和门禁以本地安装的`mck-ppt-design` skill为基础规范；只吸收其咨询版式方法，不采用其`python-pptx`实现。在此基础上吸收用户提供的BCG管理者任命模板中可复用的标题纵向节奏与证据型Layout。只保留三项品牌覆盖：KSIB配色、苹方-简字体、客户Deck正文16／14／12 pt；原生可编辑性和主题色板归一化属于工程增强。
 
+`references/design-tokens.json`是画布、字体、字号、主题色、Header/Footer几何与基础间距的机读真相源；文档、Renderer、Sanitizer、OOXML QA、格式合同和Release Manifest不得各自维护另一套无校验数值。修改这些值时必须同步通过`test_design_tokens.py`。
+
 - 画布：Mck宽屏 `13.333 × 7.5 in`（16:9；等效1280 × 720）。
 - 主色：Kwai Orange `#FF4906`；中性色、品牌浅色和快捷色板以 `production-standard.md` 为准，不继承Mck Navy及多Accent配色。
 - 字体：macOS统一使用 PingFang SC（PowerPoint显示“苹方-简”），Windows回退 Microsoft YaHei；不继承Georgia、Arial或楷体。
 - 字号：继承Mck层级中的44／28／24／22／18／16／9 pt；客户Deck正文使用16／14／12 pt，内部高密度页可使用14／12 pt。10 pt只用于来源、脚注或经批准的高密度附录，9 pt只用于来源／页脚；内容页Action Title固定22 pt，不得用缩字号掩盖超载。
 - 内容层级：Action Title负责本页唯一主结论；Subtitle只负责范围、时期、方法、定义、边界或比较框架；Takeaway只负责标题之外的决策含义、行动、风险或跨证据综合。页面默认只使用Action Title。
 - Subtitle：Mck和BCG参考模板都没有要求每页固定使用内容页Subtitle；本skill将其定义为可选边界层。确需使用时设置`subtitlePurpose`，使用苹方-简14 pt，并遵守 `layout-system.md` 的坐标、净距和零内边距合同；不得改写或复述Action Title。
-- Header：必须从 `layout-system.md` 的三种Header合同中选择一种：一行标题、标题＋Subtitle、两行标题。页眉、Action Title、Subtitle、分隔线和主体起点不得逐页漂移；开放文本框边距为0。
+- Header：必须从 `layout-system.md` 的固定Header合同中选择一种：一行标题、标题＋Subtitle、两行标题；“两行标题＋Subtitle”只作为用户明确要求的例外Profile。页眉、Action Title、Subtitle、分隔线和主体起点不得逐页漂移；开放文本框边距为0。
+- 跨页Chrome：同一页面Profile中的页眉橙色竖线、页眉文字、Action Title、Subtitle、标题／页脚分隔线、Source与页码必须按底层EMU和受控样式绝对一致；固定Chrome容差为0 EMU，不能沿用普通Layout的0.03 in容差。Profile使用`design-tokens.json`唯一枚举；同类页面达到两页时必须建立相等组，单例页面只按设计Token和视觉门禁验收。
 - 标题：结论型Action Title，原则上一行、最多两行；标题与Subtitle之间标准净距为0.04 in，不得以拉大垂直距离制造留白。
 - 布局：使用Mck Layout目录及选择逻辑，包括左右对比、表格洞见、流程、时间轴、垂直步骤、漏斗、价值链、图表和图文版式；不再全局禁止纵向Layout。页面级明确要求仍优先。
-- 留白：使用Mck `0.8 in`左右边距、`0.35 in`动态多栏间距、`0.15 in`实体框内边距和底栏间距规则；主体起点随Header模式固定为1.30／1.44／1.52 in，不得逐页手调。
+- 留白：使用Mck `0.8 in`左右边距、`0.35 in`动态多栏间距、`0.15 in`实体框内边距和底栏间距规则；主体起点随标准Header模式固定为1.30／1.44／1.52 in，两行标题＋Subtitle例外Profile为1.76 in，不得逐页手调。
 - 风格：白底、黑灰正文、平面化、无阴影、无3D、无渐变；通过对齐、细线和留白建立层级。
+- 表格：默认使用`minimal-rule`，即白底表头、无外框、无竖线、数字右对齐、仅保留表头规则线和必要的总计／分组横线。黑色或深灰实心表头不是咨询风默认值，只有客户模板或高密附录明确需要时才允许使用。
+- 图表：默认使用`direct-label-spotlight`，删除无意义的边框、图例、坐标轴和网格线；直接标注数据，只使用一个橙色视觉焦点。“其他”置于末位并保持中性灰。Waterfall、Mekko、Gantt及CAGR／差异标注按`mbb-exhibit-style-contract.md`执行。
 - 底部信息：Takeaway默认不设置；只有新增决策含义、行动、风险或跨证据综合时才允许设置一条，并声明`takeawayPurpose`。不得因页面留白而添加，不得复述Title、Subtitle、图表标注或主体洞察区，也不得与洞察侧栏、Owner、未解问题或第二结论带共存。
 - 密度：按Mck逐Layout字符预算、Max Items和内容区利用率门禁执行；超限先删减，不得任意缩小字号。
 - 品牌资产：没有经批准的Logo文件时只使用品牌色与文字标识，不重绘、不改色、不伪造Logo。
@@ -81,7 +86,8 @@ description: Build, revise, evidence-check, format, and QA serious, editable Chi
 
 先分类：
 
-- `format-only`：用户要求不改内容，只统一Layout／格式／页眉页脚／可编辑性。修改前生成PPTX语义指纹，修改后运行compare；任何文字、数字、页序、颜色或加粗语义漂移均阻断交付。
+- `format-only`：用户要求不改内容，只统一Layout／格式／页眉页脚／可编辑性。修改前生成PPTX语义指纹并为受控对象建立唯一角色名、格式合同与跨页Chrome Profile，修改后运行compare。格式合同不得为空；至少覆盖所有重复出现的Header、Title、Divider、Source和Page Number。默认`--style-policy preserve`，任何文字、数字、页序、颜色或加粗语义漂移均阻断交付；只有用户明确授权视觉重排或重新定样时才允许`--style-policy allow`，此时仍冻结文字、数字、页序、图表数据和对象内容绑定。编辑器无损保存导致的内部对象ID重排不视为漂移，唯一角色名才是优先语义键。
+- 既有PPT的Chrome归一默认先运行`scripts/pptx_chrome_normalizer.py`只读审计。用户只授权位置／尺寸时使用`--scope geometry`，不得复制颜色、字体或段落样式；授权统一样式但冻结位置时使用`--scope style`；只有两类均获授权才使用`--scope all`。对象类型不一致、角色缺失或重复时立即阻断。
 - `locked-content`：用户提供最终版内容并要求制作为PPT。使用`linzhe-mbb-storyline`的`lock`模式补齐最小交接合同，不重新发明故事线；含事实或数据时补齐Evidence Contract。
 - `story-change`：用户要求新建、重构、合并、删页或修改论证。先登记Evidence Contract中的Source、Calculation和Claim，再完成`linzhe-mbb-storyline`并取得`productionReady: true`的门禁报告。
 
@@ -92,8 +98,13 @@ description: Build, revise, evidence-check, format, and QA serious, editable Chi
 `format-only`任务先调用`codex_app__load_workspace_dependencies`设置`$PYTHON`，再在修改前后分别运行：
 
 ```bash
+"$PYTHON" "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/prepare_revision.py" \
+  --input <locked-input.pptx> \
+  --workspace work/presentations/ksib-management-review/revisions \
+  --label format-only
+
 "$PYTHON" "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/pptx_semantic_fingerprint.py" create \
-  --pptx <locked-input.pptx> \
+  --pptx <revision/source/locked-input.pptx> \
   --output work/presentations/ksib-management-review/tmp/qa/input-semantic-fingerprint.json
 
 "$PYTHON" "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/pptx_semantic_fingerprint.py" compare \
@@ -101,10 +112,13 @@ description: Build, revise, evidence-check, format, and QA serious, editable Chi
   --pptx <final.pptx> \
   --mode format-only \
   --font-policy preserve \
+  --style-policy preserve \
   --report work/presentations/ksib-management-review/tmp/qa/format-only-semantic-gate.json
 ```
 
-示例默认冻结字体族、字号和主题字体。只有用户明确授权统一字体时，compare改为`--font-policy allow`，并在构建阶段完成字体归一化；未授权不得把字体调整暗含在“版式优化”中。
+后续所有Sanitizer、构建和人工编辑只作用于`workingCopy`或新的输出路径；不得覆盖用户原文件。`revision-manifest.json`记录输入、Source副本和Working副本的SHA256。
+
+示例默认冻结字体族、字号、主题字体、颜色和加粗。用户明确授权统一字体时，compare改为`--font-policy allow`；用户明确授权按MBB／KSIB视觉规范重新定样时，compare改为`--style-policy allow`。两种授权相互独立，未授权不得把字体或视觉语义调整暗含在“版式优化”中。
 
 新建／重构Deck必须通过KSIB Storyline包装门禁；包装器会调用`linzhe-mbb-storyline`并同时绑定Storyline原文件、包装器版本和上游校验器版本：
 
@@ -208,6 +222,8 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/vali
 
 默认按系统`Presentations` skill使用`@oai/artifact-tool`生成或编辑PPTX。每页先由内容门禁把canonical Layout解析为`rendererContract`：Layout专属合同优先，其余按`global.rendererDefaults`以canonical Layout名作为Renderer接口。每页必须明确provider、canonicalRenderer与`editableNative: true`；不得把fallback renderer悄悄当作canonical renderer。
 
+构建前创建`ksib-format-contract/1.0`，把页眉、Action Title、Subtitle、分隔线、来源、页码和主证据对象命名为稳定英文角色，并声明Header模式、几何、跨页一致性组、原生对象类型及编辑性策略。固定Chrome使用0 EMU容差逐属性比较；普通正文Layout才可使用常规几何容差。若用户只授权部分格式属性，用`crossSlideEqualityGroups[].compareFields[]`把机器门禁限制到同一授权范围，不得把未比较的颜色或字体描述为“已统一”。图表、表格和流程必须分别保留为原生Chart、Table与吸附节点的Connector；静态文本页码和只含literal数据的Chart只能在合同明确降级且PowerPoint人工验收通过时使用。完整字段与Golden Deck见`references/format-engineering-contract.md`，既有PPT归一流程见`references/chrome-alignment-contract.md`。
+
 当前工作区存在且已经通过项目测试的KSIB原生构建器时，可以在项目根目录执行：
 
 ```bash
@@ -248,14 +264,18 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/vali
 
 ```bash
 "$PYTHON" "${OOXML_SANITIZE:-ppt/ooxml_sanitize.py}" <final.pptx> --in-place
-"$PYTHON" "${OOXML_QA:-ppt/ooxml_qa.py}" <final.pptx>
+"$PYTHON" "${OOXML_QA:-ppt/ooxml_qa.py}" <final.pptx> \
+  --format-contract <format-contract.json>
 ```
 
 `format-only`且用户未授权改变颜色语义时改用：
 
 ```bash
 "$PYTHON" "${OOXML_SANITIZE:-ppt/ooxml_sanitize.py}" <final.pptx> --in-place --preserve-theme
-"$PYTHON" "${OOXML_QA:-ppt/ooxml_qa.py}" <final.pptx> --theme-policy preserve --font-policy preserve
+"$PYTHON" "${OOXML_QA:-ppt/ooxml_qa.py}" <final.pptx> \
+  --theme-policy preserve \
+  --font-policy preserve \
+  --format-contract <format-contract.json>
 ```
 
 `--preserve-theme`保留主题色板，但仍会清理与段落默认色完全相同的冗余run颜色覆盖并规范化默认加粗；清理范围覆盖slide、notes、表格单元格以及关联Chart／Diagram中的DrawingML文本。语义指纹比较最终有效颜色与加粗状态，并把Chart／Diagram文本样式绑定到关联part，因此存储方式清理不会被误判为内容漂移。
@@ -278,7 +298,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/vali
 - ZIP 完整性检查。
 - OOXML 语义检查：关系目标存在、非视觉对象ID唯一、DrawingML尺寸非负、页数元数据一致。新建Deck或用户授权品牌归一化时使用KSIB主题；纯格式任务默认保留原主题，并由语义指纹证明颜色未漂移。
 - 安全与完整性检查：宏为阻断错误；外部关系、嵌入对象和媒体形成可审计清单；未解决的`[占位]`、`[替换]`、`[TBD]`或`[待验证]`阻断交付；直接字体不得漂移到未批准字体。
-- 原生编辑性检查：任何普通Shape或GraphicFrame不得保留`noGrp`、`noMove`、`noResize`、`noSelect`或`noTextEdit`锁；slide、notes、表格单元格和关联Chart／Diagram中的普通同色文本不得同时保留段落级与字符级重复颜色覆盖；有意的局部强调色必须保留。含可见文字的DrawingML段落不得把加粗仅留在`defRPr`默认层，必须在保持视觉结果不变的前提下物化到字符run并删除默认加粗覆盖，使PowerPoint的Bold按钮能直接取消加粗。
+- 原生编辑性检查：任何普通Shape或GraphicFrame不得保留`noGrp`、`noMove`、`noResize`、`noSelect`或`noTextEdit`锁；slide、notes、表格单元格和关联Chart／Diagram中的普通同色文本不得同时保留段落级与字符级重复颜色覆盖；有意的局部强调色必须保留。含可见文字的DrawingML段落不得把加粗仅留在`defRPr`默认层，必须在保持视觉结果不变的前提下物化到字符run并删除默认加粗覆盖，使PowerPoint的Bold按钮能直接取消加粗。流程Connector必须同时吸附起终节点并保留箭头；图表数据模式必须满足合同；正式Deck页码应使用`slidenum`字段或母版占位符。
 - PowerPoint 文件回读和随机页渲染。
 - 全页 PNG 渲染与逐页视觉检查。
 - 过小字号与基础OOXML尺寸使用自动检查；重叠、裁切、意外换行和标题实际行数由全尺寸PNG逐页人工Visual Gate检查，不得描述成自动几何证明。
@@ -287,12 +307,17 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/vali
 - 页面底部结构检查：主体之外至多一条经门禁允许的Takeaway；不存在Owner、未解问题或第二结论带与Takeaway纵向堆叠。
 - Storyline一致性检查：Ghost Deck页序和Action Title未漂移；每页主证据仍回答原Proof Question。
 - 三维交付检查：Content、Design、Coherence分别通过；视觉无误不能抵消内容或连贯性缺陷。
-- 留白检查：左右边距0.8 in；主体起点按Header模式为1.30／1.44／1.52 in；多栏最小间距0.35 in；实体框内边距至少0.15 in；底栏与主体至少0.15 in。
+- 留白检查：左右边距0.8 in；主体起点按标准Header模式为1.30／1.44／1.52 in，两行标题＋Subtitle例外Profile为1.76 in；多栏最小间距0.35 in；实体框内边距至少0.15 in；底栏与主体至少0.15 in。
+- 跨页绝对对齐检查：同一Chrome Profile中的固定角色按EMU、旋转、填充、线条、文本边距、字体和段落格式逐项完全一致；任何1 EMU或受控样式差异均阻断交付。合法的封面、章节页和Header模式差异必须拆分为不同Profile，不能放宽容差。
+- Header冲突检查：OOXML QA必须阻断Action Title与Subtitle的对象框正面积重叠，以及标题分隔线进入Subtitle框；两行标题＋Subtitle等高风险Profile还必须在最终PNG逐页确认字形、换行和视觉净距，画布溢出测试通过不能替代这项检查。
 - 原生文本、形状、表格、可编辑矢量图表和演讲者备注检查。
 - 媒体、外部链接、嵌入字体和敏感内容检查。
-- 使用 Microsoft PowerPoint 实际打开最终文件并跳到末页，确认没有修复提示或图表错误。抽查原生文本框，依次完成文字替换、字体颜色修改、加粗取消／恢复、字体族修改并逐项撤销；抽查形状填充色并撤销；再选中两个对象完成组合与取消组合。若文件包含表格、图表或SmartArt，还必须分别抽查表格单元格改色／取消加粗、图表标题或标签改色／取消加粗、图表数据编辑，以及SmartArt文字格式修改并撤销。任何一项不能直接操作，都不得以“对象可选中”替代真正可编辑结论。
+- Microsoft PowerPoint真机门禁拆成两个彼此独立的副本。`save-only`副本只执行打开、保存、关闭和重开，不做任何交互改动；保存后重新运行Sanitizer、语义指纹、OOXML和视觉门禁。`interaction`副本在打开前必须与最终PPTX的SHA256完全相同，只用于文字、格式、组合、表格和图表等瞬时交互，完成后不保存直接关闭。若人工确实保存了任何交互改动，该副本不得再冒充最终文件，除非重新运行全部门禁并更新Release Manifest。
+- 在`interaction`副本中跳到末页，确认没有修复提示或图表错误。抽查原生文本框，依次完成文字替换、字体颜色修改、加粗取消／恢复、字体族修改并逐项撤销；抽查形状填充色并撤销；再选中两个对象完成组合与取消组合。若文件包含表格、图表或SmartArt，还必须分别抽查表格单元格改色／取消加粗、图表标题或标签改色／取消加粗、图表数据编辑，以及SmartArt文字格式修改并撤销。选择文字时应局部拖选并确认字符级选区，未确认光标位于文本内时禁止使用全选快捷键，避免误选整页对象。任何一项不能直接操作，都不得以“对象可选中”替代真正可编辑结论。
 
-最后按`references/delivery-contract.md`生成`ksib-release-manifest/3.0`。非format-only任务必须显式提供冻结的Storyline、Content和Evidence文件；每个Gate还必须通过`--validator name=path`绑定本Skill登记的canonical校验脚本，Storyline同时绑定上游MBB校验器。Manifest会先确认最终文件是合法`.pptx` ZIP，并核对根`officeDocument`关系、Presentation Content Type、非空`sldId`、每个slide关系、真实slide part及其Content Type完全一致；再核对输入SHA256、Layout Matrix、逐页ID集合、跨门禁页数、逐页Renderer合同、最终PPTX哈希，以及Gate报告是否晚于其绑定输入并在本次Release启动前已经生成。使用fallback时必须提供版本化`renderer-usage`逐页说明实际Renderer和原因。只有所有必需Gate为`passed: true`、`errorCount: 0`、`errors: []`且人工PowerPoint检查完成，才允许交付。
+修改Renderer、主题、Sanitizer、OOXML QA、对象命名或格式合同后，必须重建并回归`${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/benchmarks/format-golden-deck`的6页Golden Deck。原始PPTX和回读再导出的PPTX都要通过格式合同、语义指纹、全页渲染与Visual Gate；基准通过仍不能替代Microsoft PowerPoint真机交互检查。
+
+最后按`references/delivery-contract.md`生成`ksib-release-manifest/3.2`。非format-only任务必须显式提供冻结的Storyline、Content和Evidence文件；每个Gate还必须通过`--validator name=path`绑定本Skill登记的canonical校验脚本，Storyline同时绑定上游MBB校验器。Manifest会先确认最终文件是合法`.pptx` ZIP，并核对根`officeDocument`关系、Presentation Content Type、非空`sldId`、每个slide关系、真实slide part及其Content Type完全一致；再核对父版本SHA256、Design Tokens、Layout Matrix、逐页ID集合、跨门禁页数、逐页Renderer合同、最终PPTX哈希，以及Gate报告是否晚于其绑定输入并在本次Release启动前已经生成。使用fallback时必须提供版本化`renderer-usage`逐页说明实际Renderer和原因。只有所有必需Gate为`passed: true`、`errorCount: 0`、`errors: []`且人工PowerPoint检查完成，才允许交付。
 
 ## 内容与演讲规则
 

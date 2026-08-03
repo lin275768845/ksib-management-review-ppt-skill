@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "ksib-powerpoint-saveonly-visual-delta/1.0",
+  "baselinePptxSha256": "bf446ccf5219032df1ea920a4cbe038277690671f5c5a74e3b3f2c75174462f5",
+  "rawPowerPointSavePptxSha256": "3983fca5b21889d9925ee0211385bb2e90c0cef3f16074e3c285dc7ad5e2d6d2",
+  "sanitizedPowerPointSavePptxSha256": "c0741f13302fdf5e8d30aec3e754dc30984ace623f4c1001f90a0bf2bbc29dac",
+  "renderWidth": 1600,
+  "renderHeight": 900,
+  "slides": [
+    {
+      "slide": 1,
+      "rawDifferingPixels": 0,
+      "sanitizedDifferingPixels": 0
+    },
+    {
+      "slide": 2,
+      "rawDifferingPixels": 0,
+      "sanitizedDifferingPixels": 0
+    },
+    {
+      "slide": 3,
+      "rawDifferingPixels": 0,
+      "sanitizedDifferingPixels": 0
+    },
+    {
+      "slide": 4,
+      "rawDifferingPixels": 195,
+      "rawDifferingPixelPercent": 0.013541666666666665,
+      "sanitizedDifferingPixels": 195,
+      "sanitizedDifferingPixelPercent": 0.013541666666666665,
+      "classification": "immaterial-text-run-rendering-delta"
+    },
+    {
+      "slide": 5,
+      "rawDifferingPixels": 0,
+      "sanitizedDifferingPixels": 0
+    },
+    {
+      "slide": 6,
+      "rawDifferingPixels": 0,
+      "sanitizedDifferingPixels": 0
+    }
+  ],
+  "passed": true,
+  "notes": "第4页差异来自PowerPoint对相邻文本run的合并与渲染细微变化；视觉检查未发现内容、颜色、几何、裁切或换行漂移。第3页独立橙色总计规则线保存后保持，像素差异为0。"
+}

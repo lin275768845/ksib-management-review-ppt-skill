@@ -1,0 +1,56 @@
+{
+  "reviewedBy": "Codex",
+  "reviewedAt": "2026-07-31T17:42:31+08:00",
+  "checks": {
+    "fullSizeReview": true,
+    "noOverlap": true,
+    "noClipping": true,
+    "noUnexpectedWrap": true,
+    "footerAndPageNumber": true,
+    "chartDataAndSources": true
+  },
+  "slideReviews": [
+    {
+      "slide": 1,
+      "renderFile": "slide-1.png",
+      "passed": true,
+      "issues": [],
+      "notes": "封面标题、说明、版本信息和留白通过。"
+    },
+    {
+      "slide": 2,
+      "renderFile": "slide-2.png",
+      "passed": true,
+      "issues": [],
+      "notes": "原生横向条形图、直接标注、右侧读数区及固定页眉／页脚通过。"
+    },
+    {
+      "slide": 3,
+      "renderFile": "slide-3.png",
+      "passed": true,
+      "issues": [],
+      "notes": "白底表头、无竖线、数字对齐、独立橙色合计线及固定页眉／页脚通过。"
+    },
+    {
+      "slide": 4,
+      "renderFile": "slide-4.png",
+      "passed": true,
+      "issues": [],
+      "notes": "等宽两栏、分隔线、局部强调及固定页眉／页脚通过。"
+    },
+    {
+      "slide": 5,
+      "renderFile": "slide-5.png",
+      "passed": true,
+      "issues": [],
+      "notes": "四节点流程、吸附箭头、反馈连接器及固定页眉／页脚通过。"
+    },
+    {
+      "slide": 6,
+      "renderFile": "slide-6.png",
+      "passed": true,
+      "issues": [],
+      "notes": "高密度附录表、轻量横线、10pt正文、固定页眉／页脚、来源和页码通过。"
+    }
+  ]
+}

@@ -1,0 +1,1063 @@
+{
+  "schemaVersion": "ksib-ooxml-qa/2.0",
+  "validatorSha256": "9164617d86c98f6b8a53dcfda3d3f8224e27d2ba4318639d64eeca459ca25ec3",
+  "themePolicy": "ksib",
+  "fontPolicy": "ksib",
+  "formatContract": {
+    "file": "golden-deck-format-contract.json",
+    "sha256": "21ed869cecd92fd4c970bfe796d61636b559567ce8def223ff8f5ed6cae32db9"
+  },
+  "passed": true,
+  "errorCount": 0,
+  "warningCount": 0,
+  "errors": [],
+  "warnings": [],
+  "reports": [
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.pptx",
+      "sha256": "a6f6cb968cb1106268cda3d71ba69807a2f07362ba11d2864bd87775e25dac35",
+      "errors": [],
+      "warnings": [],
+      "inventory": {
+        "mediaCount": 0,
+        "mediaParts": [],
+        "embeddedCount": 0,
+        "externalRelationshipCount": 0,
+        "externalRelationships": [],
+        "directTypefacesByPart": {
+          "ppt/slides/slide1.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide2.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide3.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide4.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide5.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide6.xml": [
+            "PingFang SC"
+          ]
+        },
+        "directPointSizesByPart": {
+          "ppt/slides/slide1.xml": [
+            12.0,
+            14.0,
+            16.0,
+            24.0,
+            44.0
+          ],
+          "ppt/slides/slide2.xml": [
+            9.0,
+            10.0,
+            14.0,
+            22.0,
+            24.0
+          ],
+          "ppt/slides/slide3.xml": [
+            9.0,
+            10.0,
+            12.0,
+            14.0,
+            22.0
+          ],
+          "ppt/slides/slide4.xml": [
+            9.0,
+            10.0,
+            14.0,
+            22.0
+          ],
+          "ppt/slides/slide5.xml": [
+            9.0,
+            10.0,
+            12.0,
+            14.0,
+            22.0
+          ],
+          "ppt/slides/slide6.xml": [
+            9.0,
+            10.0,
+            12.0,
+            22.0
+          ]
+        },
+        "themeTypefacesByPart": {
+          "ppt/theme/theme1.xml": {
+            "majorFont.latin": "PingFang SC",
+            "majorFont.ea": "PingFang SC",
+            "majorFont.cs": "PingFang SC",
+            "minorFont.latin": "PingFang SC",
+            "minorFont.ea": "PingFang SC",
+            "minorFont.cs": "PingFang SC"
+          }
+        },
+        "chartDataByPart": [
+          {
+            "part": "ppt/slides/charts/chart1.xml",
+            "mode": "nativeLiteral",
+            "embeddedTargets": [],
+            "hasExternalData": false,
+            "hasLiteralData": true,
+            "hasReferenceData": false
+          }
+        ],
+        "formatContractSha256": "21ed869cecd92fd4c970bfe796d61636b559567ce8def223ff8f5ed6cae32db9",
+        "formatContractSlides": [
+          {
+            "slide": 1,
+            "part": "ppt/slides/slide1.xml",
+            "slideRole": "cover",
+            "headerMode": "none",
+            "nativeObjectCounts": {
+              "shapes": 1,
+              "textBoxes": 5
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [],
+            "headerRoleGeometry": {
+              "roles": {}
+            }
+          },
+          {
+            "slide": 2,
+            "part": "ppt/slides/slide2.xml",
+            "slideRole": "content",
+            "headerMode": "title-subtitle",
+            "nativeObjectCounts": {
+              "charts": 1,
+              "shapes": 3,
+              "textBoxes": 10
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title",
+              "subtitle"
+            ],
+            "headerRoleGeometry": {
+              "roles": {
+                "action-title": {
+                  "object": "action-title",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 502920,
+                    "w": 10728655,
+                    "h": 365760
+                  }
+                },
+                "subtitle": {
+                  "object": "subtitle",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 905256,
+                    "w": 10728655,
+                    "h": 219456
+                  }
+                },
+                "title-divider": {
+                  "object": "title-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 1188720,
+                    "w": 10728655,
+                    "h": 9144
+                  }
+                }
+              }
+            }
+          },
+          {
+            "slide": 3,
+            "part": "ppt/slides/slide3.xml",
+            "slideRole": "content",
+            "headerMode": "title-only",
+            "nativeObjectCounts": {
+              "shapes": 5,
+              "tables": 1,
+              "textBoxes": 5
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title"
+            ],
+            "headerRoleGeometry": {
+              "roles": {
+                "action-title": {
+                  "object": "action-title",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 502920,
+                    "w": 10728655,
+                    "h": 365760
+                  }
+                },
+                "title-divider": {
+                  "object": "title-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 1005840,
+                    "w": 10728655,
+                    "h": 9144
+                  }
+                }
+              }
+            }
+          },
+          {
+            "slide": 4,
+            "part": "ppt/slides/slide4.xml",
+            "slideRole": "content",
+            "headerMode": "title-only",
+            "nativeObjectCounts": {
+              "shapes": 4,
+              "textBoxes": 6
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title"
+            ],
+            "headerRoleGeometry": {
+              "roles": {
+                "action-title": {
+                  "object": "action-title",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 502920,
+                    "w": 10728655,
+                    "h": 365760
+                  }
+                },
+                "title-divider": {
+                  "object": "title-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 1005840,
+                    "w": 10728655,
+                    "h": 9144
+                  }
+                }
+              }
+            }
+          },
+          {
+            "slide": 5,
+            "part": "ppt/slides/slide5.xml",
+            "slideRole": "content",
+            "headerMode": "title-two-line",
+            "nativeObjectCounts": {
+              "connectors": 4,
+              "shapes": 3,
+              "textBoxes": 9
+            },
+            "connectorEditability": {
+              "count": 4,
+              "attachedBothEnds": 4,
+              "withArrowhead": 4
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title"
+            ],
+            "headerRoleGeometry": {
+              "roles": {
+                "action-title": {
+                  "object": "action-title",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 502920,
+                    "w": 10728655,
+                    "h": 658368
+                  }
+                },
+                "title-divider": {
+                  "object": "title-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 1261872,
+                    "w": 10728655,
+                    "h": 9144
+                  }
+                }
+              }
+            }
+          },
+          {
+            "slide": 6,
+            "part": "ppt/slides/slide6.xml",
+            "slideRole": "appendix",
+            "headerMode": "title-only",
+            "nativeObjectCounts": {
+              "shapes": 3,
+              "tables": 1,
+              "textBoxes": 5
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title"
+            ],
+            "headerRoleGeometry": {
+              "roles": {
+                "action-title": {
+                  "object": "action-title",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 502920,
+                    "w": 10728655,
+                    "h": 365760
+                  }
+                },
+                "title-divider": {
+                  "object": "title-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 1005840,
+                    "w": 10728655,
+                    "h": 9144
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "crossSlideEqualityGroups": [
+          {
+            "group": "golden-common-chrome",
+            "headerMode": "<mixed>",
+            "slides": [
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "referenceSlide": 2,
+            "geometryToleranceEmu": 0,
+            "compareFields": [
+              "fill",
+              "font",
+              "geometry",
+              "line",
+              "objectType",
+              "paragraph",
+              "rotation",
+              "textMargins",
+              "verticalAlignment"
+            ],
+            "roles": {
+              "header-accent": [
+                {
+                  "slide": 2,
+                  "part": "ppt/slides/slide2.xml",
+                  "object": "header-accent",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 137160,
+                    "w": 27432,
+                    "h": 182880
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "1411107bda73c5791432a63349510e0caac3c8803f3d18cfbe2a80d8a8ea97df",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 3,
+                  "part": "ppt/slides/slide3.xml",
+                  "object": "header-accent",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 137160,
+                    "w": 27432,
+                    "h": 182880
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "1411107bda73c5791432a63349510e0caac3c8803f3d18cfbe2a80d8a8ea97df",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 4,
+                  "part": "ppt/slides/slide4.xml",
+                  "object": "header-accent",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 137160,
+                    "w": 27432,
+                    "h": 182880
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "1411107bda73c5791432a63349510e0caac3c8803f3d18cfbe2a80d8a8ea97df",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 5,
+                  "part": "ppt/slides/slide5.xml",
+                  "object": "header-accent",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 137160,
+                    "w": 27432,
+                    "h": 182880
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "1411107bda73c5791432a63349510e0caac3c8803f3d18cfbe2a80d8a8ea97df",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 6,
+                  "part": "ppt/slides/slide6.xml",
+                  "object": "header-accent",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 137160,
+                    "w": 27432,
+                    "h": 182880
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "1411107bda73c5791432a63349510e0caac3c8803f3d18cfbe2a80d8a8ea97df",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                }
+              ],
+              "header-text": [
+                {
+                  "slide": 2,
+                  "part": "ppt/slides/slide2.xml",
+                  "object": "header-text",
+                  "geometryEmu": {
+                    "x": 841248,
+                    "y": 137160,
+                    "w": 10616184,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "5a00a50d6174c8fcb3cd46526fc1dabb22f568ed72e804e6c9f63c1edf71c699",
+                    "font": "368076f629d0506149813e4272fcaad4de014ba9a2b958c981c7cadd87fe79ed",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 3,
+                  "part": "ppt/slides/slide3.xml",
+                  "object": "header-text",
+                  "geometryEmu": {
+                    "x": 841248,
+                    "y": 137160,
+                    "w": 10616184,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "5a00a50d6174c8fcb3cd46526fc1dabb22f568ed72e804e6c9f63c1edf71c699",
+                    "font": "368076f629d0506149813e4272fcaad4de014ba9a2b958c981c7cadd87fe79ed",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 4,
+                  "part": "ppt/slides/slide4.xml",
+                  "object": "header-text",
+                  "geometryEmu": {
+                    "x": 841248,
+                    "y": 137160,
+                    "w": 10616184,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "5a00a50d6174c8fcb3cd46526fc1dabb22f568ed72e804e6c9f63c1edf71c699",
+                    "font": "368076f629d0506149813e4272fcaad4de014ba9a2b958c981c7cadd87fe79ed",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 5,
+                  "part": "ppt/slides/slide5.xml",
+                  "object": "header-text",
+                  "geometryEmu": {
+                    "x": 841248,
+                    "y": 137160,
+                    "w": 10616184,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "5a00a50d6174c8fcb3cd46526fc1dabb22f568ed72e804e6c9f63c1edf71c699",
+                    "font": "368076f629d0506149813e4272fcaad4de014ba9a2b958c981c7cadd87fe79ed",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 6,
+                  "part": "ppt/slides/slide6.xml",
+                  "object": "header-text",
+                  "geometryEmu": {
+                    "x": 841248,
+                    "y": 137160,
+                    "w": 10616184,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "5a00a50d6174c8fcb3cd46526fc1dabb22f568ed72e804e6c9f63c1edf71c699",
+                    "font": "368076f629d0506149813e4272fcaad4de014ba9a2b958c981c7cadd87fe79ed",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                }
+              ],
+              "footer-divider": [
+                {
+                  "slide": 2,
+                  "part": "ppt/slides/slide2.xml",
+                  "object": "footer-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6355080,
+                    "w": 10728655,
+                    "h": 0
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "1ea6d07c0cb1ad7d4cda0b1586915e345945f1d1348af7a246b6e78faf336a8f",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 3,
+                  "part": "ppt/slides/slide3.xml",
+                  "object": "footer-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6355080,
+                    "w": 10728655,
+                    "h": 0
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "1ea6d07c0cb1ad7d4cda0b1586915e345945f1d1348af7a246b6e78faf336a8f",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 4,
+                  "part": "ppt/slides/slide4.xml",
+                  "object": "footer-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6355080,
+                    "w": 10728655,
+                    "h": 0
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "1ea6d07c0cb1ad7d4cda0b1586915e345945f1d1348af7a246b6e78faf336a8f",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 5,
+                  "part": "ppt/slides/slide5.xml",
+                  "object": "footer-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6355080,
+                    "w": 10728655,
+                    "h": 0
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "1ea6d07c0cb1ad7d4cda0b1586915e345945f1d1348af7a246b6e78faf336a8f",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 6,
+                  "part": "ppt/slides/slide6.xml",
+                  "object": "footer-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6355080,
+                    "w": 10728655,
+                    "h": 0
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "1ea6d07c0cb1ad7d4cda0b1586915e345945f1d1348af7a246b6e78faf336a8f",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                }
+              ],
+              "source-footnote": [
+                {
+                  "slide": 2,
+                  "part": "ppt/slides/slide2.xml",
+                  "object": "source-footnote",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6446520,
+                    "w": 9875520,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 3,
+                  "part": "ppt/slides/slide3.xml",
+                  "object": "source-footnote",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6446520,
+                    "w": 9875520,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 4,
+                  "part": "ppt/slides/slide4.xml",
+                  "object": "source-footnote",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6446520,
+                    "w": 9875520,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 5,
+                  "part": "ppt/slides/slide5.xml",
+                  "object": "source-footnote",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6446520,
+                    "w": 9875520,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 6,
+                  "part": "ppt/slides/slide6.xml",
+                  "object": "source-footnote",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 6446520,
+                    "w": 9875520,
+                    "h": 182880
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                }
+              ],
+              "page-number": [
+                {
+                  "slide": 2,
+                  "part": "ppt/slides/slide2.xml",
+                  "object": "page-number",
+                  "geometryEmu": {
+                    "x": 11155680,
+                    "y": 6492240,
+                    "w": 914400,
+                    "h": 274320
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "7dcc68c48cdbd86cc97d85a39041f79d023f314fdd11a3a8d68796eaafe9d225"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 3,
+                  "part": "ppt/slides/slide3.xml",
+                  "object": "page-number",
+                  "geometryEmu": {
+                    "x": 11155680,
+                    "y": 6492240,
+                    "w": 914400,
+                    "h": 274320
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "7dcc68c48cdbd86cc97d85a39041f79d023f314fdd11a3a8d68796eaafe9d225"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 4,
+                  "part": "ppt/slides/slide4.xml",
+                  "object": "page-number",
+                  "geometryEmu": {
+                    "x": 11155680,
+                    "y": 6492240,
+                    "w": 914400,
+                    "h": 274320
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "7dcc68c48cdbd86cc97d85a39041f79d023f314fdd11a3a8d68796eaafe9d225"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 5,
+                  "part": "ppt/slides/slide5.xml",
+                  "object": "page-number",
+                  "geometryEmu": {
+                    "x": 11155680,
+                    "y": 6492240,
+                    "w": 914400,
+                    "h": 274320
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "7dcc68c48cdbd86cc97d85a39041f79d023f314fdd11a3a8d68796eaafe9d225"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 6,
+                  "part": "ppt/slides/slide6.xml",
+                  "object": "page-number",
+                  "geometryEmu": {
+                    "x": 11155680,
+                    "y": 6492240,
+                    "w": 914400,
+                    "h": 274320
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "2e60523dc46ab1e0feb5d49fe029810a49120d40f76a72006a35c731eb5da516",
+                    "paragraph": "7dcc68c48cdbd86cc97d85a39041f79d023f314fdd11a3a8d68796eaafe9d225"
+                  },
+                  "status": "inventoried"
+                }
+              ]
+            }
+          },
+          {
+            "group": "golden-content-title-only-chrome",
+            "headerMode": "title-only",
+            "slides": [
+              3,
+              4
+            ],
+            "referenceSlide": 3,
+            "geometryToleranceEmu": 0,
+            "compareFields": [
+              "fill",
+              "font",
+              "geometry",
+              "line",
+              "objectType",
+              "paragraph",
+              "rotation",
+              "textMargins",
+              "verticalAlignment"
+            ],
+            "roles": {
+              "action-title": [
+                {
+                  "slide": 3,
+                  "part": "ppt/slides/slide3.xml",
+                  "object": "action-title",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 502920,
+                    "w": 10728655,
+                    "h": 365760
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "a88810bd6d146a12adc088b784261cf9e084784aead3e5d574e2706ca1b77f6d",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 4,
+                  "part": "ppt/slides/slide4.xml",
+                  "object": "action-title",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 502920,
+                    "w": 10728655,
+                    "h": 365760
+                  },
+                  "objectType": "textBoxes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "a88810bd6d146a12adc088b784261cf9e084784aead3e5d574e2706ca1b77f6d",
+                    "paragraph": "a8da72df5ac375943cc1081b232ccf477f310629a9c8f9e6ce0dfa2bbcbeb45e"
+                  },
+                  "status": "inventoried"
+                }
+              ],
+              "title-divider": [
+                {
+                  "slide": 3,
+                  "part": "ppt/slides/slide3.xml",
+                  "object": "title-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 1005840,
+                    "w": 10728655,
+                    "h": 9144
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "68ba0ce263bed851a050b2b824972f02df2c9c7a0e2e4cb1edc229e469716f99",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                },
+                {
+                  "slide": 4,
+                  "part": "ppt/slides/slide4.xml",
+                  "object": "title-divider",
+                  "geometryEmu": {
+                    "x": 731520,
+                    "y": 1005840,
+                    "w": 10728655,
+                    "h": 9144
+                  },
+                  "objectType": "shapes",
+                  "rotation": 0,
+                  "styleHashes": {
+                    "fill": "68ba0ce263bed851a050b2b824972f02df2c9c7a0e2e4cb1edc229e469716f99",
+                    "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
+                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                  },
+                  "status": "inventoried"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

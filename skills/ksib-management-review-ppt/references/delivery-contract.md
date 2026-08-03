@@ -46,6 +46,7 @@ python3 scripts/pptx_semantic_fingerprint.py compare \
   --pptx outputs/client-delivery.pptx \
   --mode format-only \
   --font-policy preserve \
+  --style-policy preserve \
   --report work/delivery/format-only-semantic-gate.json
 ```
 
@@ -60,18 +61,21 @@ python3 scripts/pptx_semantic_fingerprint.py compare \
 - 主题色槽位或主题色值变化。
 - `--font-policy preserve`时，任一页字体族、字号、主题字体引用或主题字体槽位变化。
 
-指纹使用`ksib-pptx-semantic-fingerprint/3.0`与`ksib-pptx-semantic-compare/3.0`，会把语义绑定到原生对象ID；格式专修应保留对象ID，不得用整页重建伪装成格式调整。字体是否冻结由`--font-policy preserve|allow`显式决定；只有用户授权字体归一化时才能使用`allow`。它不验证缓存背后的Excel公式、图片中的OCR文本、音视频内容、Speaker Notes、动画时序或肉眼渲染一致性，这些仍需由数据门禁、OOXML门禁、视觉门禁和人工PowerPoint检查覆盖。
+指纹使用`ksib-pptx-semantic-fingerprint/3.2`与`ksib-pptx-semantic-compare/3.2`。语义优先绑定到唯一且明确的原生对象名称；没有唯一名称时回退到OOXML对象ID。这样既允许PowerPoint或兼容工具在无损保存时重排内部ID，又能阻断对象之间的文字、数字、颜色、字号和加粗关系被交换。格式专修必须先为受控对象赋予唯一角色名，不得用整页重建伪装成格式调整。字体是否冻结由`--font-policy preserve|allow`显式决定；颜色、填充、边框边侧、线宽、线型、端点和加粗是否冻结由`--style-policy preserve|allow`显式决定。只有用户授权字体归一化或按KSIB／MBB规范重新定样时，才能分别使用对应的`allow`；允许重新定样仍冻结文字、数字、页序、图表数据与对象内容绑定。它不验证缓存背后的Excel公式、图片中的OCR文本、音视频内容、Speaker Notes、动画时序或肉眼渲染一致性，这些仍需由数据门禁、OOXML门禁、视觉门禁和人工PowerPoint检查覆盖。
 
 格式专修执行OOXML兼容性归一化时必须使用`ooxml_sanitize.py --preserve-theme`。该模式保留主题色板，同时在slide、notes、表格单元格及关联Chart／Diagram的DrawingML文本中清理与段落默认色完全相同的冗余run颜色覆盖，并将段落默认加粗等价物化到字符run；语义指纹按最终有效文字颜色与加粗状态核对，因此允许存储方式清理，但任何实际视觉语义变化仍会阻断。新建Deck或用户已授权品牌归一化时才使用默认KSIB主题模式。
 
+任何format-only任务在Sanitizer或编辑器打开前，先用`prepare_revision.py`创建Source副本、Working副本和`ksib-pptx-revision/1.0`清单。后续写操作只能发生在Working副本或新的最终输出路径；用户原文件与Source副本不得被覆盖。
+
 ## 2. Release Manifest
 
-`build_release_manifest.mjs`输出`ksib-release-manifest/3.0`，为最终交付建立单一、可审计的发布记录。它收集：
+`build_release_manifest.mjs`输出`ksib-release-manifest/3.2`，为最终交付建立单一、可审计的发布记录。3.2要求format-only使用`ksib-pptx-semantic-compare/3.2`，把填充和边框结构纳入`stylePolicy`；同时保留3.1引入的`parentArtifactSha256`与Design Tokens哈希。既有3.0／3.1清单可作为历史记录保留，但新交付必须重新生成，不能把旧报告直接复用。它收集：
 
-- 输入PPTX、冻结Content、Evidence及最终PPTX的文件名、字节数和SHA256；
+- 输入PPTX、冻结Content、Evidence及最终PPTX的文件名、字节数和SHA256；输入同时记录为`parentArtifactSha256`，证明本次修订源自哪一个父版本；
 - Storyline Lock文件的SHA256、锁定状态和页数；
 - 每个Gate JSON的SHA256、`passed`、错误数、警告数、Schema版本及当前Validator SHA256；
 - Storyline包装器与上游MBB Storyline Validator的SHA256；
+- 当前Layout Matrix与`design-tokens.json`的SHA256；
 - 逐页Storyline ID、canonical／fallback Renderer合同和实际使用记录；
 - 人工PowerPoint检查人、检查时间、总状态和逐项状态；
 - 阻断原因和Manifest自身Hash。
@@ -104,6 +108,8 @@ python3 scripts/pptx_semantic_fingerprint.py compare \
 ```
 
 前9项为所有Deck必检；后4项由最终PPTX的原生对象清单自动触发：存在表格时必须提供`tableCellFormatUndo`，存在图表时必须同时提供`chartTextFormatUndo`和`chartDataEditUndo`，存在SmartArt时必须提供`smartArtTextFormatUndo`。不含对应对象时无需伪填。
+
+人工交互应在测试前与最终PPTX逐字节一致的`interaction`副本上完成，并在不保存的情况下关闭；这样检查记录仍可绑定最终文件的SHA256。另建`save-only`副本验证PowerPoint保存与重开，保存后必须重新运行Sanitizer、语义指纹、OOXML和视觉门禁。不得把已经执行并保存过临时交互改动的副本用作最终文件或无损往返证据。
 
 生成Release Manifest：
 
@@ -150,7 +156,7 @@ Release Manifest还会检查Gate本身的Schema与生成版本，不能用一个
 - `evidence`必须使用`ksib-evidence-gate/2.0`、为`mode: "full"`、包含`coverage`，并绑定当前Evidence、Content与Layout Matrix SHA256；
 - `content`必须使用`ksib-content-gate/2.0`、包含非空逐页`results[]`；`slide`必须唯一完整覆盖1..N，`storylineId`必须与锁定Storyline完全一致，每页解析到`provider`、`canonicalRenderer`和`editableNative: true`，并绑定当前Content与Layout Matrix SHA256；
 - `handoff`必须使用`ksib-storyline-handoff/2.0`、包含唯一完整且逐页一致的`semanticHashes[]`、`argumentTree.passed: true`，并绑定当前Storyline、Content与Layout Matrix SHA256；
-- `fingerprint`必须来自format-only语义比较脚本，并显式登记`fontPolicy`；
+- `fingerprint`必须来自format-only语义比较脚本，并显式登记`fontPolicy`与`stylePolicy`；
 - `ooxml`必须使用`ksib-ooxml-qa/2.0`，包含`reports[]`并显式登记主题与字体策略；字体报告应列出直接字体族与字号清单；
 - OOXML报告中的外部关系只保留协议与主机，必须删除路径、查询参数、片段和用户信息；日志或Manifest不得复制完整外链；
 - `visual`必须逐页全尺寸复核并满足下方合同。

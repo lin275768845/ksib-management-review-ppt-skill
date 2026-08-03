@@ -1,7 +1,7 @@
 {
   "packageName": "KSIB_PPT_Skill",
-  "packageVersion": "2026.07.23",
-  "generatedDate": "2026-07-23",
+  "packageVersion": "2026.07.31-v4.2",
+  "generatedDate": "2026-07-31",
   "distributionNotice": "DISTRIBUTION_NOTICE.md",
   "primarySkill": "ksib-management-review-ppt",
   "bundledSkills": [
@@ -32,10 +32,18 @@
     "Codex system Presentations skill",
     "@oai/artifact-tool runtime",
     "Microsoft PowerPoint",
-    "PingFang SC or Microsoft YaHei fonts"
+    "PingFang SC or Microsoft YaHei fonts",
+    "Optional open-source candidates documented in think-cell-open-source-landscape.md"
+  ],
+  "benchmarks": [
+    {
+      "name": "KSIB-MBB-FORMAT-6P-V1",
+      "path": "skills/ksib-management-review-ppt/benchmarks/format-golden-deck",
+      "role": "format-native-editability-regression"
+    }
   ],
   "validationBaseline": {
-    "automatedRegressionCount": 175,
+    "automatedRegressionCount": 228,
     "layoutMatrixVersion": 8,
     "layoutCount": 36,
     "proofShapeCount": 8

@@ -51,7 +51,7 @@ EDITABLE_TEXT_MEMBER_RE = re.compile(
     r"ppt/(?:"
     r"slides/slide\d+|"
     r"notesSlides/notesSlide\d+|"
-    r"charts/chart\d+|"
+    r"(?:charts|slides/charts)/chart\d+|"
     r"diagrams/(?:data|drawing)\d+"
     r")\.xml\Z"
 )
@@ -74,6 +74,8 @@ EDITABILITY_LOCK_ATTRIBUTES = {
     "noTextEdit",
 }
 KSIB_THEME_NAME = "KSIB Management Review Orange"
+KSIB_THEME_FONT_NAME = "KSIB Management Review Chinese"
+KSIB_PRIMARY_TYPEFACE = "PingFang SC"
 KSIB_THEME_COLORS = {
     "dk1": "1F2329",
     "lt1": "FFFFFF",
@@ -370,7 +372,7 @@ def normalize_slide_editability(
 
 
 def normalize_ksib_theme(xml_bytes: bytes, member_name: str) -> tuple[bytes, bool]:
-    """Rewrite one theme part to the approved KSIB color picker palette."""
+    """Rewrite one theme part to the approved KSIB color and font schemes."""
 
     parser = etree.XMLParser(remove_blank_text=False)
     try:
@@ -403,6 +405,88 @@ def normalize_ksib_theme(xml_bytes: bytes, member_name: str) -> tuple[bytes, boo
                 slot, etree.QName(DRAWING_NS, "srgbClr")
             )
             color_node.set("val", color)
+
+    font_schemes = root.xpath(
+        ".//a:themeElements/a:fontScheme",
+        namespaces=NS,
+    )
+    if len(font_schemes) > 1:
+        raise SanitizeError(
+            f"{member_name}: expected at most one a:fontScheme; "
+            f"found {len(font_schemes)}"
+        )
+    if font_schemes:
+        font_scheme = font_schemes[0]
+    else:
+        theme_elements = root.xpath(
+            ".//a:themeElements",
+            namespaces=NS,
+        )
+        if len(theme_elements) != 1:
+            raise SanitizeError(
+                f"{member_name}: expected one a:themeElements; "
+                f"found {len(theme_elements)}"
+            )
+        font_scheme = etree.Element(
+            etree.QName(DRAWING_NS, "fontScheme")
+        )
+        color_index = theme_elements[0].index(scheme)
+        theme_elements[0].insert(color_index + 1, font_scheme)
+        changed = True
+    if font_scheme.get("name") != KSIB_THEME_FONT_NAME:
+        font_scheme.set("name", KSIB_THEME_FONT_NAME)
+        changed = True
+    for family_name in ("majorFont", "minorFont"):
+        families = font_scheme.xpath(
+            f"./a:{family_name}",
+            namespaces=NS,
+        )
+        if len(families) > 1:
+            raise SanitizeError(
+                f"{member_name}: expected at most one a:{family_name}; "
+                f"found {len(families)}"
+            )
+        if families:
+            family = families[0]
+        else:
+            family = etree.Element(
+                etree.QName(DRAWING_NS, family_name)
+            )
+            if family_name == "majorFont":
+                font_scheme.insert(0, family)
+            else:
+                major_families = font_scheme.xpath(
+                    "./a:majorFont",
+                    namespaces=NS,
+                )
+                insertion_index = (
+                    font_scheme.index(major_families[0]) + 1
+                    if major_families
+                    else len(font_scheme)
+                )
+                font_scheme.insert(insertion_index, family)
+            changed = True
+        for slot_name in ("latin", "ea", "cs"):
+            slots = family.xpath(
+                f"./a:{slot_name}",
+                namespaces=NS,
+            )
+            if len(slots) > 1:
+                raise SanitizeError(
+                    f"{member_name}: expected at most one "
+                    f"a:{family_name}/a:{slot_name}; found {len(slots)}"
+                )
+            if slots:
+                slot = slots[0]
+            else:
+                slot = etree.SubElement(
+                    family,
+                    etree.QName(DRAWING_NS, slot_name),
+                )
+                changed = True
+            if slot.get("typeface") != KSIB_PRIMARY_TYPEFACE:
+                slot.set("typeface", KSIB_PRIMARY_TYPEFACE)
+                changed = True
 
     if not changed:
         return xml_bytes, False
