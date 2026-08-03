@@ -1,0 +1,27 @@
+{
+  "baseline": {
+    "archiveSha256": "bf446ccf5219032df1ea920a4cbe038277690671f5c5a74e3b3f2c75174462f5",
+    "overallHash": "f868a3903846a3c23a6754dacaa491071f055b98dcc81c3183f9a12c23cd2db8",
+    "slideCount": 6
+  },
+  "candidate": {
+    "archiveSha256": "3983fca5b21889d9925ee0211385bb2e90c0cef3f16074e3c285dc7ad5e2d6d2",
+    "overallHash": "9bb1809ba7516e659d8a9fdc363a1b7cff63dcde6c4ffc2e9db71d444ea4b102",
+    "slideCount": 6
+  },
+  "errorCount": 1,
+  "errors": [
+    {
+      "detail": "主题字体槽位或字体值发生变化",
+      "rule": "theme_font_semantics_drift"
+    }
+  ],
+  "fontPolicy": "preserve",
+  "mode": "format-only",
+  "passed": false,
+  "schemaVersion": "ksib-pptx-semantic-compare/3.2",
+  "stylePolicy": "preserve",
+  "validatorSha256": "c00ed689fd9fbcd7195bd2b8ed9bfcc6eb4de7e158ec42551c1ef49c4172d5b1",
+  "warningCount": 0,
+  "warnings": []
+}

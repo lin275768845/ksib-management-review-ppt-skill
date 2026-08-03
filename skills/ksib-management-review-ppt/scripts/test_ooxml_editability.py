@@ -19,7 +19,9 @@ if str(SCRIPT_DIR) not in sys.path:
 from ooxml_qa import audit
 from ooxml_sanitize import (
     KSIB_THEME_COLORS,
+    KSIB_THEME_FONT_NAME,
     KSIB_THEME_NAME,
+    KSIB_PRIMARY_TYPEFACE,
     _rewrite_package,
     normalize_ksib_theme,
     normalize_slide_editability,
@@ -35,9 +37,561 @@ P = "http://schemas.openxmlformats.org/presentationml/2006/main"
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 C = "http://schemas.openxmlformats.org/drawingml/2006/chart"
 DGM = "http://schemas.openxmlformats.org/drawingml/2006/diagram"
+R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+PKG_REL = "http://schemas.openxmlformats.org/package/2006/relationships"
+
+
+def write_semantic_fixture(
+    target: Path,
+    slide: bytes,
+    *,
+    slide_relationships: bytes | None = None,
+    extra_parts: dict[str, bytes] | None = None,
+) -> None:
+    presentation = f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:presentation xmlns:p="{P}" xmlns:r="{R}">
+  <p:sldIdLst><p:sldId id="256" r:id="rId1"/></p:sldIdLst>
+</p:presentation>""".encode()
+    presentation_relationships = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="{PKG_REL}">
+  <Relationship Id="rId1" Type="{R}/slide" Target="slides/slide1.xml"/>
+</Relationships>""".encode()
+    with zipfile.ZipFile(target, "w") as archive:
+        archive.writestr("ppt/presentation.xml", presentation)
+        archive.writestr(
+            "ppt/_rels/presentation.xml.rels",
+            presentation_relationships,
+        )
+        archive.writestr("ppt/slides/slide1.xml", slide)
+        if slide_relationships is not None:
+            archive.writestr(
+                "ppt/slides/_rels/slide1.xml.rels",
+                slide_relationships,
+            )
+        for part_name, payload in (extra_parts or {}).items():
+            archive.writestr(part_name, payload)
 
 
 class EditabilityNormalizationTest(unittest.TestCase):
+    def test_semantic_fingerprint_equates_missing_clr_map_override_with_master_mapping(self) -> None:
+        slide = f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sld xmlns:p="{P}"><p:cSld><p:spTree/></p:cSld></p:sld>""".encode()
+        slide_relationships = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="{PKG_REL}">
+  <Relationship Id="rIdLayout" Type="{R}/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>
+</Relationships>""".encode()
+        layout_relationships = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="{PKG_REL}">
+  <Relationship Id="rIdMaster" Type="{R}/slideMaster" Target="../slideMasters/slideMaster1.xml"/>
+</Relationships>""".encode()
+        master_relationships = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="{PKG_REL}">
+  <Relationship Id="rIdTheme" Type="{R}/theme" Target="../theme/theme1.xml"/>
+</Relationships>""".encode()
+        master = f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sldMaster xmlns:p="{P}">
+  <p:cSld/><p:clrMap accent1="accent1" tx1="dk1" bg1="lt1"/>
+</p:sldMaster>""".encode()
+        theme = f"""<?xml version="1.0" encoding="UTF-8"?>
+<a:theme xmlns:a="{A}" name="KSIB">
+  <a:themeElements>
+    <a:clrScheme name="KSIB"><a:dk1><a:srgbClr val="1F2329"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1><a:accent1><a:srgbClr val="FF4906"/></a:accent1></a:clrScheme>
+    <a:fontScheme name="KSIB"><a:majorFont><a:latin typeface="PingFang SC"/></a:majorFont><a:minorFont><a:latin typeface="PingFang SC"/></a:minorFont></a:fontScheme>
+  </a:themeElements>
+</a:theme>""".encode()
+
+        def layout(include_mapping: bool) -> bytes:
+            override = (
+                f'<p:clrMapOvr><a:masterClrMapping xmlns:a="{A}"/></p:clrMapOvr>'
+                if include_mapping
+                else ""
+            )
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sldLayout xmlns:p="{P}"><p:cSld/>{override}</p:sldLayout>""".encode()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            baseline_path = root / "missing-override.pptx"
+            candidate_path = root / "master-mapping.pptx"
+            common_parts = {
+                "ppt/slideLayouts/_rels/slideLayout1.xml.rels": layout_relationships,
+                "ppt/slideMasters/slideMaster1.xml": master,
+                "ppt/slideMasters/_rels/slideMaster1.xml.rels": master_relationships,
+                "ppt/theme/theme1.xml": theme,
+            }
+            for target, include_mapping in (
+                (baseline_path, False),
+                (candidate_path, True),
+            ):
+                write_semantic_fixture(
+                    target,
+                    slide,
+                    slide_relationships=slide_relationships,
+                    extra_parts={
+                        **common_parts,
+                        "ppt/slideLayouts/slideLayout1.xml": layout(
+                            include_mapping
+                        ),
+                    },
+                )
+            baseline = create_fingerprint(baseline_path)
+            candidate = create_fingerprint(candidate_path)
+            report = compare_fingerprints(
+                baseline,
+                candidate,
+                font_policy="preserve",
+            )
+
+        self.assertTrue(report["passed"])
+        self.assertIsNone(
+            baseline["slides"][0]["colorSemantics"]["inherited"][
+                "layoutColorMapOverride"
+            ]
+        )
+        self.assertIsNone(
+            candidate["slides"][0]["colorSemantics"]["inherited"][
+                "layoutColorMapOverride"
+            ]
+        )
+
+    def test_semantic_fingerprint_deduplicates_themes_but_blocks_office_font_drift(self) -> None:
+        slide = f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sld xmlns:p="{P}"><p:cSld><p:spTree/></p:cSld></p:sld>""".encode()
+        slide_relationships = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="{PKG_REL}">
+  <Relationship Id="rIdLayout" Type="{R}/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>
+</Relationships>""".encode()
+        active_theme_parts = {
+            "ppt/slideLayouts/slideLayout1.xml": (
+                f'<p:sldLayout xmlns:p="{P}"><p:cSld/></p:sldLayout>'
+            ).encode(),
+            "ppt/slideLayouts/_rels/slideLayout1.xml.rels": (
+                f'<Relationships xmlns="{PKG_REL}"><Relationship Id="rIdMaster" Type="{R}/slideMaster" Target="../slideMasters/slideMaster1.xml"/></Relationships>'
+            ).encode(),
+            "ppt/slideMasters/slideMaster1.xml": (
+                f'<p:sldMaster xmlns:p="{P}"><p:cSld/><p:clrMap accent1="accent1" tx1="dk1" bg1="lt1"/></p:sldMaster>'
+            ).encode(),
+            "ppt/slideMasters/_rels/slideMaster1.xml.rels": (
+                f'<Relationships xmlns="{PKG_REL}"><Relationship Id="rIdTheme" Type="{R}/theme" Target="../theme/theme1.xml"/></Relationships>'
+            ).encode(),
+        }
+
+        def theme(typeface: str, scheme_name: str) -> bytes:
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<a:theme xmlns:a="{A}" name="{scheme_name}">
+  <a:themeElements>
+    <a:clrScheme name="KSIB Colors">
+      <a:dk1><a:srgbClr val="1F2329"/></a:dk1>
+      <a:lt1><a:srgbClr val="FFFFFF"/></a:lt1>
+      <a:accent1><a:srgbClr val="FF4906"/></a:accent1>
+    </a:clrScheme>
+    <a:fontScheme name="{scheme_name}">
+      <a:majorFont><a:latin typeface="{typeface}"/><a:ea typeface="{typeface}"/><a:cs typeface="{typeface}"/></a:majorFont>
+      <a:minorFont><a:latin typeface="{typeface}"/><a:ea typeface="{typeface}"/><a:cs typeface="{typeface}"/></a:minorFont>
+    </a:fontScheme>
+  </a:themeElements>
+</a:theme>""".encode()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            baseline_path = root / "pingfang.pptx"
+            duplicate_path = root / "pingfang-duplicate.pptx"
+            office_path = root / "office-duplicate.pptx"
+            pingfang = theme("PingFang SC", "KSIB Chinese")
+            office = theme("Calibri", "Office")
+            write_semantic_fixture(
+                baseline_path,
+                slide,
+                slide_relationships=slide_relationships,
+                extra_parts={
+                    **active_theme_parts,
+                    "ppt/theme/theme1.xml": pingfang,
+                },
+            )
+            write_semantic_fixture(
+                duplicate_path,
+                slide,
+                slide_relationships=slide_relationships,
+                extra_parts={
+                    **active_theme_parts,
+                    "ppt/theme/theme1.xml": pingfang,
+                    "ppt/theme/theme2.xml": pingfang,
+                },
+            )
+            write_semantic_fixture(
+                office_path,
+                slide,
+                slide_relationships=slide_relationships,
+                extra_parts={
+                    **active_theme_parts,
+                    "ppt/theme/theme1.xml": office,
+                    "ppt/theme/theme2.xml": office,
+                },
+            )
+            baseline = create_fingerprint(baseline_path)
+            duplicate = create_fingerprint(duplicate_path)
+            office_candidate = create_fingerprint(office_path)
+            duplicate_report = compare_fingerprints(
+                baseline,
+                duplicate,
+                font_policy="preserve",
+            )
+            office_report = compare_fingerprints(
+                baseline,
+                office_candidate,
+                font_policy="preserve",
+            )
+
+        self.assertEqual(len(duplicate["themeColorSemantics"]), 1)
+        self.assertEqual(len(duplicate["themeFontSemantics"]), 1)
+        self.assertTrue(duplicate_report["passed"])
+        self.assertFalse(office_report["passed"])
+        office_rules = {item["rule"] for item in office_report["errors"]}
+        self.assertIn("theme_font_semantics_drift", office_rules)
+        self.assertNotIn("theme_color_semantics_drift", office_rules)
+
+    def test_semantic_fingerprint_matches_chart_by_type_ordinal_and_keeps_formula_strict(self) -> None:
+        def slide(relationship_id: str) -> bytes:
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sld xmlns:p="{P}" xmlns:a="{A}" xmlns:c="{C}" xmlns:r="{R}">
+  <p:cSld><p:spTree><p:graphicFrame>
+    <p:nvGraphicFramePr><p:cNvPr id="2" name="chart-main"/><p:cNvGraphicFramePr/><p:nvPr/></p:nvGraphicFramePr>
+    <a:xfrm/><a:graphic><a:graphicData uri="{C}"><c:chart r:id="{relationship_id}"/></a:graphicData></a:graphic>
+  </p:graphicFrame></p:spTree></p:cSld>
+</p:sld>""".encode()
+
+        def slide_relationships(
+            relationship_id: str,
+            target: str,
+        ) -> bytes:
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="{PKG_REL}">
+  <Relationship Id="{relationship_id}" Type="{R}/chart" Target="{target}"/>
+</Relationships>""".encode()
+
+        def chart(value_formula: str) -> bytes:
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<c:chartSpace xmlns:c="{C}">
+  <c:chart><c:plotArea><c:barChart><c:ser>
+    <c:idx val="0"/><c:order val="0"/>
+    <c:tx><c:strRef><c:f>Sheet1!$B$1</c:f><c:strCache><c:pt idx="0"><c:v>Series A</c:v></c:pt></c:strCache></c:strRef></c:tx>
+    <c:cat><c:strRef><c:f>Sheet1!$A$2:$A$3</c:f><c:strCache><c:pt idx="0"><c:v>Alpha</c:v></c:pt><c:pt idx="1"><c:v>Beta</c:v></c:pt></c:strCache></c:strRef></c:cat>
+    <c:val><c:numRef><c:f>{value_formula}</c:f><c:numCache><c:pt idx="0"><c:v>10</c:v></c:pt><c:pt idx="1"><c:v>20</c:v></c:pt></c:numCache></c:numRef></c:val>
+  </c:ser></c:barChart></c:plotArea></c:chart>
+</c:chartSpace>""".encode()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            baseline_path = root / "chart1.pptx"
+            relocated_path = root / "chart-relocated.pptx"
+            formula_drift_path = root / "chart-formula-drift.pptx"
+            write_semantic_fixture(
+                baseline_path,
+                slide("rIdChart1"),
+                slide_relationships=slide_relationships(
+                    "rIdChart1",
+                    "../charts/chart1.xml",
+                ),
+                extra_parts={
+                    "ppt/charts/chart1.xml": chart(
+                        "Sheet1!$B$2:$B$3"
+                    ),
+                },
+            )
+            write_semantic_fixture(
+                relocated_path,
+                slide("rId99"),
+                slide_relationships=slide_relationships(
+                    "rId99",
+                    "../charts/renamed99.xml",
+                ),
+                extra_parts={
+                    "ppt/charts/renamed99.xml": chart(
+                        "Sheet1!$B$2:$B$3"
+                    ),
+                },
+            )
+            write_semantic_fixture(
+                formula_drift_path,
+                slide("rId99"),
+                slide_relationships=slide_relationships(
+                    "rId99",
+                    "../charts/renamed99.xml",
+                ),
+                extra_parts={
+                    "ppt/charts/renamed99.xml": chart(
+                        "Sheet1!$C$2:$C$3"
+                    ),
+                },
+            )
+            baseline = create_fingerprint(baseline_path)
+            relocated = create_fingerprint(relocated_path)
+            formula_drift = create_fingerprint(formula_drift_path)
+            relocated_report = compare_fingerprints(
+                baseline,
+                relocated,
+                font_policy="preserve",
+            )
+            formula_report = compare_fingerprints(
+                baseline,
+                formula_drift,
+                font_policy="preserve",
+            )
+
+        self.assertEqual(
+            baseline["slides"][0]["objectContentSemantics"],
+            relocated["slides"][0]["objectContentSemantics"],
+        )
+        self.assertEqual(
+            baseline["slides"][0]["objectContentSemantics"][0][
+                "relatedParts"
+            ],
+            ["chart[1]"],
+        )
+        self.assertTrue(relocated_report["passed"])
+        self.assertFalse(formula_report["passed"])
+        formula_rules = {item["rule"] for item in formula_report["errors"]}
+        self.assertIn("slide_object_content_binding_drift", formula_rules)
+
+    def test_semantic_fingerprint_ignores_extensions_empty_text_defaults_and_line_defaults(self) -> None:
+        def slide(powerpoint_defaults: bool) -> bytes:
+            empty_paragraph = (
+                f"""<a:p><a:pPr><a:defRPr sz="4000"><a:latin typeface="Calibri"/><a:solidFill><a:srgbClr val="00FF00"/></a:solidFill></a:defRPr></a:pPr><a:endParaRPr sz="4000"/></a:p>"""
+                if powerpoint_defaults
+                else ""
+            )
+            line_attributes = (
+                ' cap="flat" cmpd="sng" algn="ctr"'
+                if powerpoint_defaults
+                else ""
+            )
+            line_defaults = (
+                """<a:prstDash val="solid"/><a:round/><a:headEnd type="none" w="med" len="med"/><a:tailEnd type="none" w="med" len="med"/>"""
+                if powerpoint_defaults
+                else ""
+            )
+            extension = (
+                f"""<a:extLst><a:ext uri="noise"><x:payload xmlns:x="urn:test"><a:solidFill><a:srgbClr val="00FF00"/></a:solidFill><a:p><a:r><a:rPr sz="4000"/><a:t>extension noise</a:t></a:r></a:p></x:payload></a:ext></a:extLst>"""
+                if powerpoint_defaults
+                else ""
+            )
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sld xmlns:p="{P}" xmlns:a="{A}">
+  <p:cSld><p:spTree><p:sp>
+    <p:nvSpPr><p:cNvPr id="2" name="default-noise"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+    <p:spPr><a:ln w="12700"{line_attributes}><a:solidFill><a:srgbClr val="AEB2BA"/></a:solidFill>{line_defaults}</a:ln>{extension}</p:spPr>
+    <p:txBody><a:bodyPr/><a:lstStyle/>{empty_paragraph}<a:p>
+      <a:r><a:rPr sz="1400" b="0"><a:latin typeface="PingFang SC"/><a:solidFill><a:srgbClr val="1F2329"/></a:solidFill></a:rPr><a:t>可见文字</a:t></a:r>
+    </a:p></p:txBody>
+  </p:sp></p:spTree></p:cSld>
+</p:sld>""".encode()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            baseline_path = root / "minimal.pptx"
+            candidate_path = root / "powerpoint-defaults.pptx"
+            write_semantic_fixture(baseline_path, slide(False))
+            write_semantic_fixture(candidate_path, slide(True))
+            report = compare_fingerprints(
+                create_fingerprint(baseline_path),
+                create_fingerprint(candidate_path),
+                font_policy="preserve",
+            )
+
+        self.assertTrue(report["passed"])
+
+    def test_semantic_fingerprint_canonicalizes_shared_table_edges_but_detects_missing_orange(self) -> None:
+        no_line = "<a:noFill/>"
+        orange = (
+            '<a:solidFill><a:srgbClr val="FF4906"/></a:solidFill>'
+        )
+
+        def line(side: str, payload: str) -> str:
+            width = ' w="14288"' if payload == orange else ""
+            return f"<a:{side}{width}>{payload}</a:{side}>"
+
+        def table_slide(upper_bottom: str, lower_top: str) -> bytes:
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sld xmlns:p="{P}" xmlns:a="{A}">
+  <p:cSld><p:spTree><p:graphicFrame>
+    <p:nvGraphicFramePr><p:cNvPr id="2" name="table-main"/><p:cNvGraphicFramePr/><p:nvPr/></p:nvGraphicFramePr>
+    <a:xfrm/><a:graphic><a:graphicData uri="table"><a:tbl>
+      <a:tblGrid><a:gridCol w="2000000"/></a:tblGrid>
+      <a:tr h="400000"><a:tc><a:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:t>上行</a:t></a:r></a:p></a:txBody><a:tcPr>{line("lnB", upper_bottom)}</a:tcPr></a:tc></a:tr>
+      <a:tr h="400000"><a:tc><a:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:t>下行</a:t></a:r></a:p></a:txBody><a:tcPr>{line("lnT", lower_top)}</a:tcPr></a:tc></a:tr>
+    </a:tbl></a:graphicData></a:graphic>
+  </p:graphicFrame></p:spTree></p:cSld>
+</p:sld>""".encode()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            baseline_path = root / "upper-owned.pptx"
+            transferred_path = root / "lower-owned.pptx"
+            lost_path = root / "lost.pptx"
+            write_semantic_fixture(
+                baseline_path,
+                table_slide(orange, no_line),
+            )
+            write_semantic_fixture(
+                transferred_path,
+                table_slide(no_line, orange),
+            )
+            write_semantic_fixture(
+                lost_path,
+                table_slide(no_line, no_line),
+            )
+            baseline = create_fingerprint(baseline_path)
+            transferred_report = compare_fingerprints(
+                baseline,
+                create_fingerprint(transferred_path),
+                font_policy="preserve",
+            )
+            lost_report = compare_fingerprints(
+                baseline,
+                create_fingerprint(lost_path),
+                font_policy="preserve",
+            )
+
+        self.assertTrue(transferred_report["passed"])
+        self.assertFalse(lost_report["passed"])
+        lost_rules = {item["rule"] for item in lost_report["errors"]}
+        self.assertIn("slide_object_graphic_style_binding_drift", lost_rules)
+        self.assertIn("slide_object_color_binding_drift", lost_rules)
+
+    def test_semantic_fingerprint_merges_only_adjacent_runs_with_same_effective_style(self) -> None:
+        def run(
+            text: str,
+            *,
+            typeface: str = "PingFang SC",
+            size: str = "1400",
+            bold: str = "1",
+            color: str = "1F2329",
+        ) -> str:
+            return f"""<a:r><a:rPr sz="{size}" b="{bold}"><a:latin typeface="{typeface}"/><a:ea typeface="{typeface}"/><a:cs typeface="{typeface}"/><a:solidFill><a:srgbClr val="{color}"/></a:solidFill></a:rPr><a:t>{text}</a:t></a:r>"""
+
+        def slide(runs: str) -> bytes:
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sld xmlns:p="{P}" xmlns:a="{A}">
+  <p:cSld><p:spTree><p:sp>
+    <p:nvSpPr><p:cNvPr id="2" name="run-body"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+    <p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p>{runs}</a:p></p:txBody>
+  </p:sp></p:spTree></p:cSld>
+</p:sld>""".encode()
+
+        baseline_runs = (
+            run("资源需求｜")
+            + run("2")
+            + run("个角色", bold="0")
+        )
+        merged_runs = run("资源需求｜2") + run("个角色", bold="0")
+        mutations = {
+            "font": (
+                run("资源需求｜")
+                + run("2", typeface="Calibri")
+                + run("个角色", bold="0"),
+                "slide_font_semantics_drift",
+            ),
+            "size": (
+                run("资源需求｜")
+                + run("2", size="1600")
+                + run("个角色", bold="0"),
+                "slide_font_semantics_drift",
+            ),
+            "bold": (
+                run("资源需求｜")
+                + run("2", bold="0")
+                + run("个角色", bold="0"),
+                "slide_object_text_style_binding_drift",
+            ),
+            "color": (
+                run("资源需求｜")
+                + run("2", color="FF4906")
+                + run("个角色", bold="0"),
+                "slide_object_color_binding_drift",
+            ),
+        }
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            baseline_path = root / "split.pptx"
+            merged_path = root / "merged.pptx"
+            write_semantic_fixture(baseline_path, slide(baseline_runs))
+            write_semantic_fixture(merged_path, slide(merged_runs))
+            baseline = create_fingerprint(baseline_path)
+            merged_report = compare_fingerprints(
+                baseline,
+                create_fingerprint(merged_path),
+                font_policy="preserve",
+            )
+            mutation_reports: dict[str, tuple[dict[str, object], str]] = {}
+            for name, (payload, expected_rule) in mutations.items():
+                candidate_path = root / f"{name}.pptx"
+                write_semantic_fixture(candidate_path, slide(payload))
+                mutation_reports[name] = (
+                    compare_fingerprints(
+                        baseline,
+                        create_fingerprint(candidate_path),
+                        font_policy="preserve",
+                    ),
+                    expected_rule,
+                )
+
+        self.assertTrue(merged_report["passed"])
+        for name, (report, expected_rule) in mutation_reports.items():
+            with self.subTest(property=name):
+                self.assertFalse(report["passed"])
+                rules = {item["rule"] for item in report["errors"]}
+                self.assertIn(expected_rule, rules)
+                if name in {"bold", "color"}:
+                    self.assertNotIn("slide_font_semantics_drift", rules)
+                    self.assertNotIn(
+                        "slide_object_font_binding_drift",
+                        rules,
+                    )
+
+    def test_semantic_fingerprint_uses_unique_object_name_before_internal_id(self) -> None:
+        presentation = f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:presentation xmlns:p="{P}" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <p:sldIdLst><p:sldId id="256" r:id="rId1"/></p:sldIdLst>
+</p:presentation>""".encode()
+        relationships = b"""<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide1.xml"/>
+</Relationships>"""
+
+        def slide(object_id: int) -> bytes:
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sld xmlns:p="{P}" xmlns:a="{A}">
+  <p:cSld><p:spTree><p:sp>
+    <p:nvSpPr><p:cNvPr id="{object_id}" name="action-title"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+    <p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p>
+      <a:r><a:rPr b="1"><a:solidFill><a:srgbClr val="1F2329"/></a:solidFill></a:rPr><a:t>结论保持不变</a:t></a:r>
+    </a:p></p:txBody>
+  </p:sp></p:spTree></p:cSld>
+</p:sld>""".encode()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            baseline_path = Path(temporary_directory) / "baseline.pptx"
+            candidate_path = Path(temporary_directory) / "candidate.pptx"
+            for target, object_id in ((baseline_path, 2), (candidate_path, 27)):
+                with zipfile.ZipFile(target, "w") as archive:
+                    archive.writestr("ppt/presentation.xml", presentation)
+                    archive.writestr("ppt/_rels/presentation.xml.rels", relationships)
+                    archive.writestr("ppt/slides/slide1.xml", slide(object_id))
+            baseline = create_fingerprint(baseline_path)
+            candidate = create_fingerprint(candidate_path)
+            report = compare_fingerprints(
+                baseline,
+                candidate,
+                font_policy="preserve",
+            )
+
+        self.assertTrue(report["passed"])
+        self.assertEqual(
+            baseline["slides"][0]["objectContentSemantics"][0]["objectKey"],
+            "name:action-title",
+        )
+
     def test_semantic_fingerprint_binds_text_and_color_to_native_objects(self) -> None:
         presentation = f"""<?xml version="1.0" encoding="UTF-8"?>
 <p:presentation xmlns:p="{P}" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
@@ -134,6 +688,11 @@ class EditabilityNormalizationTest(unittest.TestCase):
             baseline = create_fingerprint(baseline_path)
             candidate = create_fingerprint(candidate_path)
             report = compare_fingerprints(baseline, candidate)
+            restyled = compare_fingerprints(
+                baseline,
+                candidate,
+                style_policy="allow",
+            )
 
         self.assertEqual(
             baseline["slides"][0]["textInventory"],
@@ -150,6 +709,8 @@ class EditabilityNormalizationTest(unittest.TestCase):
         self.assertFalse(report["passed"])
         rules = {item["rule"] for item in report["errors"]}
         self.assertIn("slide_object_color_binding_drift", rules)
+        self.assertTrue(restyled["passed"])
+        self.assertEqual(restyled["stylePolicy"], "allow")
 
     def test_semantic_fingerprint_binds_text_to_effective_bold(self) -> None:
         presentation = f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -187,10 +748,74 @@ class EditabilityNormalizationTest(unittest.TestCase):
             baseline = create_fingerprint(baseline_path)
             candidate = create_fingerprint(candidate_path)
             report = compare_fingerprints(baseline, candidate)
+            restyled = compare_fingerprints(
+                baseline,
+                candidate,
+                style_policy="allow",
+            )
 
         self.assertFalse(report["passed"])
         rules = {item["rule"] for item in report["errors"]}
         self.assertIn("slide_object_text_style_binding_drift", rules)
+        self.assertTrue(restyled["passed"])
+
+    def test_semantic_fingerprint_binds_border_width_and_dash(self) -> None:
+        presentation = f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:presentation xmlns:p="{P}" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <p:sldIdLst><p:sldId id="256" r:id="rId1"/></p:sldIdLst>
+</p:presentation>""".encode()
+        relationships = b"""<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide1.xml"/>
+</Relationships>"""
+
+        def slide(width: str, dash: str) -> bytes:
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
+<p:sld xmlns:p="{P}" xmlns:a="{A}">
+  <p:cSld><p:spTree><p:sp>
+    <p:nvSpPr><p:cNvPr id="2" name="bordered-shape"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+    <p:spPr>
+      <a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill>
+      <a:ln w="{width}">
+        <a:solidFill><a:srgbClr val="AEB2BA"/></a:solidFill>
+        <a:prstDash val="{dash}"/>
+      </a:ln>
+    </p:spPr>
+  </p:sp></p:spTree></p:cSld>
+</p:sld>""".encode()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            baseline_path = Path(temporary_directory) / "baseline.pptx"
+            candidate_path = Path(temporary_directory) / "candidate.pptx"
+            for target, slide_payload in (
+                (baseline_path, slide("12700", "solid")),
+                (candidate_path, slide("25400", "dash")),
+            ):
+                with zipfile.ZipFile(target, "w") as archive:
+                    archive.writestr("ppt/presentation.xml", presentation)
+                    archive.writestr("ppt/_rels/presentation.xml.rels", relationships)
+                    archive.writestr("ppt/slides/slide1.xml", slide_payload)
+            baseline = create_fingerprint(baseline_path)
+            candidate = create_fingerprint(candidate_path)
+            report = compare_fingerprints(baseline, candidate)
+            restyled = compare_fingerprints(
+                baseline,
+                candidate,
+                style_policy="allow",
+            )
+
+        self.assertEqual(
+            baseline["slides"][0]["colorSemantics"],
+            candidate["slides"][0]["colorSemantics"],
+        )
+        self.assertNotEqual(
+            baseline["slides"][0]["objectGraphicStyleSemantics"],
+            candidate["slides"][0]["objectGraphicStyleSemantics"],
+        )
+        self.assertFalse(report["passed"])
+        rules = {item["rule"] for item in report["errors"]}
+        self.assertIn("slide_object_graphic_style_binding_drift", rules)
+        self.assertTrue(restyled["passed"])
 
     def test_semantic_fingerprint_binds_chart_data_to_series_and_points(self) -> None:
         presentation = f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -800,9 +1425,26 @@ class EditabilityNormalizationTest(unittest.TestCase):
         root = etree.fromstring(payload)
         ns = {"a": A}
         scheme = root.xpath(".//a:clrScheme", namespaces=ns)[0]
+        font_scheme = root.xpath(".//a:fontScheme", namespaces=ns)[0]
 
         self.assertTrue(changed)
         self.assertEqual(scheme.get("name"), KSIB_THEME_NAME)
+        self.assertEqual(
+            font_scheme.get("name"),
+            KSIB_THEME_FONT_NAME,
+        )
+        self.assertEqual(
+            font_scheme.xpath(
+                "./a:majorFont/a:latin/@typeface | "
+                "./a:majorFont/a:ea/@typeface | "
+                "./a:majorFont/a:cs/@typeface | "
+                "./a:minorFont/a:latin/@typeface | "
+                "./a:minorFont/a:ea/@typeface | "
+                "./a:minorFont/a:cs/@typeface",
+                namespaces=ns,
+            ),
+            [KSIB_PRIMARY_TYPEFACE] * 6,
+        )
         for slot, expected in KSIB_THEME_COLORS.items():
             actual = scheme.xpath(
                 f"./a:{slot}/a:srgbClr/@val", namespaces=ns

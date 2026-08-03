@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "ksib-visual-review/2.0",
+  "validatorSha256": "abc0b8eb09dfdc46120f84a84b5b69ad634c7406fdb30895f8909f78511ee62d",
+  "passed": true,
+  "errorCount": 0,
+  "warningCount": 0,
+  "slideCount": 6,
+  "reviewedSlideCount": 6,
+  "reviewedBy": "Codex",
+  "reviewedAt": "2026-07-31T17:42:31+08:00",
+  "checks": {
+    "fullSizeReview": true,
+    "noOverlap": true,
+    "noClipping": true,
+    "noUnexpectedWrap": true,
+    "footerAndPageNumber": true,
+    "chartDataAndSources": true
+  },
+  "pptx": {
+    "fileName": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.roundtrip.pptx",
+    "sha256": "02392caee6e5a52f0fbcb53e224b4d9b6bb49d8fd87e8407c62e1d9cb4e16efe",
+    "slideCount": 6,
+    "widthEmu": 12192000,
+    "heightEmu": 6858000
+  },
+  "renderSetHash": "794ebcd081101e9dc18617a02aba40f722e3a5b81ab3eac32a81b83a2caa7237",
+  "slides": [
+    {
+      "slide": 1,
+      "renderFile": "slide-1.png",
+      "bytes": 87360,
+      "sha256": "412a80a946f83d03d84f4ad41bc4c54ff5a4472cd97e2e105d03c21acabecc37",
+      "pixelSha256": "05a96f1fc20cea506c986074eba843553dc304d489f61c083ac07d7a111ec60d",
+      "width": 1600,
+      "height": 900,
+      "passed": true,
+      "notes": "回读封面与基线一致。"
+    },
+    {
+      "slide": 2,
+      "renderFile": "slide-2.png",
+      "bytes": 102164,
+      "sha256": "05d99888d5b188b0ac5309801e36992826102dfbc88dfc8a9e600b54a21fa719",
+      "pixelSha256": "d358d893dabf8c09d25428a9fafa4f1f668df60e104ec70498136e5064805061",
+      "width": 1600,
+      "height": 900,
+      "passed": true,
+      "notes": "回读图表、直接标注及固定页眉／页脚一致。"
+    },
+    {
+      "slide": 3,
+      "renderFile": "slide-3.png",
+      "bytes": 123923,
+      "sha256": "01dfa23af3524233a737b6d42354af5e72032c70036956238aac1cf4feeb276c",
+      "pixelSha256": "74999fcf3032514501c6519089daffc9605355fa03128112087090646fffa6bb",
+      "width": 1600,
+      "height": 900,
+      "passed": true,
+      "notes": "回读表格、独立橙色合计线及固定页眉／页脚一致。"
+    },
+    {
+      "slide": 4,
+      "renderFile": "slide-4.png",
+      "bytes": 121818,
+      "sha256": "ac7cd5ba1ece4b41f747da89f841147d73f0847247dec7c7ccf53d625cfe0eee",
+      "pixelSha256": "10308fbe50b6053c3f55f52e84e39b89589be12005248638ab7c4aa72ed82cc4",
+      "width": 1600,
+      "height": 900,
+      "passed": true,
+      "notes": "回读左右比较页及固定页眉／页脚一致。"
+    },
+    {
+      "slide": 5,
+      "renderFile": "slide-5.png",
+      "bytes": 111813,
+      "sha256": "78a104ef35597e5cd358ac8e643870a37590cdc2c867cca575b019f7c011d673",
+      "pixelSha256": "8ff004f352a40949fae251e26cfa14e424b500f82fc58d90865da89b542faf6a",
+      "width": 1600,
+      "height": 900,
+      "passed": true,
+      "notes": "回读流程节点、连接器及固定页眉／页脚一致。"
+    },
+    {
+      "slide": 6,
+      "renderFile": "slide-6.png",
+      "bytes": 147827,
+      "sha256": "bcb1f13f9d0dd7bd082cbc552cd1fa74c1ad40473b08dbbf1aff76aa5c4bfb2c",
+      "pixelSha256": "0173d6969b6c51b81c8a35663512153c49dc9015e985609aea6970e782c60754",
+      "width": 1600,
+      "height": 900,
+      "passed": true,
+      "notes": "回读附录表及固定页眉／页脚一致。"
+    }
+  ],
+  "errors": [],
+  "warnings": []
+}

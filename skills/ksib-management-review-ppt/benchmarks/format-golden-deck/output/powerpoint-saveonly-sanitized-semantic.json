@@ -1,0 +1,22 @@
+{
+  "baseline": {
+    "archiveSha256": "bf446ccf5219032df1ea920a4cbe038277690671f5c5a74e3b3f2c75174462f5",
+    "overallHash": "f868a3903846a3c23a6754dacaa491071f055b98dcc81c3183f9a12c23cd2db8",
+    "slideCount": 6
+  },
+  "candidate": {
+    "archiveSha256": "c0741f13302fdf5e8d30aec3e754dc30984ace623f4c1001f90a0bf2bbc29dac",
+    "overallHash": "f868a3903846a3c23a6754dacaa491071f055b98dcc81c3183f9a12c23cd2db8",
+    "slideCount": 6
+  },
+  "errorCount": 0,
+  "errors": [],
+  "fontPolicy": "preserve",
+  "mode": "format-only",
+  "passed": true,
+  "schemaVersion": "ksib-pptx-semantic-compare/3.2",
+  "stylePolicy": "preserve",
+  "validatorSha256": "c00ed689fd9fbcd7195bd2b8ed9bfcc6eb4de7e158ec42551c1ef49c4172d5b1",
+  "warningCount": 0,
+  "warnings": []
+}

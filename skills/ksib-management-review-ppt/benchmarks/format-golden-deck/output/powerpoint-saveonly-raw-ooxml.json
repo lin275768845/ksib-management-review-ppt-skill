@@ -1,0 +1,550 @@
+{
+  "schemaVersion": "ksib-ooxml-qa/2.0",
+  "validatorSha256": "b70aec2bf0c85b5b73176d41a1b9919aa4d6a32d630470ed553ef14fa30ad1d3",
+  "themePolicy": "ksib",
+  "fontPolicy": "ksib",
+  "formatContract": {
+    "file": "golden-deck-format-contract.json",
+    "sha256": "b89786b9645302d9f39a27f46d90787b2d861eda7dd2629da42561017751be1e"
+  },
+  "passed": false,
+  "errorCount": 14,
+  "warningCount": 0,
+  "errors": [
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_font_scheme_name",
+      "part": "ppt/theme/theme1.xml",
+      "actual": "Office",
+      "expected": "KSIB Management Review Chinese"
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme1.xml",
+      "slot": "majorFont.latin",
+      "actual": "Calibri Light",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme1.xml",
+      "slot": "majorFont.ea",
+      "actual": "Calibri Light",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme1.xml",
+      "slot": "majorFont.cs",
+      "actual": "Calibri Light",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme1.xml",
+      "slot": "minorFont.latin",
+      "actual": "Calibri",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme1.xml",
+      "slot": "minorFont.ea",
+      "actual": "Calibri",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme1.xml",
+      "slot": "minorFont.cs",
+      "actual": "Calibri",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_font_scheme_name",
+      "part": "ppt/theme/theme2.xml",
+      "actual": "Office",
+      "expected": "KSIB Management Review Chinese"
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme2.xml",
+      "slot": "majorFont.latin",
+      "actual": "Calibri Light",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme2.xml",
+      "slot": "majorFont.ea",
+      "actual": "Calibri Light",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme2.xml",
+      "slot": "majorFont.cs",
+      "actual": "Calibri Light",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme2.xml",
+      "slot": "minorFont.latin",
+      "actual": "Calibri",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme2.xml",
+      "slot": "minorFont.ea",
+      "actual": "Calibri",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    },
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "kind": "unapproved_theme_typeface",
+      "part": "ppt/theme/theme2.xml",
+      "slot": "minorFont.cs",
+      "actual": "Calibri",
+      "approvedTypefaces": [
+        "Microsoft YaHei",
+        "PingFang SC",
+        "苹方-简"
+      ]
+    }
+  ],
+  "warnings": [],
+  "reports": [
+    {
+      "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.powerpoint-saveonly.pptx",
+      "sha256": "3983fca5b21889d9925ee0211385bb2e90c0cef3f16074e3c285dc7ad5e2d6d2",
+      "errors": [
+        {
+          "kind": "unapproved_theme_font_scheme_name",
+          "part": "ppt/theme/theme1.xml",
+          "actual": "Office",
+          "expected": "KSIB Management Review Chinese"
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme1.xml",
+          "slot": "majorFont.latin",
+          "actual": "Calibri Light",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme1.xml",
+          "slot": "majorFont.ea",
+          "actual": "Calibri Light",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme1.xml",
+          "slot": "majorFont.cs",
+          "actual": "Calibri Light",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme1.xml",
+          "slot": "minorFont.latin",
+          "actual": "Calibri",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme1.xml",
+          "slot": "minorFont.ea",
+          "actual": "Calibri",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme1.xml",
+          "slot": "minorFont.cs",
+          "actual": "Calibri",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_font_scheme_name",
+          "part": "ppt/theme/theme2.xml",
+          "actual": "Office",
+          "expected": "KSIB Management Review Chinese"
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme2.xml",
+          "slot": "majorFont.latin",
+          "actual": "Calibri Light",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme2.xml",
+          "slot": "majorFont.ea",
+          "actual": "Calibri Light",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme2.xml",
+          "slot": "majorFont.cs",
+          "actual": "Calibri Light",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme2.xml",
+          "slot": "minorFont.latin",
+          "actual": "Calibri",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme2.xml",
+          "slot": "minorFont.ea",
+          "actual": "Calibri",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        },
+        {
+          "kind": "unapproved_theme_typeface",
+          "part": "ppt/theme/theme2.xml",
+          "slot": "minorFont.cs",
+          "actual": "Calibri",
+          "approvedTypefaces": [
+            "Microsoft YaHei",
+            "PingFang SC",
+            "苹方-简"
+          ]
+        }
+      ],
+      "warnings": [],
+      "inventory": {
+        "mediaCount": 0,
+        "mediaParts": [],
+        "embeddedCount": 0,
+        "externalRelationshipCount": 0,
+        "externalRelationships": [],
+        "directTypefacesByPart": {
+          "ppt/slides/slide1.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide2.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide3.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide4.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide5.xml": [
+            "PingFang SC"
+          ],
+          "ppt/slides/slide6.xml": [
+            "PingFang SC"
+          ]
+        },
+        "directPointSizesByPart": {
+          "ppt/slides/slide1.xml": [
+            12.0,
+            14.0,
+            16.0,
+            24.0,
+            44.0
+          ],
+          "ppt/slides/slide2.xml": [
+            9.0,
+            10.0,
+            14.0,
+            22.0,
+            24.0
+          ],
+          "ppt/slides/slide3.xml": [
+            9.0,
+            10.0,
+            12.0,
+            14.0,
+            22.0
+          ],
+          "ppt/slides/slide4.xml": [
+            9.0,
+            10.0,
+            14.0,
+            22.0
+          ],
+          "ppt/slides/slide5.xml": [
+            9.0,
+            10.0,
+            12.0,
+            14.0,
+            22.0
+          ],
+          "ppt/slides/slide6.xml": [
+            9.0,
+            10.0,
+            12.0,
+            22.0
+          ]
+        },
+        "themeTypefacesByPart": {
+          "ppt/theme/theme1.xml": {
+            "majorFont.latin": "Calibri Light",
+            "majorFont.ea": "Calibri Light",
+            "majorFont.cs": "Calibri Light",
+            "minorFont.latin": "Calibri",
+            "minorFont.ea": "Calibri",
+            "minorFont.cs": "Calibri"
+          },
+          "ppt/theme/theme2.xml": {
+            "majorFont.latin": "Calibri Light",
+            "majorFont.ea": "Calibri Light",
+            "majorFont.cs": "Calibri Light",
+            "minorFont.latin": "Calibri",
+            "minorFont.ea": "Calibri",
+            "minorFont.cs": "Calibri"
+          }
+        },
+        "chartDataByPart": [
+          {
+            "part": "ppt/charts/chart1.xml",
+            "mode": "nativeLiteral",
+            "embeddedTargets": [],
+            "hasExternalData": false,
+            "hasLiteralData": true,
+            "hasReferenceData": false
+          }
+        ],
+        "formatContractSha256": "b89786b9645302d9f39a27f46d90787b2d861eda7dd2629da42561017751be1e",
+        "formatContractSlides": [
+          {
+            "slide": 1,
+            "part": "ppt/slides/slide1.xml",
+            "slideRole": "cover",
+            "headerMode": "none",
+            "nativeObjectCounts": {
+              "shapes": 1,
+              "textBoxes": 5
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": []
+          },
+          {
+            "slide": 2,
+            "part": "ppt/slides/slide2.xml",
+            "slideRole": "content",
+            "headerMode": "title-subtitle",
+            "nativeObjectCounts": {
+              "charts": 1,
+              "shapes": 2,
+              "textBoxes": 10
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title",
+              "subtitle"
+            ]
+          },
+          {
+            "slide": 3,
+            "part": "ppt/slides/slide3.xml",
+            "slideRole": "content",
+            "headerMode": "title-only",
+            "nativeObjectCounts": {
+              "shapes": 4,
+              "tables": 1,
+              "textBoxes": 5
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title"
+            ]
+          },
+          {
+            "slide": 4,
+            "part": "ppt/slides/slide4.xml",
+            "slideRole": "content",
+            "headerMode": "title-only",
+            "nativeObjectCounts": {
+              "shapes": 3,
+              "textBoxes": 6
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title"
+            ]
+          },
+          {
+            "slide": 5,
+            "part": "ppt/slides/slide5.xml",
+            "slideRole": "content",
+            "headerMode": "title-two-line",
+            "nativeObjectCounts": {
+              "connectors": 4,
+              "shapes": 2,
+              "textBoxes": 9
+            },
+            "connectorEditability": {
+              "count": 4,
+              "attachedBothEnds": 4,
+              "withArrowhead": 4
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title"
+            ]
+          },
+          {
+            "slide": 6,
+            "part": "ppt/slides/slide6.xml",
+            "slideRole": "appendix",
+            "headerMode": "title-only",
+            "nativeObjectCounts": {
+              "shapes": 2,
+              "tables": 1,
+              "textBoxes": 5
+            },
+            "connectorEditability": {
+              "count": 0,
+              "attachedBothEnds": 0,
+              "withArrowhead": 0
+            },
+            "slideNumberFieldCount": 0,
+            "fullSlidePictureCount": 0,
+            "hierarchyRolesPresent": [
+              "action-title"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

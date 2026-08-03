@@ -21,7 +21,8 @@ from typing import Any, Iterable
 from xml.etree import ElementTree as ET
 
 
-SCHEMA_VERSION = "ksib-pptx-semantic-fingerprint/3.0"
+SCHEMA_VERSION = "ksib-pptx-semantic-fingerprint/3.2"
+COMPARE_SCHEMA_VERSION = "ksib-pptx-semantic-compare/3.2"
 P_NS = "http://schemas.openxmlformats.org/presentationml/2006/main"
 A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
 R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -38,9 +39,36 @@ DIRECT_COLOR_TAGS = COLOR_TAGS - {"schemeClr"}
 TYPEFACE_TAGS = {"latin", "ea", "cs", "font"}
 FONT_PROPERTY_TAGS = {"rPr", "defRPr", "endParaRPr"}
 TEXT_CONTEXT = {"rPr", "defRPr", "endParaRPr", "fontRef"}
-LINE_CONTEXT = {"ln", "lnRef"}
+LINE_CONTEXT = {
+    "ln",
+    "lnL",
+    "lnR",
+    "lnT",
+    "lnB",
+    "lnTlToBr",
+    "lnBlToTr",
+    "lnRef",
+}
 BACKGROUND_CONTEXT = {"bgPr", "bgRef"}
 EFFECT_CONTEXT = {"effectLst", "effectDag", "effectRef", "outerShdw", "innerShdw", "glow"}
+GRAPHIC_LINE_TAGS = {
+    "ln",
+    "lnL",
+    "lnR",
+    "lnT",
+    "lnB",
+    "lnTlToBr",
+    "lnBlToTr",
+    "lnRef",
+}
+GRAPHIC_FILL_TAGS = {
+    "solidFill",
+    "noFill",
+    "gradFill",
+    "pattFill",
+    "blipFill",
+    "grpFill",
+}
 
 NUMBER_RE = re.compile(
     r"(?:R\$|BRL|US\$|USD|CNY|[¥￥€$])?\s*"
@@ -85,6 +113,26 @@ def normalize_text(value: str) -> str:
 def normalize_number(value: str) -> str:
     normalized = unicodedata.normalize("NFKC", value).replace("−", "-")
     return re.sub(r"\s+", "", normalized)
+
+
+def semantic_children(node: ET.Element) -> list[ET.Element]:
+    """Return children that can affect visible/editable presentation semantics."""
+    if local_name(node.tag) == "extLst":
+        return []
+    return [
+        child
+        for child in list(node)
+        if local_name(child.tag) != "extLst"
+    ]
+
+
+def iter_semantic(node: ET.Element) -> Iterable[ET.Element]:
+    """Iterate an OOXML subtree while excluding application extension payloads."""
+    if local_name(node.tag) == "extLst":
+        return
+    yield node
+    for child in semantic_children(node):
+        yield from iter_semantic(child)
 
 
 def resolve_part(source_part: str, target: str) -> str:
@@ -165,8 +213,16 @@ def slide_parts_in_order(package: zipfile.ZipFile) -> list[str]:
 
 def extract_paragraphs(root: ET.Element) -> list[str]:
     paragraphs: list[str] = []
-    for paragraph in root.iter(f"{{{A_NS}}}p"):
-        value = "".join(node.text or "" for node in paragraph.iter(f"{{{A_NS}}}t"))
+    for paragraph in (
+        node
+        for node in iter_semantic(root)
+        if node.tag == f"{{{A_NS}}}p"
+    ):
+        value = "".join(
+            node.text or ""
+            for node in iter_semantic(paragraph)
+            if node.tag == f"{{{A_NS}}}t"
+        )
         normalized = normalize_text(value)
         if normalized:
             paragraphs.append(normalized)
@@ -182,7 +238,7 @@ def extract_numbers(paragraphs: Iterable[str]) -> list[str]:
 
 def extract_related_data_values(root: ET.Element) -> list[str]:
     values: list[str] = []
-    for node in root.iter():
+    for node in iter_semantic(root):
         if local_name(node.tag) != "v":
             continue
         normalized = normalize_text(node.text or "")
@@ -236,6 +292,8 @@ def extract_related_data_bindings(
 
     def visit(node: ET.Element, path: tuple[str, ...]) -> None:
         tag = local_name(node.tag)
+        if tag == "extLst":
+            return
         if tag in {"v", "f", "t"}:
             value = normalize_text(node.text or "")
             if value:
@@ -246,7 +304,7 @@ def extract_related_data_bindings(
                     "value": value,
                 })
         child_ordinals: collections.Counter[str] = collections.Counter()
-        for child in list(node):
+        for child in semantic_children(node):
             child_tag = local_name(child.tag)
             ordinal = child_ordinals[child_tag]
             child_ordinals[child_tag] += 1
@@ -289,7 +347,7 @@ def color_value(node: ET.Element) -> str:
 
 def color_transforms(node: ET.Element) -> list[dict[str, Any]]:
     transforms: list[dict[str, Any]] = []
-    for child in list(node):
+    for child in semantic_children(node):
         transforms.append(
             {
                 "name": local_name(child.tag),
@@ -304,6 +362,14 @@ def collect_colors(root: ET.Element) -> dict[str, list[dict[str, Any]]]:
 
     def visit(node: ET.Element, ancestors: list[str]) -> None:
         tag = local_name(node.tag)
+        if tag == "extLst":
+            return
+        if (
+            tag in GRAPHIC_LINE_TAGS
+            and "tbl" in ancestors
+            and "tcPr" in ancestors
+        ):
+            return
         if tag in COLOR_TAGS:
             item = {
                 "role": color_role(ancestors),
@@ -313,10 +379,53 @@ def collect_colors(root: ET.Element) -> dict[str, list[dict[str, Any]]]:
                 "transforms": color_transforms(node),
             }
             counter[canonical_json(item)] += 1
-        for child in list(node):
+        for child in semantic_children(node):
             visit(child, [*ancestors, tag])
 
     visit(root, [])
+    for record in table_border_style_records(root):
+        def visit_style(style: dict[str, Any], ancestors: list[str]) -> None:
+            tag = style["tag"]
+            if tag in COLOR_TAGS:
+                attributes = style["attributes"]
+                if tag == "sysClr":
+                    value = (
+                        attributes.get("lastClr")
+                        or attributes.get("val")
+                        or ""
+                    )
+                elif tag == "scrgbClr":
+                    value = ",".join(
+                        attributes.get(key, "")
+                        for key in ("r", "g", "b")
+                    )
+                elif tag == "hslClr":
+                    value = ",".join(
+                        attributes.get(key, "")
+                        for key in ("hue", "sat", "lum")
+                    )
+                else:
+                    value = attributes.get("val", "")
+                counter[canonical_json({
+                    "role": "line",
+                    "kind": (
+                        "theme" if tag == "schemeClr" else "direct"
+                    ),
+                    "type": tag,
+                    "value": value,
+                    "transforms": [
+                        {
+                            "name": child["tag"],
+                            "attributes": child["attributes"],
+                        }
+                        for child in style["children"]
+                    ],
+                })] += 1
+                return
+            for child in style["children"]:
+                visit_style(child, [*ancestors, tag])
+
+        visit_style(record["style"], [])
     direct: list[dict[str, Any]] = []
     theme: list[dict[str, Any]] = []
     for encoded, count in sorted(counter.items()):
@@ -331,21 +440,19 @@ def collect_fonts(root: ET.Element) -> list[dict[str, Any]]:
 
     def visit(node: ET.Element, ancestors: list[str]) -> None:
         tag = local_name(node.tag)
-        if tag in TYPEFACE_TAGS and node.get("typeface"):
+        if tag == "extLst":
+            return
+        if (
+            tag in TYPEFACE_TAGS
+            and node.get("typeface")
+            and not set(ancestors) & FONT_PROPERTY_TAGS
+        ):
             item = {
                 "kind": "typeface",
                 "role": color_role(ancestors),
                 "tag": tag,
                 "typeface": node.get("typeface"),
                 "script": node.get("script"),
-            }
-            counter[canonical_json(item)] += 1
-        if tag in FONT_PROPERTY_TAGS and node.get("sz"):
-            item = {
-                "kind": "size",
-                "role": color_role([*ancestors, tag]),
-                "tag": tag,
-                "value": node.get("sz"),
             }
             counter[canonical_json(item)] += 1
         if tag == "fontRef" and node.get("idx"):
@@ -355,10 +462,36 @@ def collect_fonts(root: ET.Element) -> list[dict[str, Any]]:
                 "value": node.get("idx"),
             }
             counter[canonical_json(item)] += 1
-        for child in list(node):
+        for child in semantic_children(node):
             visit(child, [*ancestors, tag])
 
     visit(root, [])
+    for paragraph_segments in effective_text_segments(root):
+        previous_font_style: dict[str, Any] | None = None
+        for segment in paragraph_segments:
+            style = segment["style"]
+            font_style = {
+                "size": style["size"],
+                "typefaces": style["typefaces"],
+            }
+            if font_style == previous_font_style:
+                continue
+            previous_font_style = font_style
+            if font_style["size"] is not None:
+                counter[canonical_json({
+                    "kind": "size",
+                    "role": "text",
+                    "tag": "rPr",
+                    "value": font_style["size"],
+                })] += 1
+            for typeface in font_style["typefaces"]:
+                counter[canonical_json({
+                    "kind": "typeface",
+                    "role": "text",
+                    "tag": typeface["tag"],
+                    "typeface": typeface["typeface"],
+                    "script": typeface["script"],
+                })] += 1
     output: list[dict[str, Any]] = []
     for encoded, count in sorted(counter.items()):
         item = json.loads(encoded)
@@ -416,28 +549,312 @@ def visible_color_semantics(
     }
 
 
-def object_identity(node: ET.Element, fallback_index: int) -> dict[str, str]:
-    for candidate in node.iter():
+def normalized_style_subtree(node: ET.Element) -> dict[str, Any]:
+    """Serialize one line or fill subtree without unstable relationship IDs."""
+    tag = local_name(node.tag)
+    children = semantic_children(node)
+    if (
+        tag in GRAPHIC_LINE_TAGS
+        and any(local_name(child.tag) == "noFill" for child in children)
+    ):
+        return {
+            "tag": tag,
+            "attributes": {},
+            "children": [{
+                "tag": "noFill",
+                "attributes": {},
+                "children": [],
+            }],
+        }
+    attributes = {
+        local_name(attribute): value
+        for attribute, value in sorted(node.attrib.items())
+        if not attribute.startswith(f"{{{R_NS}}}")
+    }
+    if tag in GRAPHIC_LINE_TAGS:
+        for attribute, default in (
+            ("cap", "flat"),
+            ("cmpd", "sng"),
+            ("algn", "ctr"),
+        ):
+            if attributes.get(attribute) == default:
+                attributes.pop(attribute)
+        children = [
+            child
+            for child in children
+            if not (
+                (
+                    local_name(child.tag) == "prstDash"
+                    and child.get("val") == "solid"
+                )
+                or local_name(child.tag) == "round"
+                or (
+                    local_name(child.tag) in {"headEnd", "tailEnd"}
+                    and (child.get("type") in {None, "none"})
+                    and (child.get("w") in {None, "med"})
+                    and (child.get("len") in {None, "med"})
+                )
+            )
+        ]
+    return {
+        "tag": tag,
+        "attributes": attributes,
+        "children": [
+            normalized_style_subtree(child)
+            for child in children
+        ],
+    }
+
+
+def canonical_line_style(node: ET.Element | None) -> dict[str, Any]:
+    if node is None:
+        return {
+            "tag": "ln",
+            "attributes": {},
+            "children": [{
+                "tag": "noFill",
+                "attributes": {},
+                "children": [],
+            }],
+        }
+    style = normalized_style_subtree(node)
+    style["tag"] = "ln"
+    return style
+
+
+def line_style_is_visible(style: dict[str, Any]) -> bool:
+    return not (
+        len(style.get("children", [])) == 1
+        and style["children"][0].get("tag") == "noFill"
+    )
+
+
+def merge_shared_line_styles(
+    first: ET.Element | None,
+    second: ET.Element | None,
+) -> dict[str, Any]:
+    """Merge the two cell-owned representations of one physical table edge."""
+    visible_by_encoding: dict[str, dict[str, Any]] = {}
+    for node in (first, second):
+        style = canonical_line_style(node)
+        if line_style_is_visible(style):
+            visible_by_encoding[canonical_json(style)] = style
+    if not visible_by_encoding:
+        return canonical_line_style(None)
+    if len(visible_by_encoding) == 1:
+        return next(iter(visible_by_encoding.values()))
+    return {
+        "tag": "lnConflict",
+        "attributes": {},
+        "children": [
+            visible_by_encoding[encoded]
+            for encoded in sorted(visible_by_encoding)
+        ],
+    }
+
+
+def cell_border(
+    cell: ET.Element | None,
+    side: str,
+) -> ET.Element | None:
+    if cell is None:
+        return None
+    properties = first_direct_child(cell, "tcPr")
+    if properties is None:
+        return None
+    return first_direct_child(properties, side)
+
+
+def table_border_style_records(root: ET.Element) -> list[dict[str, Any]]:
+    """Canonicalize cell-owned borders into physical table grid edges."""
+    records: list[dict[str, Any]] = []
+    tables = [
+        node
+        for node in iter_semantic(root)
+        if local_name(node.tag) == "tbl"
+    ]
+    for table_index, table in enumerate(tables):
+        rows = [
+            child
+            for child in semantic_children(table)
+            if local_name(child.tag) == "tr"
+        ]
+        cells = [
+            [
+                child
+                for child in semantic_children(row)
+                if local_name(child.tag) == "tc"
+            ]
+            for row in rows
+        ]
+        column_count = max((len(row) for row in cells), default=0)
+        for boundary in range(len(cells) + 1):
+            for column in range(column_count):
+                above = (
+                    cells[boundary - 1][column]
+                    if boundary > 0 and column < len(cells[boundary - 1])
+                    else None
+                )
+                below = (
+                    cells[boundary][column]
+                    if boundary < len(cells) and column < len(cells[boundary])
+                    else None
+                )
+                style = merge_shared_line_styles(
+                    cell_border(above, "lnB"),
+                    cell_border(below, "lnT"),
+                )
+                if line_style_is_visible(style):
+                    records.append({
+                        "path": (
+                            f"table[{table_index}]/horizontal[{boundary}]"
+                            f"/segment[{column}]"
+                        ),
+                        "style": style,
+                    })
+        for row_index, row in enumerate(cells):
+            for boundary in range(len(row) + 1):
+                left = row[boundary - 1] if boundary > 0 else None
+                right = row[boundary] if boundary < len(row) else None
+                style = merge_shared_line_styles(
+                    cell_border(left, "lnR"),
+                    cell_border(right, "lnL"),
+                )
+                if line_style_is_visible(style):
+                    records.append({
+                        "path": (
+                            f"table[{table_index}]/vertical[{boundary}]"
+                            f"/segment[{row_index}]"
+                        ),
+                        "style": style,
+                    })
+            for column, cell in enumerate(row):
+                for diagonal in ("lnTlToBr", "lnBlToTr"):
+                    style = canonical_line_style(
+                        cell_border(cell, diagonal)
+                    )
+                    if line_style_is_visible(style):
+                        records.append({
+                            "path": (
+                                f"table[{table_index}]/cell[{row_index},"
+                                f"{column}]/{diagonal}"
+                            ),
+                            "style": style,
+                        })
+    return sorted(records, key=canonical_json)
+
+
+def collect_graphic_styles(root: ET.Element) -> list[dict[str, Any]]:
+    """Bind fill and border side, width, dash and endpoint semantics to paths."""
+    styles: list[dict[str, Any]] = []
+    target_tags = GRAPHIC_LINE_TAGS | GRAPHIC_FILL_TAGS
+
+    def visit(
+        node: ET.Element,
+        path: tuple[str, ...],
+        ancestors: tuple[str, ...],
+    ) -> None:
+        tag = local_name(node.tag)
+        if tag == "extLst":
+            return
+        is_text_fill = (
+            tag in GRAPHIC_FILL_TAGS
+            and bool(set(ancestors) & TEXT_CONTEXT)
+        )
+        is_table_cell_line = (
+            tag in GRAPHIC_LINE_TAGS
+            and "tbl" in ancestors
+            and "tcPr" in ancestors
+        )
+        if is_table_cell_line:
+            return
+        is_default_chart_label_style = (
+            bool({"dLbl", "dLbls"} & set(ancestors))
+            and "spPr" in ancestors
+            and (
+                tag == "noFill"
+                or (
+                    tag in GRAPHIC_LINE_TAGS
+                    and not line_style_is_visible(
+                        normalized_style_subtree(node)
+                    )
+                )
+            )
+        )
+        if is_default_chart_label_style:
+            return
+        if tag in target_tags and not is_text_fill:
+            styles.append({
+                "path": "/".join(path),
+                "style": normalized_style_subtree(node),
+            })
+            return
+        child_ordinals: collections.Counter[str] = collections.Counter()
+        for child in semantic_children(node):
+            child_tag = local_name(child.tag)
+            ordinal = child_ordinals[child_tag]
+            child_ordinals[child_tag] += 1
+            visit(
+                child,
+                (*path, f"{child_tag}[{ordinal}]"),
+                (*ancestors, tag),
+            )
+
+    visit(root, (f"{local_name(root.tag)}[0]",), ())
+    styles.extend(table_border_style_records(root))
+    return sorted(styles, key=canonical_json)
+
+
+def object_identity(
+    node: ET.Element,
+    fallback_index: int,
+    object_name_counts: collections.Counter[str],
+) -> dict[str, str]:
+    """Return a stable semantic identity for one native slide object.
+
+    PowerPoint editors may legitimately renumber ``cNvPr/@id`` values during a
+    lossless save. A unique, explicit object name is therefore the preferred
+    semantic key. Duplicate or missing names fall back to the OOXML object ID,
+    preserving the stricter behavior for decks that have not adopted role
+    naming.
+    """
+    for candidate in iter_semantic(node):
         if local_name(candidate.tag) == "cNvPr":
             object_id = candidate.get("id")
+            object_name = normalize_text(candidate.get("name") or "")
+            if object_name and object_name_counts[object_name] == 1:
+                return {
+                    "objectKey": f"name:{object_name}",
+                    "objectType": local_name(node.tag),
+                }
             if object_id:
                 return {
-                    "objectId": object_id,
+                    "objectKey": f"id:{object_id}",
                     "objectType": local_name(node.tag),
                 }
     return {
-        "objectId": f"anonymous-{fallback_index}",
+        "objectKey": f"anonymous:{fallback_index}",
         "objectType": local_name(node.tag),
     }
 
 
 def object_relationship_ids(node: ET.Element) -> list[str]:
-    values: set[str] = set()
-    for candidate in node.iter():
+    values: list[str] = []
+    seen: set[str] = set()
+    for candidate in iter_semantic(node):
         for attribute, relationship_id in candidate.attrib.items():
-            if attribute.startswith(f"{{{R_NS}}}") and relationship_id:
-                values.add(relationship_id)
-    return sorted(values)
+            if (
+                attribute.startswith(f"{{{R_NS}}}")
+                and relationship_id
+                and relationship_id not in seen
+            ):
+                seen.add(relationship_id)
+                values.append(relationship_id)
+    return values
+
+
+def relationship_semantic_type(relationship_type: str) -> str:
+    return relationship_type.rsplit("/", 1)[-1] or "relatedPart"
 
 
 def first_direct_child(node: ET.Element, tag_name: str) -> ET.Element | None:
@@ -448,7 +865,7 @@ def first_direct_child(node: ET.Element, tag_name: str) -> ET.Element | None:
 
 
 def object_default_text_color(node: ET.Element) -> dict[str, Any] | None:
-    for candidate in node.iter():
+    for candidate in iter_semantic(node):
         if local_name(candidate.tag) == "fontRef":
             color = first_color_spec(candidate)
             if color is not None:
@@ -456,20 +873,43 @@ def object_default_text_color(node: ET.Element) -> dict[str, Any] | None:
     return None
 
 
-def extract_text_color_bindings(node: ET.Element) -> list[dict[str, Any]]:
-    """Preserve ordered visible-text to effective-color bindings in one object."""
+def direct_typeface_semantics(
+    properties: ET.Element | None,
+) -> dict[tuple[str, str | None], dict[str, Any]]:
+    if properties is None:
+        return {}
+    output: dict[tuple[str, str | None], dict[str, Any]] = {}
+    for child in semantic_children(properties):
+        tag = local_name(child.tag)
+        if tag not in TYPEFACE_TAGS or not child.get("typeface"):
+            continue
+        script = child.get("script")
+        output[(tag, script)] = {
+            "tag": tag,
+            "typeface": child.get("typeface"),
+            "script": script,
+        }
+    return output
+
+
+def effective_text_segments(
+    node: ET.Element,
+) -> list[list[dict[str, Any]]]:
+    """Return visible text merged across adjacent runs with one effective style."""
     object_default = object_default_text_color(node)
-    bindings: list[dict[str, Any]] = []
-    for paragraph_index, paragraph in enumerate(
-        node.iter(f"{{{A_NS}}}p"),
-        start=1,
-    ):
+    output: list[list[dict[str, Any]]] = []
+    paragraphs = [
+        candidate
+        for candidate in iter_semantic(node)
+        if candidate.tag == f"{{{A_NS}}}p"
+    ]
+    for paragraph in paragraphs:
         paragraph_properties = first_direct_child(paragraph, "pPr")
         default_run_properties = (
             next(
                 (
                     candidate
-                    for candidate in paragraph_properties.iter()
+                    for candidate in iter_semantic(paragraph_properties)
                     if local_name(candidate.tag) == "defRPr"
                 ),
                 None,
@@ -482,13 +922,32 @@ def extract_text_color_bindings(node: ET.Element) -> list[dict[str, Any]]:
             if default_run_properties is not None
             else None
         )
+        paragraph_bold = normalized_boolean_property(
+            default_run_properties.get("b")
+            if default_run_properties is not None
+            else None
+        )
+        paragraph_size = (
+            default_run_properties.get("sz")
+            if default_run_properties is not None
+            else None
+        )
+        paragraph_typefaces = direct_typeface_semantics(
+            default_run_properties
+        )
         raw_segments: list[dict[str, Any]] = []
         for child in list(paragraph):
-            if local_name(child.tag) not in {"r", "fld"}:
+            child_tag = local_name(child.tag)
+            if child_tag == "extLst":
+                continue
+            if child_tag not in {"r", "fld"}:
+                if child_tag not in {"pPr", "endParaRPr"}:
+                    raw_segments.append({"break": True})
                 continue
             text = "".join(
                 candidate.text or ""
-                for candidate in child.iter(f"{{{A_NS}}}t")
+                for candidate in iter_semantic(child)
+                if candidate.tag == f"{{{A_NS}}}t"
             )
             if not text:
                 continue
@@ -498,19 +957,73 @@ def extract_text_color_bindings(node: ET.Element) -> list[dict[str, Any]]:
                 if run_properties is not None
                 else None
             )
-            effective_color = run_color or paragraph_default or object_default
+            run_bold = normalized_boolean_property(
+                run_properties.get("b")
+                if run_properties is not None
+                else None
+            )
+            run_size = (
+                run_properties.get("sz")
+                if run_properties is not None
+                else None
+            )
+            effective_typefaces = dict(paragraph_typefaces)
+            effective_typefaces.update(
+                direct_typeface_semantics(run_properties)
+            )
+            style = {
+                "color": run_color or paragraph_default or object_default,
+                "bold": (
+                    run_bold
+                    if run_bold is not None
+                    else paragraph_bold
+                ),
+                "size": run_size or paragraph_size,
+                "typefaces": sorted(
+                    effective_typefaces.values(),
+                    key=canonical_json,
+                ),
+            }
             if (
                 raw_segments
-                and raw_segments[-1]["color"] == effective_color
+                and "style" in raw_segments[-1]
+                and raw_segments[-1]["style"] == style
             ):
                 raw_segments[-1]["text"] += text
             else:
                 raw_segments.append({
                     "text": text,
-                    "color": effective_color,
+                    "style": style,
+                })
+        visible_segments = [
+            segment
+            for segment in raw_segments
+            if "style" in segment and normalize_text(segment["text"])
+        ]
+        if visible_segments:
+            output.append(visible_segments)
+    return output
+
+
+def extract_text_color_bindings(node: ET.Element) -> list[dict[str, Any]]:
+    """Preserve ordered visible-text to effective-color bindings in one object."""
+    bindings: list[dict[str, Any]] = []
+    for paragraph_index, raw_segments in enumerate(
+        effective_text_segments(node),
+        start=1,
+    ):
+        color_segments: list[dict[str, Any]] = []
+        for segment in raw_segments:
+            color = segment["style"]["color"]
+            if color_segments and color_segments[-1]["color"] == color:
+                color_segments[-1]["text"] += segment["text"]
+            else:
+                color_segments.append({
+                    "text": segment["text"],
+                    "color": color,
                 })
         segment_index = 0
-        for segment in raw_segments:
+        for segment in color_segments:
             text = normalize_text(segment["text"])
             if not text:
                 continue
@@ -533,56 +1046,22 @@ def normalized_boolean_property(value: str | None) -> str | None:
 def extract_text_bold_bindings(node: ET.Element) -> list[dict[str, Any]]:
     """Preserve ordered visible-text to effective bold bindings in one object."""
     bindings: list[dict[str, Any]] = []
-    for paragraph_index, paragraph in enumerate(
-        node.iter(f"{{{A_NS}}}p"),
+    for paragraph_index, raw_segments in enumerate(
+        effective_text_segments(node),
         start=1,
     ):
-        paragraph_properties = first_direct_child(paragraph, "pPr")
-        default_run_properties = (
-            next(
-                (
-                    candidate
-                    for candidate in paragraph_properties.iter()
-                    if local_name(candidate.tag) == "defRPr"
-                ),
-                None,
-            )
-            if paragraph_properties is not None
-            else None
-        )
-        paragraph_default = normalized_boolean_property(
-            default_run_properties.get("b")
-            if default_run_properties is not None
-            else None
-        )
-        raw_segments: list[dict[str, Any]] = []
-        for child in list(paragraph):
-            if local_name(child.tag) not in {"r", "fld"}:
-                continue
-            text = "".join(
-                candidate.text or ""
-                for candidate in child.iter(f"{{{A_NS}}}t")
-            )
-            if not text:
-                continue
-            run_properties = first_direct_child(child, "rPr")
-            run_bold = normalized_boolean_property(
-                run_properties.get("b")
-                if run_properties is not None
-                else None
-            )
-            effective_bold = (
-                run_bold if run_bold is not None else paragraph_default
-            )
-            if raw_segments and raw_segments[-1]["bold"] == effective_bold:
-                raw_segments[-1]["text"] += text
+        bold_segments: list[dict[str, Any]] = []
+        for segment in raw_segments:
+            bold = segment["style"]["bold"]
+            if bold_segments and bold_segments[-1]["bold"] == bold:
+                bold_segments[-1]["text"] += segment["text"]
             else:
-                raw_segments.append({
-                    "text": text,
-                    "bold": effective_bold,
+                bold_segments.append({
+                    "text": segment["text"],
+                    "bold": bold,
                 })
         segment_index = 0
-        for segment in raw_segments:
+        for segment in bold_segments:
             text = normalize_text(segment["text"])
             if not text:
                 continue
@@ -606,15 +1085,26 @@ def semantic_object_inventories(
     color_items: list[dict[str, Any]] = []
     font_items: list[dict[str, Any]] = []
     text_style_items: list[dict[str, Any]] = []
+    graphic_style_items: list[dict[str, Any]] = []
     objects = [
         node
-        for node in root.iter()
+        for node in iter_semantic(root)
         if local_name(node.tag) in SEMANTIC_OBJECT_TAGS
     ]
+    object_name_counts: collections.Counter[str] = collections.Counter()
+    for node in objects:
+        for candidate in iter_semantic(node):
+            if local_name(candidate.tag) != "cNvPr":
+                continue
+            object_name = normalize_text(candidate.get("name") or "")
+            if object_name:
+                object_name_counts[object_name] += 1
+            break
     for index, node in enumerate(objects, start=1):
-        identity = object_identity(node, index)
+        identity = object_identity(node, index, object_name_counts)
         related_parts: list[str] = []
         related_roots: list[ET.Element] = []
+        related_type_counts: collections.Counter[str] = collections.Counter()
         for relationship_id in object_relationship_ids(node):
             relationship = relationships.get(relationship_id)
             if (
@@ -626,7 +1116,13 @@ def semantic_object_inventories(
                 or not relationship["target"].endswith(".xml")
             ):
                 continue
-            related_parts.append(relationship["target"])
+            relationship_type = relationship_semantic_type(
+                relationship["type"]
+            )
+            related_type_counts[relationship_type] += 1
+            related_parts.append(
+                f"{relationship_type}[{related_type_counts[relationship_type]}]"
+            )
             related_roots.append(read_xml(package, relationship["target"]))
         paragraphs = extract_paragraphs(node)
         related_data_values = sorted(
@@ -714,17 +1210,44 @@ def semantic_object_inventories(
                 "textBoldBindings": text_bold_bindings,
                 "relatedTextBoldBindings": related_text_bold_bindings,
             })
-    sort_key = lambda item: (item["objectId"], item["objectType"])
+        graphic_styles = [
+            {
+                "part": slide_part,
+                "styles": collect_graphic_styles(node),
+            },
+            *[
+                {
+                    "part": related_part,
+                    "styles": collect_graphic_styles(related_root),
+                }
+                for related_part, related_root in zip(
+                    related_parts,
+                    related_roots,
+                )
+            ],
+        ]
+        graphic_styles = [
+            item
+            for item in graphic_styles
+            if item["styles"]
+        ]
+        if graphic_styles:
+            graphic_style_items.append({
+                **identity,
+                "graphicStyles": graphic_styles,
+            })
+    sort_key = lambda item: (item["objectKey"], item["objectType"])
     return {
         "content": sorted(content_items, key=sort_key),
         "colors": sorted(color_items, key=sort_key),
         "fonts": sorted(font_items, key=sort_key),
         "textStyles": sorted(text_style_items, key=sort_key),
+        "graphicStyles": sorted(graphic_style_items, key=sort_key),
     }
 
 
 def first_color_spec(node: ET.Element) -> dict[str, Any] | None:
-    for candidate in node.iter():
+    for candidate in iter_semantic(node):
         tag = local_name(candidate.tag)
         if tag in COLOR_TAGS:
             return {
@@ -752,7 +1275,7 @@ def theme_font_scheme_from_root(root: ET.Element) -> dict[str, Any]:
     if scheme is None:
         return {"schemeName": "", "entries": []}
     entries: list[dict[str, Any]] = []
-    for node in scheme.iter():
+    for node in iter_semantic(scheme):
         tag = local_name(node.tag)
         if tag not in TYPEFACE_TAGS:
             continue
@@ -800,10 +1323,16 @@ def inherited_slide_color_semantics(
         override = layout_root.find(f".//{{{P_NS}}}clrMapOvr")
         if override is not None and list(override):
             mapping = list(override)[0]
-            layout_override = {
-                "type": local_name(mapping.tag),
-                "attributes": dict(sorted(mapping.attrib.items())),
-            }
+            mapping_type = local_name(mapping.tag)
+            mapping_attributes = dict(sorted(mapping.attrib.items()))
+            if not (
+                mapping_type == "masterClrMapping"
+                and not mapping_attributes
+            ):
+                layout_override = {
+                    "type": mapping_type,
+                    "attributes": mapping_attributes,
+                }
     return {
         "theme": theme,
         "masterColorMap": master_color_map,
@@ -830,8 +1359,20 @@ def extract_theme_semantics(
         })
         semantic_schemes.append(semantics)
         font_schemes.append(font_semantics)
-    semantic_schemes.sort(key=canonical_json)
-    font_schemes.sort(key=canonical_json)
+    semantic_schemes = [
+        json.loads(encoded)
+        for encoded in sorted({
+            canonical_json(semantics)
+            for semantics in semantic_schemes
+        })
+    ]
+    font_schemes = [
+        json.loads(encoded)
+        for encoded in sorted({
+            canonical_json(semantics)
+            for semantics in font_schemes
+        })
+    ]
     return theme_parts, semantic_schemes, font_schemes
 
 
@@ -885,6 +1426,7 @@ def build_slide(
         "objectColorSemantics": object_inventories["colors"],
         "objectFontSemantics": object_inventories["fonts"],
         "objectTextStyleSemantics": object_inventories["textStyles"],
+        "objectGraphicStyleSemantics": object_inventories["graphicStyles"],
     }
     return {
         "position": position,
@@ -900,6 +1442,7 @@ def build_slide(
         "objectColorSemantics": object_inventories["colors"],
         "objectFontSemantics": object_inventories["fonts"],
         "objectTextStyleSemantics": object_inventories["textStyles"],
+        "objectGraphicStyleSemantics": object_inventories["graphicStyles"],
         "contentKey": semantic_hash(content_payload),
         "semanticHash": semantic_hash(semantic_payload),
     }
@@ -934,6 +1477,8 @@ def create_fingerprint(pptx_path: Path) -> dict[str, Any]:
                 "objectContentSemantics": slide["objectContentSemantics"],
                 "objectColorSemantics": slide["objectColorSemantics"],
                 "objectFontSemantics": slide["objectFontSemantics"],
+                "objectTextStyleSemantics": slide["objectTextStyleSemantics"],
+                "objectGraphicStyleSemantics": slide["objectGraphicStyleSemantics"],
             }
             for slide in slides
         ],
@@ -972,6 +1517,7 @@ def compare_fingerprints(
     baseline: dict[str, Any],
     candidate: dict[str, Any],
     font_policy: str = "allow",
+    style_policy: str = "preserve",
 ) -> dict[str, Any]:
     if baseline.get("schemaVersion") != SCHEMA_VERSION:
         raise FingerprintError(f"Unsupported baseline schema: {baseline.get('schemaVersion')}")
@@ -1036,7 +1582,10 @@ def compare_fingerprints(
                 "文字、数字、图表缓存数据或系列／点级关系在原生对象内外发生交换或重绑定",
                 **location,
             )
-        if baseline_slide["colorSemantics"] != candidate_slide["colorSemantics"]:
+        if (
+            style_policy == "preserve"
+            and baseline_slide["colorSemantics"] != candidate_slide["colorSemantics"]
+        ):
             add_error(
                 errors,
                 "slide_color_semantics_drift",
@@ -1044,7 +1593,8 @@ def compare_fingerprints(
                 **location,
             )
         if (
-            baseline_slide.get("objectColorSemantics", [])
+            style_policy == "preserve"
+            and baseline_slide.get("objectColorSemantics", [])
             != candidate_slide.get("objectColorSemantics", [])
         ):
             add_error(
@@ -1075,7 +1625,8 @@ def compare_fingerprints(
                 **location,
             )
         if (
-            baseline_slide.get("objectTextStyleSemantics", [])
+            style_policy == "preserve"
+            and baseline_slide.get("objectTextStyleSemantics", [])
             != candidate_slide.get("objectTextStyleSemantics", [])
         ):
             add_error(
@@ -1084,8 +1635,22 @@ def compare_fingerprints(
                 "加粗状态与可见文字在原生对象内外发生交换或重绑定",
                 **location,
             )
+        if (
+            style_policy == "preserve"
+            and baseline_slide.get("objectGraphicStyleSemantics", [])
+            != candidate_slide.get("objectGraphicStyleSemantics", [])
+        ):
+            add_error(
+                errors,
+                "slide_object_graphic_style_binding_drift",
+                "填充或边框的边侧、线宽、线型、端点或颜色语义发生变化",
+                **location,
+            )
 
-    if baseline.get("themeColorSemantics") != candidate.get("themeColorSemantics"):
+    if (
+        style_policy == "preserve"
+        and baseline.get("themeColorSemantics") != candidate.get("themeColorSemantics")
+    ):
         add_error(errors, "theme_color_semantics_drift", "主题色槽位或主题色值发生变化")
     if (
         font_policy == "preserve"
@@ -1102,10 +1667,11 @@ def compare_fingerprints(
         )
 
     return {
-        "schemaVersion": "ksib-pptx-semantic-compare/3.0",
+        "schemaVersion": COMPARE_SCHEMA_VERSION,
         "validatorSha256": sha256_file(Path(__file__).resolve()),
         "mode": "format-only",
         "fontPolicy": font_policy,
+        "stylePolicy": style_policy,
         "passed": not errors,
         "errorCount": len(errors),
         "warningCount": len(warnings),
@@ -1168,6 +1734,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         choices=["allow", "preserve"],
         help="preserve blocks font-family, size, and theme-font drift; allow permits font normalization",
     )
+    compare_parser.add_argument(
+        "--style-policy",
+        default="preserve",
+        choices=["allow", "preserve"],
+        help="preserve blocks color and bold drift; allow permits an explicitly authorized visual restyle",
+    )
     compare_parser.add_argument("--report", type=Path)
     return parser.parse_args(argv)
 
@@ -1180,7 +1752,12 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         baseline = load_baseline(args.baseline.resolve())
         candidate = create_fingerprint(args.pptx.resolve())
-        report = compare_fingerprints(baseline, candidate, font_policy=args.font_policy)
+        report = compare_fingerprints(
+            baseline,
+            candidate,
+            font_policy=args.font_policy,
+            style_policy=args.style_policy,
+        )
         write_json(args.report, report)
         return 0 if report["passed"] else 1
     except FingerprintError as error:

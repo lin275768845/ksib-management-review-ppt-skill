@@ -1,0 +1,5 @@
+node_modules/
+output/*.layout.json
+output/slide-*.png
+output/*.inspect.ndjson
+output/deck-montage.webp

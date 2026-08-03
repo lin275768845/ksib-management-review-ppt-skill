@@ -23,13 +23,14 @@
 
 ## 3. Header、标题与Subtitle合同
 
-Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-only页面。BCG模板的内容页标题基线约为y=0.68 in，明显低于本skill旧版y=0.40 in；本skill因此将Action Title统一下移至y=0.55 in，同时保留页眉与Mck 0.8 in安全边距。每页必须选择以下一种Header模式，不得逐页微调：
+Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-only页面。BCG模板的内容页标题基线约为y=0.68 in，明显低于本skill旧版y=0.40 in；本skill因此将Action Title统一下移至y=0.55 in，同时保留页眉与Mck 0.8 in安全边距。每页必须选择以下一种Header模式，不得逐页微调；第四种只用于用户明确保留“两行标题＋Subtitle”的例外页：
 
 | Header模式 | Action Title | Subtitle | 分隔线 | 主体起点 |
 |---|---|---|---:|---:|
 | 一行标题 | x=0.80, y=0.55, w=11.733, h=0.40 in；22 pt | 不使用 | y=1.10 in | y=1.30 in |
 | 一行标题＋Subtitle | x=0.80, y=0.55, w=11.733, h=0.40 in；22 pt | x=0.80, y=0.99, w=11.733, h=0.24 in；14 pt | y=1.30 in | y=1.44 in |
 | 两行标题 | x=0.80, y=0.55, w=11.733, h=0.72 in；22 pt | 默认不使用 | y=1.38 in | y=1.52 in |
+| 两行标题＋Subtitle（例外） | x=0.80, y=0.55, w=11.733, h=0.72 in；22 pt | x=0.80, y=1.31, w=11.733, h=0.24 in；14 pt | y=1.62 in | y=1.76 in |
 
 三种模式共用的页眉与页脚坐标：
 
@@ -37,8 +38,11 @@ Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-
 |---|---:|---:|---:|---:|---|
 | 页眉橙色竖线 | 0.80 in | 0.15 in | 0.03 in | 0.20 in | `#FF4906`，无边框 |
 | 页眉文字 | 0.92 in | 0.15 in | 11.61 in | 0.20 in | 10 pt，苹方-简，Semibold，`#646A73`，垂直居中 |
+| 页脚分隔线 | 0.80 in | 6.95 in | 11.733 in | 0 in | `#E5E6EB`，细线 |
 | Source | 0.80 in | 7.05 in | 10.80 in | 0.20 in | 9 pt，苹方-简，`#646A73` |
 | 页码 | 12.20 in | 7.10 in | 1.00 in | 0.30 in | 9 pt，右对齐 |
+
+以上坐标不是“建议范围”。页眉橙色竖线、页眉文字、Action Title、Subtitle、标题分隔线、页脚分隔线、Source和页码属于固定Chrome；同一Header Profile内必须按底层EMU与受控样式完全一致，几何容差为0 EMU。普通正文对象仍可使用常规Layout容差。详细规则见`chrome-alignment-contract.md`。
 
 强制格式：
 
@@ -47,8 +51,10 @@ Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-
 - 页眉文字框使用垂直居中；Action Title和Subtitle使用顶端对齐。
 - Action Title与Subtitle的标准净距为0.04 in，约4 px；不得把Subtitle放到标题下方20–40 px之外。
 - Subtitle是可选解释层，不是每页必备元素；确需使用时固定14 pt，不得使用12 pt，且不得重复标题。
-- 两行Action Title默认不再叠加Subtitle；应先缩短标题或把解释性内容移入主体顶部的事实／背景行。只有用户明确要求的Leading Page才允许例外。
+- 两行Action Title默认不再叠加Subtitle；应先缩短标题或把解释性内容移入主体顶部的事实／背景行。只有用户明确要求的Leading Page才允许使用“两行标题＋Subtitle”独立Profile，且标题底边不得越过Subtitle顶边。
+- 两行标题、Subtitle和分隔线必须在最终PNG中人工检查；`slides_test.py`的画布溢出通过不能证明对象之间没有重叠。
 - 同一连续页面组优先共享相同Header模式；若Title-only与Title＋Subtitle混用，必须分别严格使用上表坐标，不能靠手工移动制造“看起来差不多”。
+- Chrome Profile名称以`design-tokens.json.crossSlideChrome.profileIds[]`为唯一枚举。单例封面、目录或章节页可以只登记Profile、不建立跨页相等组；出现两页及以上时必须建立独立相等组。同一Profile内不得存在第二套小矩形宽高、颜色、标题基线、分隔线或页脚坐标。
 - Header区域不得放置状态标签以外的附加结论；状态标签如确需保留，应固定在右上角，不改变标题、Subtitle和主体基线。
 
 ### 3.1 Title、Subtitle与Takeaway语义合同
@@ -78,7 +84,7 @@ Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-
 - Takeaway是例外组件，不是页面标配。仅当页面需要表达Action Title之外的行动、风险、决策含义或跨证据综合时，主体之外才允许设置一条；不得因留白、版式习惯或“每页都应有总结”而添加。
 - Takeaway不得用于封面、章节页、目录、附录、单一证据且标题已完整表达结论的页面，或已经设置主体洞察区／Implication Panel的页面。除标准来源和页码外，禁止在Takeaway附近堆叠Owner、未解问题、角色说明、补充结论、第二条总结或其他内容带。
 - Owner 价值必须在主体的“我的角色／我的判断／我的决策／责任对象”等信息中体现；未解问题必须并入主体因果链、唯一 Takeaway 或 Speaker Notes，不得另起底部模块。
-- Mck的0.8 in安全边距、动态多栏、底栏间距和逐Layout容量是强制结构基准；主体起点按Header模式固定为1.30／1.44／1.52 in。
+- Mck的0.8 in安全边距、动态多栏、底栏间距和逐Layout容量是强制结构基准；主体起点按Header模式固定为1.30／1.44／1.52 in；只有两行标题＋Subtitle例外Profile使用1.76 in。
 - BCG增强Layout只使用其信息架构，不继承字体、绿色、顶部进度条、阴影、纹理、剪贴画或小字号。具体合同见 `bcg-layout-patterns.md`。
 - 所有新建或重制页面必须使用 `layout-system.md` 的Mck英寸坐标；既有PPT的页眉、标题、Subtitle、分隔线、主体起点、来源和页码也必须归一。
 - 每页先按Mck `layout-matrix.yaml` 选择Layout，再用KSIB `layout-matrix.json` 校验业务别名。
@@ -110,8 +116,9 @@ Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-
 PYTHON="<codex_app__load_workspace_dependencies 返回的 Python executable>"
 OOXML_SANITIZE="<当前项目ppt/ooxml_sanitize.py；不存在则使用本Skill scripts/ooxml_sanitize.py>"
 OOXML_QA="<当前项目ppt/ooxml_qa.py；不存在则使用本Skill scripts/ooxml_qa.py>"
+FORMAT_CONTRACT="<当前项目最终format-contract.json>"
 "$PYTHON" "$OOXML_SANITIZE" <final.pptx> --in-place
-"$PYTHON" "$OOXML_QA" <final.pptx>
+"$PYTHON" "$OOXML_QA" <final.pptx> --format-contract "$FORMAT_CONTRACT"
 ```
 
 归一化必须：
@@ -136,7 +143,10 @@ OOXML_QA="<当前项目ppt/ooxml_qa.py；不存在则使用本Skill scripts/ooxm
 
 ```bash
 "$PYTHON" "$OOXML_SANITIZE" <final.pptx> --in-place --preserve-theme
-"$PYTHON" "$OOXML_QA" <final.pptx> --theme-policy preserve --font-policy preserve
+"$PYTHON" "$OOXML_QA" <final.pptx> \
+  --theme-policy preserve \
+  --font-policy preserve \
+  --format-contract "$FORMAT_CONTRACT"
 ```
 
 随后必须以修改前指纹运行format-only compare。主题色、直接色、文字、数字或页序任一漂移均阻断交付。
@@ -159,7 +169,9 @@ OOXML_QA="<当前项目ppt/ooxml_qa.py；不存在则使用本Skill scripts/ooxm
 - 主体之外至多一条经门禁允许的底部Takeaway；不存在Owner、未解问题、补充结论或第二总结带与其纵向堆叠。
 - 内容容量门禁 `validate_content.mjs` 的 `passed` 必须为 `true`；空Deck、空内容页、未知Layout、缺少Layout必填字段、超栏目数、超节点数或超字符预算均阻断构建。嵌套必填路径必须在每个父节点逐一成立，不能因为另一分支存在同名子字段而放行。所有非豁免Layout必须在Matrix中定义非空`requiredFields[]`。
 - canonical Layout必须存在机读合同；`singleExhibit`、`issueTree`、`recommendationRoadmap`必须通过必填字段、容量、Proof Shape和rendererContract门禁。使用fallback renderer时必须以`ksib-renderer-usage/1.0`逐页记录实际Renderer和具体原因。
-- Header坐标、字体、文本框边距、标题与Subtitle净距符合第3节；主体遵守0.8 in边距和所选Header模式的固定起点；实体框内边距不小于0.15 in；主体与底栏不小于0.15 in。
+- Header坐标、字体、文本框边距、标题与Subtitle净距符合第3节；主体遵守0.8 in边距和所选Header模式的固定起点；实体框内边距不小于0.15 in；主体与底栏不小于0.15 in。两行标题＋Subtitle必须使用独立Profile，并由人工视觉门禁确认标题、Subtitle和分隔线没有重叠。
+- 跨页Chrome合同必须存在且覆盖所有重复模板页；同组固定角色的几何、旋转、填充、线条、文本边距、字体和段落格式逐项完全一致。任何1 EMU差异或受控样式差异均为阻断错误。
+- OOXML QA必须阻断Action Title与Subtitle正面积重叠，以及标题分隔线进入Subtitle框；几何门禁通过后仍要在最终PNG检查实际字形和换行。
 
 ### 视觉门禁
 
@@ -177,7 +189,12 @@ OOXML_QA="<当前项目ppt/ooxml_qa.py；不存在则使用本Skill scripts/ooxm
 
 ### PowerPoint 交互门禁
 
-在 Microsoft PowerPoint 中打开最终文件：
+先从最终PPTX制作两个副本：
+
+- `save-only`：只打开、保存、关闭、重开；随后重新运行Sanitizer、语义指纹、OOXML和视觉门禁；
+- `interaction`：复制完成时必须与最终PPTX的SHA256相同；只做瞬时编辑测试，完成后不保存直接关闭。若误保存，立即废弃该副本，不把它作为最终PPTX或语义等价证据。
+
+在 Microsoft PowerPoint 中打开`interaction`副本：
 
 1. 确认没有修复提示；
 2. 抽查一个原生文本框，替换一段文字后撤销；
@@ -193,6 +210,8 @@ OOXML_QA="<当前项目ppt/ooxml_qa.py；不存在则使用本Skill scripts/ooxm
 12. 跳到末页确认页码、备注和对象均正常。
 
 “能选中对象”不等于“可编辑”。颜色、加粗、字体族、文字内容和组合关系必须分别通过交互检查，不能用一个笼统的`editable=true`或一次文本修改替代。
+
+文字操作必须先形成可见的字符级局部选区；未确认光标位于文本内时不得使用全选快捷键，否则可能误选整页对象并破坏对象结构。人工检查记录仍绑定最终PPTX的SHA256，因为`interaction`副本在测试前必须与最终文件逐字节一致；任何保存后的副本都必须重新绑定哈希并重跑全部门禁。
 
 ## 8. 交付命名
 
