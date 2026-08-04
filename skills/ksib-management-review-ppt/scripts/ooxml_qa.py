@@ -639,6 +639,43 @@ def object_text(element: ET.Element) -> str:
     ).strip()
 
 
+def weighted_title_length(value: str) -> float:
+    total = 0.0
+    for character in value:
+        if character.isspace():
+            total += 0.3
+        elif ord(character) <= 0x7F:
+            total += 0.55 if character.isalnum() else 0.45
+        else:
+            total += 1.0
+    return total
+
+
+def action_title_text_structure(element: ET.Element) -> dict:
+    paragraphs = []
+    explicit_break_count = 0
+    newline_character_count = 0
+    for paragraph in element.iter(f"{A}p"):
+        paragraph_text = "".join(
+            candidate.text or ""
+            for candidate in paragraph.iter(f"{A}t")
+        )
+        if paragraph_text.strip():
+            paragraphs.append(paragraph_text)
+        explicit_break_count += len(paragraph.findall(f".//{A}br"))
+        newline_character_count += sum(
+            paragraph_text.count(character)
+            for character in ("\r", "\n", "\u2028", "\u2029")
+        )
+    text = "".join(paragraphs)
+    return {
+        "nonEmptyParagraphCount": len(paragraphs),
+        "explicitBreakCount": explicit_break_count,
+        "newlineCharacterCount": newline_character_count,
+        "weightedCharacters": round(weighted_title_length(text), 3),
+    }
+
+
 def object_type(element: ET.Element) -> str:
     name = local_name(element.tag)
     if name == "pic":
@@ -1131,6 +1168,167 @@ def validate_header_role_geometry(
     }
 
 
+def validate_action_title_policy(
+    *,
+    slide_number: int,
+    slide_part: str,
+    records: list[dict],
+    contract: dict,
+) -> tuple[list[dict], dict | None]:
+    policy = contract.get("titlePolicy")
+    if not isinstance(policy, dict):
+        return [], None
+    errors: list[dict] = []
+    divider_matches = records_for_contract_role(
+        records,
+        contract,
+        "title-divider",
+    )
+    if (
+        policy.get("defaultTitleDividerPolicy") == "forbid"
+        and divider_matches
+    ):
+        errors.append({
+            "kind": "format_default_title_divider_forbidden",
+            "part": slide_part,
+            "slide": slide_number,
+            "objects": [record["name"] for record in divider_matches],
+        })
+    matches = records_for_contract_role(records, contract, "action-title")
+    if len(matches) != 1:
+        return errors, {
+            "objectCount": len(matches),
+            "evaluated": False,
+            "defaultTitleDividerPolicy": policy.get(
+                "defaultTitleDividerPolicy"
+            ),
+        }
+    record = matches[0]
+    structure = action_title_text_structure(record["element"])
+    if (
+        policy.get("forbidMultipleParagraphs") is True
+        and structure["nonEmptyParagraphCount"] > 1
+    ):
+        errors.append({
+            "kind": "format_action_title_multiline",
+            "part": slide_part,
+            "slide": slide_number,
+            "object": record["name"],
+            "rule": "multiple-paragraphs",
+            "actual": structure["nonEmptyParagraphCount"],
+            "maximum": 1,
+        })
+    if (
+        policy.get("forbidExplicitLineBreaks") is True
+        and (
+            structure["explicitBreakCount"] > 0
+            or structure["newlineCharacterCount"] > 0
+        )
+    ):
+        errors.append({
+            "kind": "format_action_title_multiline",
+            "part": slide_part,
+            "slide": slide_number,
+            "object": record["name"],
+            "rule": "explicit-line-break",
+            "explicitBreakCount": structure["explicitBreakCount"],
+            "newlineCharacterCount": structure["newlineCharacterCount"],
+        })
+    maximum_weighted = policy.get("maxWeightedCharacters")
+    if (
+        isinstance(maximum_weighted, (int, float))
+        and structure["weightedCharacters"] > float(maximum_weighted)
+    ):
+        errors.append({
+            "kind": "format_action_title_width_budget_exceeded",
+            "part": slide_part,
+            "slide": slide_number,
+            "object": record["name"],
+            "actualWeightedCharacters": structure["weightedCharacters"],
+            "maximumWeightedCharacters": float(maximum_weighted),
+        })
+    return errors, {
+        "object": record["name"],
+        "evaluated": True,
+        **structure,
+        "maximumWeightedCharacters": maximum_weighted,
+        "defaultTitleDividerPolicy": policy.get(
+            "defaultTitleDividerPolicy"
+        ),
+        "softWrapRequiresVisualGate": policy.get(
+            "softWrapRequiresVisualGate",
+            True,
+        ),
+    }
+
+
+def validate_body_start_policy(
+    *,
+    slide_number: int,
+    slide_part: str,
+    records: list[dict],
+    contract: dict,
+    slide_contract: dict,
+    header_contract: dict,
+) -> tuple[list[dict], dict | None]:
+    policy = contract.get("bodyStartPolicy")
+    if not isinstance(policy, dict):
+        return [], None
+    body_start = header_contract.get("bodyStartY")
+    if not isinstance(body_start, (int, float)):
+        return [], None
+    roles = slide_contract.get("bodyStartRoles")
+    errors: list[dict] = []
+    if policy.get("requireNamedAnchors") is True and not roles:
+        errors.append({
+            "kind": "format_body_start_roles_missing",
+            "part": slide_part,
+            "slide": slide_number,
+            "headerMode": slide_contract.get("headerMode"),
+        })
+        return errors, {
+            "bodyStartYIn": float(body_start),
+            "roles": [],
+        }
+    if not isinstance(roles, list):
+        return errors, None
+    inventory = []
+    for role in roles:
+        matches = records_for_contract_role(records, contract, role)
+        if len(matches) != 1:
+            errors.append({
+                "kind": "format_body_start_role_count_invalid",
+                "part": slide_part,
+                "slide": slide_number,
+                "role": role,
+                "actual": len(matches),
+                "expected": 1,
+            })
+            continue
+        record = matches[0]
+        geometry = record.get("geometry")
+        inventory.append({
+            "role": role,
+            "object": record["name"],
+            "geometry": geometry,
+        })
+        if geometry is not None and geometry["y"] + 1e-9 < float(body_start):
+            errors.append({
+                "kind": "format_body_starts_above_header_clearance",
+                "part": slide_part,
+                "slide": slide_number,
+                "role": role,
+                "object": record["name"],
+                "actualYIn": round(geometry["y"], 4),
+                "minimumYIn": float(body_start),
+                "deltaIn": round(geometry["y"] - float(body_start), 4),
+            })
+    return errors, {
+        "bodyStartYIn": float(body_start),
+        "roles": inventory,
+    }
+
+
 def validate_cross_slide_equality_groups(
     *,
     contract: dict,
@@ -1554,6 +1752,16 @@ def validate_slide_format_contract(
 
     header_mode = slide_contract.get("headerMode", "none")
     header_modes = contract.get("headerModes", {})
+    if (
+        contract.get("titlePolicy", {}).get("maxActionTitleLines") == 1
+        and "two-line" in str(header_mode).casefold()
+    ):
+        errors.append({
+            "kind": "format_two_line_header_mode_forbidden",
+            "part": slide_part,
+            "slide": slide_number,
+            "headerMode": header_mode,
+        })
     header_contract = header_modes.get(header_mode)
     if header_contract is None:
         errors.append({
@@ -1674,6 +1882,26 @@ def validate_slide_format_contract(
         )
     )
     errors.extend(header_geometry_errors)
+    title_policy_errors, title_policy_inventory = (
+        validate_action_title_policy(
+            slide_number=slide_number,
+            slide_part=slide_part,
+            records=records,
+            contract=contract,
+        )
+    )
+    errors.extend(title_policy_errors)
+    body_start_errors, body_start_inventory = (
+        validate_body_start_policy(
+            slide_number=slide_number,
+            slide_part=slide_part,
+            records=records,
+            contract=contract,
+            slide_contract=slide_contract,
+            header_contract=header_contract,
+        )
+    )
+    errors.extend(body_start_errors)
 
     counts = Counter(record["type"] for record in records)
     for object_kind, minimum in slide_contract.get(
@@ -1916,6 +2144,8 @@ def validate_slide_format_contract(
         "fullSlidePictureCount": full_slide_picture_count,
         "hierarchyRolesPresent": sorted(hierarchy_text),
         "headerRoleGeometry": header_geometry_inventory,
+        "actionTitleSingleLine": title_policy_inventory,
+        "bodyStart": body_start_inventory,
     }
 
 

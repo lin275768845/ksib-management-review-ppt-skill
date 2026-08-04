@@ -1,7 +1,7 @@
 # KSIB 咨询与管理汇报 PPT Skill
 
-发行日期：2026-07-31
-发行版本：v4.2
+发行日期：2026-08-04
+发行版本：v4.4
 主 Skill：`ksib-management-review-ppt`
 
 这是一套面向中文咨询报告、管理汇报和市场研究演示文稿的 Codex Skill。它把故事线、证据链、版式合同、原生可编辑性和交付门禁连接成一套工作流，适合：
@@ -12,12 +12,18 @@
 - 在完全不改文字、数字和页序的前提下统一既有 PPT 格式；
 - 检查 PowerPoint 的颜色、加粗、字体、表格、图表和 SmartArt 是否真正可编辑。
 
-v4.2新增“固定Chrome跨页绝对对齐”能力：按版型Profile统一页眉小矩形、页眉文字、标题、Subtitle、标题／页脚分隔线、来源和页码，并以PowerPoint底层EMU整数做零容差门禁。归一化脚本默认只审计，只有显式`--apply`才写入新副本，同时保留目标页可见文字、数字和字段。
+当前工作树将Intake升级为`ksib-intake-contract/1.1`：继续接受PPT Studio的`topic-to-deck`、`story-rebuild`与`format-only`三种用户任务类型，并为新建与重构任务增加`ksib-page-intent-contract/1.0`。每张实质内容页先锁定回答问题、标题策略、必备内容、主证据、视觉层级和验收条件，再选择Layout；主体与底栏净距默认0.30 in、硬下限0.15 in。工作台已有答案继续复用，只对缺失或冲突项进行一次性澄清；`locked-content`保留为Skill内部派生状态，不增加第四个上游选项。
+
+当前工作树进一步增加P0交付门禁：PowerPoint逐页截图成为最终视觉真相源；重复标签归属、百分比精度、金融折线平滑和`phasePlaybook`漏渲染由`validate_powerpoint_render.py`阻断。辅助PNG／PDF仍可用于预览，但不能替代PowerPoint Render Gate。
+
+本版把`ksib-theme-color-contract/1.0`升级为最终成片门禁：主色按深／主／浅／极浅四级色阶使用，对比辅色只承担真实对照，浅灰只表示“其他”、基线、参考、弱化或较差对比，深灰不作为默认数据填充。最终PPTX必须先由`extract_pptx_theme_colors.py`逐对象提取真实颜色，再以`ksib-theme-usage/1.1`把每个可见绑定与Token交叉核对；Renderer声明、虚假绑定、漏登记颜色、Token与成片Hex不一致都会阻断。
+
+本版同时把内容页Header升级为更接近MBB的开放式结构：Action Title固定单行，移除默认标题下划线，Title-only正文从1.52 in起，Title＋Subtitle正文从1.66 in起。内容、OOXML和全页PNG形成三层门禁；封面标题与章节名称不受内容页单行结构门禁限制，但仍须通过视觉复核。v4.2的固定Chrome跨页0 EMU绝对对齐能力继续保留。
 
 ## 1. 包内文件
 
 ```text
-KSIB_PPT_Skill_20260731_v4.2/
+KSIB_PPT_Skill_20260804_v4.4/
 ├── README.md
 ├── DISTRIBUTION_NOTICE.md
 ├── PACKAGE_MANIFEST.json
@@ -89,7 +95,25 @@ third_party\mck-ppt-design
 使用 $ksib-management-review-ppt
 ```
 
-### 模式A：只改格式，不改内容
+Skill首先执行两步Intake：先确认一种任务类型，再按该模式一次性处理最多9个问题，总问题数不超过10个。`required`缺失即阻断；重要选填项会连同默认值主动展示；条件项只有触发后才转为必填。若PPT Studio已经提供兼容的任务合同，Skill不得重复询问已有答案。
+
+三种上游任务类型与内部执行状态如下：
+
+| 上游任务类型 | 适用场景 | 内部执行模式 |
+|---|---|---|
+| `topic-to-deck` | 没有现成PPT或故事线，从研究Topic新建 | `story-change` |
+| `story-rebuild` | 有现成PPT，允许调整故事线、页序和结构 | 默认`story-change`；内容明确锁定时派生`locked-content` |
+| `format-only` | 冻结内容，只修改格式与Layout | `format-only` |
+
+验证工作台或项目任务合同：
+
+```bash
+node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/validate_intake.mjs" \
+  --task task.json \
+  --report intake-gate.json
+```
+
+### `format-only`：只改格式，不改内容
 
 适合用户已经锁定全部文字、数字和页序，只希望统一字体、页眉、页码、标题高度、对象位置或原生可编辑性。
 
@@ -111,12 +135,12 @@ python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/pptx_chrome_norma
   --slides 2,3,5,6,8,9 \
   --profile content-title-subtitle \
   --scope all \
-  --roles header-accent,header-text,action-title,subtitle,title-divider,footer-divider,source-footnote,page-number
+  --roles header-accent,header-text,action-title,subtitle,footer-divider,source-footnote,page-number
 ```
 
 确认Profile、参考页和角色别名后，再加`--apply --output normalized.pptx`生成新副本。`--scope geometry`只同步坐标、尺寸和旋转，适合未授权改变颜色／字体的format-only任务；`--scope style`只同步样式；`--scope all`同时同步两者。固定Chrome最终必须通过`crossSlideEqualityGroups`的`geometryToleranceEmu: 0`门禁；普通单页对象的近似容差不能替代跨页绝对一致。
 
-### 模式B：内容已锁定，制作正式PPT
+### `story-rebuild`的内部`locked-content`状态：内容已锁定，制作正式PPT
 
 适合已经有完整报告、Word稿或最终页序，只需要补齐最小故事线合同、证据引用、版式和交付门禁。
 
@@ -127,7 +151,7 @@ python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/pptx_chrome_norma
 主体内容和结论不得重写；补齐来源、口径和可编辑图表，并输出最终PPTX和QA结果。
 ```
 
-### 模式C：新建或重构故事线
+### `topic-to-deck`或`story-rebuild`：新建或重构故事线
 
 适合从研究材料出发建立新Deck，或修复现有PPT故事线断裂、重复和“只有主题没有结论”的问题。
 
@@ -145,7 +169,8 @@ python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/pptx_chrome_norma
 研究、数据或策略型Deck采用：
 
 ```text
-Source核验
+Intake Gate
+→ Source核验
 → Calculation登记
 → Claim登记
 → Evidence门禁
@@ -170,6 +195,8 @@ Source核验
 9. 同一Profile的固定Chrome必须做到0 EMU跨页一致；页眉小矩形、页眉文字、标题区、页脚线、来源和页码不得因手工拖动产生翻页跳动。
 10. 表格默认采用白底表头、无外框、无竖线和数字右对齐；黑色表头不是MBB默认风格。
 11. 图表默认删除重复的图例、坐标轴和网格线，优先直接标注，并只保留一个重点色焦点。
+12. 内容页Action Title固定单行；标题过长时改写或拆页，不得缩字号、硬换行或恢复两行Profile。
+13. 内容页默认不使用标题下划线；Title-only正文从1.52 in起，Title＋Subtitle正文从1.66 in起，同类页面不得逐页上移或下沉。
 
 ## 6. “真正可编辑”的含义
 
@@ -206,6 +233,9 @@ CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 
 node "$CODEX_HOME/skills/linzhe-mbb-storyline/scripts/validate_storyline.mjs" --self-test
 
+node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_intake.mjs" --self-test
+node --test "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_intake_contract.mjs"
+
 node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_storyline_gate.mjs" \
   --self-test \
   --upstream "$CODEX_HOME/skills/linzhe-mbb-storyline/scripts/validate_storyline.mjs"
@@ -213,22 +243,25 @@ node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_storyline_g
 node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_evidence.mjs" --self-test
 node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_content.mjs" --self-test
 node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_storyline_handoff.mjs" --self-test
+node --test "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_theme_color_contract.mjs"
 node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/build_release_manifest.mjs" --self-test
 
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/build_visual_review_gate.py" --self-test
+python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_powerpoint_render.py" --self-test
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/prepare_revision.py" --self-test
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_ooxml_editability.py"
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_format_contract.py"
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_design_tokens.py"
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_exhibit_styles.py"
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_chrome_normalizer.py"
+python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_pptx_theme_colors.py"
 ```
 
 如果上述Python测试提示缺少`lxml`，请改用Codex工作区提供的bundled Python，或在独立Python环境中安装`lxml`后重试。
 
 ## 8. Golden Deck格式回归
 
-`skills/ksib-management-review-ppt/benchmarks/format-golden-deck`提供固定6页合成Deck，覆盖封面、原生图表、原生表格、左右对比、吸附连接器流程和高密度附录，并将固定Chrome的跨页0 EMU一致性纳入格式合同。它随主Skill安装，用于比较Renderer或OOXML处理链，不是客户模板。
+`skills/ksib-management-review-ppt/benchmarks/format-golden-deck`提供固定6页合成Deck，覆盖封面、原生图表、原生表格、左右对比、吸附连接器流程和高密度附录，并将固定Chrome的跨页0 EMU一致性、内容页Action Title单行、无默认标题下划线及1.52／1.66 in正文起点纳入格式合同。它随主Skill安装，用于比较Renderer或OOXML处理链，不是客户模板。
 
 每次改动格式生产链后，至少完成：
 
@@ -256,6 +289,7 @@ python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_chrome_norma
 完整客户PPT项目通常应保留：
 
 - 最终 `.pptx`；
+- `ksib-intake-contract/1.1`任务合同、`ksib-page-intent-contract/1.0`页面意图合同与`intake-gate.json`；
 - 锁定的 `storyline.json`；
 - `evidence.json`与结构化内容文件；
 - Storyline、Evidence、Content和Visual Gate报告；

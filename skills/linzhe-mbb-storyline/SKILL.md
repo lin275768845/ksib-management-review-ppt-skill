@@ -23,6 +23,7 @@ description: Build, review, and lock decision-led MBB-style storylines before sl
 2. 完整读取`references/frameworks-and-rubric.md`，选择适合任务的论证架构和评分规则。
 3. 需要创建可交接文件时读取`references/storyline-contract.md`。
 4. 需要说明方法来源或更新本Skill时读取`references/source-provenance.md`。
+5. 若上游已提供`ksib-intake-gate/1.0`报告或项目级Intake任务JSON，先读取并复用已确认的受众、场合、决策、时长、页数、证据范围和禁区；只补缺失或冲突项，不重复提问。Intake原始答案仍按隐私边界处理，不复制到无关日志。
 
 ## 工作模式
 
@@ -38,7 +39,7 @@ description: Build, review, and lock decision-led MBB-style storylines before sl
 
 ### S1 决策简报
 
-明确：
+优先从已通过的KSIB Intake Gate读取，只有缺失或冲突时再明确：
 
 - 受众是谁、拥有何种决策权；
 - 演示结束后希望受众相信、决定或授权什么；
@@ -76,7 +77,7 @@ Action Title必须：
 - 是完整结论，不是主题标签；
 - 回答“So what”；
 - 使用主动、具体、可证实的表达；
-- 中文原则上18–32字，最多40字；英文原则上不超过15词；
+- 中文原则上18–32字，最多38个加权字符；英文原则上不超过15词；内容页标题不得包含硬换行，交接到PPT Skill后必须保持单行；
 - 不超出证据强度，不把假设写成事实；
 - 同类页面保持平行句式。
 

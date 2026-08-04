@@ -20,7 +20,7 @@
 | `header-text` | 单一页眉文本框 |
 | `action-title` | 本页唯一主结论 |
 | `subtitle` | 范围、时期、方法、定义、边界或比较框架 |
-| `title-divider` | 标题区分隔线 |
+| `title-divider` | 遗留Deck或经批准特殊模板的标题区分隔线；KSIB默认正文禁用 |
 | `footer-divider` | 页脚区分隔线 |
 | `takeaway` | 标题之外的行动、风险、决策含义或跨证据综合 |
 | `source-footnote` | 数据来源或脚注 |
@@ -49,6 +49,17 @@
     "chartDataPolicy": "native-data-required",
     "slideNumberPolicy": "field-required"
   },
+  "titlePolicy": {
+    "maxActionTitleLines": 1,
+    "forbidExplicitLineBreaks": true,
+    "forbidMultipleParagraphs": true,
+    "maxWeightedCharacters": 38,
+    "defaultTitleDividerPolicy": "forbid",
+    "softWrapRequiresVisualGate": true
+  },
+  "bodyStartPolicy": {
+    "requireNamedAnchors": true
+  },
   "hierarchy": {
     "roles": ["action-title", "subtitle", "takeaway"],
     "similarityThreshold": 0.72
@@ -61,9 +72,13 @@
     "allowedBottomRoles": ["takeaway", "source-footnote", "page-number"]
   },
   "crossSlideEqualityGroups": [],
+  "chartSemantics": [],
+  "renderValidation": {"slides": []},
   "slides": []
 }
 ```
+
+`chartSemantics[]`逐图声明`slide`、`chart`、`measureKind`、`precision`和金融时间序列语义；`renderValidation.slides[]`逐页把Content字段绑定到最终PowerPoint对象名。完整示例和阻断规则见`powerpoint-render-contract.md`。Layout名称只是一项声明，不能替代最终对象中的真实字段。
 
 ### `roleGeometry`
 
@@ -131,7 +146,7 @@
 - `referenceSlide`指定基准页；如果基准页不在某个Header Mode分区，则使用该分区第一张页；
 - `geometryToleranceEmu`默认0；固定Chrome不得改回英寸级宽松容差；
 - `compareFields[]`可选；默认比较全部字段。仅获授权改位置时可写`["geometry","rotation","objectType"]`，不能借此宣称颜色或字体也已统一；
-- `groupByHeaderMode`默认`true`，防止一行标题、标题＋Subtitle和两行标题互相误比；只有页眉小矩形、页眉文字、Source和页码等确实跨模式共用的角色才设为`false`；
+- `groupByHeaderMode`默认`true`，防止Title-only与Title＋Subtitle互相误比；只有页眉小矩形、页眉文字、Source和页码等确实跨模式共用的角色才设为`false`；
 - `roleAliases`中的值是遗留对象的完整角色名，不是模糊片段；每页每个canonical角色必须唯一命中。
 
 跨页签名使用原始EMU比较`x/y/w/h`，并比较PresentationML对象类型、旋转、填充、线条、文本框边距、有效垂直对齐、字体和段落格式。任一差异分别输出`format_cross_slide_geometry_drift`、`format_cross_slide_object_type_drift`或`format_cross_slide_style_drift`；角色缺失或重复输出`format_cross_slide_role_count_invalid`。空角色、缺页、参考页不在组内或有效覆盖少于两页直接判为合同错误，不能“无比较即通过”。Inventory同时登记每组覆盖页、基准页、角色对象和签名哈希。
@@ -144,8 +159,11 @@
 
 - `title-only`：Action Title，无Subtitle；
 - `title-subtitle`：Action Title＋Subtitle；
-- `title-two-line`：两行Action Title，默认无Subtitle；
 - `none`：封面或纯分隔页。
+
+内容页Action Title只能一行。`titlePolicy.scope`固定为`content-action-title`：它自动拒绝多个非空`a:p`、显式`a:br`、文本中的换行字符和超过38个加权字符的标题；字体渲染造成的软换行仍由全页PNG门禁确认。封面主标题和章节名称不属于该结构门禁，但仍须通过全页PNG视觉复核。默认Header模式不要求`title-divider`，并应把该角色列入`forbiddenRoles[]`。
+
+`title-only.bodyStartY`固定为1.52 in，`title-subtitle.bodyStartY`固定为1.66 in。每张内容页必须用`bodyStartRoles[]`列出最上方主体锚点；启用`bodyStartPolicy.requireNamedAnchors`后，锚点缺失、重复或y坐标高于对应起点均阻断。
 
 ### `slides[]`
 
@@ -154,6 +172,7 @@
 - `slide`：从1开始的实际演示顺序；
 - `slideRole`：`cover`、`navigator`、`content`、`appendix`等；
 - `headerMode`；
+- `bodyStartRoles[]`：最上方主体证据或正文锚点，必须位于Header模式的`bodyStartY`及以下；
 - `requiredRoles[]`、`forbiddenRoles[]`；
 - `nativeObjectMinimums`／`nativeObjectMaximums`。
 - 流程页可声明`connectorPolicy.requireAttachedBothEnds`和`requireArrowhead`，避免把普通直线或未吸附连接器误当成可编辑流程。
@@ -185,18 +204,19 @@ OOXML QA会在`chartDataByPart[]`中区分`embeddedWorkbook`、`nativeLiteral`�
 以下任一项出现时，不得交付：
 
 1. 必需角色缺失、重复或对象类型错误；
-2. 页眉、Action Title、Subtitle、分隔线、来源或页码超出几何容差；
+2. 页眉、Action Title、Subtitle、来源或页码超出几何容差；默认正文出现未经批准的`title-divider`；
 3. 同一Chrome Profile中的固定角色存在1 EMU几何差异，或旋转、填充、线条、文本边距、字体、段落格式不一致；
-4. 同页Action Title与Subtitle发生正面积重叠，或标题分隔线进入Subtitle框；
-5. Header／Title／Subtitle文本框保留Office默认内边距；
-6. Action Title、Subtitle、Takeaway存在包含关系或高相似复述；
-7. Takeaway超过内容页预算或连续滥用；
-8. 底部结论带未命名为`takeaway`，用通用文本框名称绕过层级与稀缺性检查；
-9. 图表页没有原生Chart、表格页没有原生Table、流程页没有原生Connector；
-10. 连接器未同时吸附起终节点、箭头端点缺失，或图表数据模式不满足项目策略；
-11. 正式Deck要求动态页码但`page-number`不是`slidenum`字段或母版页码占位符；
-12. 全页图片覆盖率达到阈值，构成栅格化伪PPT；
-13. 普通用户对象保留移动、缩放、选择、文字编辑或组合锁。
+4. Action Title包含多个段落、显式换行、超出单行容量或最终PNG出现软换行；
+5. 同页Action Title与Subtitle发生正面积重叠，或主体锚点高于1.52／1.66 in固定起点；遗留标题分隔线进入Subtitle框；
+6. Header／Title／Subtitle文本框保留Office默认内边距；
+7. Action Title、Subtitle、Takeaway存在包含关系或高相似复述；
+8. Takeaway超过内容页预算或连续滥用；
+9. 底部结论带未命名为`takeaway`，用通用文本框名称绕过层级与稀缺性检查；
+10. 图表页没有原生Chart、表格页没有原生Table、流程页没有原生Connector；
+11. 连接器未同时吸附起终节点、箭头端点缺失，或图表数据模式不满足项目策略；
+12. 正式Deck要求动态页码但`page-number`不是`slidenum`字段或母版页码占位符；
+13. 全页图片覆盖率达到阈值，构成栅格化伪PPT；
+14. 普通用户对象保留移动、缩放、选择、文字编辑或组合锁。
 
 标准Notes Placeholder是PowerPoint内部占位对象，不属于客户页面内容；其系统锁不作为普通对象锁报错。用户自行添加到Notes页的普通对象仍必须通过锁检查。
 

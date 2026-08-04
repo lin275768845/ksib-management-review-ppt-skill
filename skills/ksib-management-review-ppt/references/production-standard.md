@@ -16,21 +16,26 @@
 - 主字体：macOS使用 `PingFang SC`，PowerPoint显示“苹方-简”；Windows使用 `Microsoft YaHei`。中文、英文和数字使用同一字体族。
 - Mck字号层级：封面44 pt；章节／目录28 pt；封面副标题24 pt；内容页Action Title 22 pt；Sub-header 18 pt；Takeaway 16 pt；来源和页码9 pt。
 - KSIB正文覆盖：客户Deck正文使用16／14／12 pt。16 pt用于少量高层正文，14 pt用于主要正文与内容页Subtitle，12 pt用于密集正文；10 pt只用于来源、脚注或经批准的高密度附录。
-- 内容页Action Title：22 pt、粗体、结论句，优先一行，最多两行。
+- 内容页Action Title：22 pt、粗体、结论句，只允许一行；超出单行容量时必须改写标题或拆页，不得缩字号或启用两行Profile。该门禁不限制封面主标题或章节名称的自然断行，但这些页面仍须通过视觉复核。
 - 主色：Kwai Orange `#FF4906`；深橙 `#D83D00`；浅橙 `#FFF7F3`；浅橙分隔线 `#FFDBCD`。
+- 对比辅色：`#006B8F`；浅色面为`#E6F3F7`。只用于真正的对照、反例或第二关键证据，不用于装饰。
 - 正文：`#1F2329`；次级文字：`#646A73`；分隔线：`#E5E6EB`；白色：`#FFFFFF`。
 - 橙色只用于Action、关键结论、主数字、当前节点和结构锚点，不做随意highlight。
 
+### 2.1 Theme Color Contract
+
+颜色的机读真相源为`theme-color-contract.json`，执行说明为`theme-color-contract.md`。Renderer只能按Token用色：主色阶负责同一语义家族的层级与顺序；对比辅色负责真正对照；浅灰`#D9DCE1`只表示“其他”、基线、参考、弱化或较差对比；深灰只用于文字与必要线条，不得作为默认图表填充。正向、负向和预警色只有在内容本身存在对应状态语义时才可使用。
+
+每页必须生成`ksib-theme-usage/1.1`登记。最终PPTX完成最后一次保存后，必须用`extract_pptx_theme_colors.py`生成`ksib-pptx-color-inventory/1.0`，并把每个可见实际颜色绑定到一个语义元素和Token。对象名不稳定、主题色无法解析、实际色未登记／重复登记、声明Token与成片Hex不同、清单与当前PPTX哈希不同，均阻断交付。`single-focus`、`sequential`、`two-way-comparison`、`status-diverging`与`categorical-limited`必须选择其一；无数据页使用`no-data`。Format-only未获样式授权时只审计并保留原颜色，不得自动套用新色板。
+
 ## 3. Header、标题与Subtitle合同
 
-Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-only页面。BCG模板的内容页标题基线约为y=0.68 in，明显低于本skill旧版y=0.40 in；本skill因此将Action Title统一下移至y=0.55 in，同时保留页眉与Mck 0.8 in安全边距。每页必须选择以下一种Header模式，不得逐页微调；第四种只用于用户明确保留“两行标题＋Subtitle”的例外页：
+Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-only页面。BCG模板的内容页标题基线约为y=0.68 in，明显低于本skill旧版y=0.40 in；本skill因此将Action Title统一下移至y=0.55 in，同时保留页眉与Mck 0.8 in安全边距。内容页标题下默认不使用横向分隔线，主体进一步下移，形成更开放的咨询页Header。每页只能选择以下两种Header模式，不得逐页微调：
 
-| Header模式 | Action Title | Subtitle | 分隔线 | 主体起点 |
+| Header模式 | Action Title | Subtitle | 标题分隔线 | 主体起点 |
 |---|---|---|---:|---:|
-| 一行标题 | x=0.80, y=0.55, w=11.733, h=0.40 in；22 pt | 不使用 | y=1.10 in | y=1.30 in |
-| 一行标题＋Subtitle | x=0.80, y=0.55, w=11.733, h=0.40 in；22 pt | x=0.80, y=0.99, w=11.733, h=0.24 in；14 pt | y=1.30 in | y=1.44 in |
-| 两行标题 | x=0.80, y=0.55, w=11.733, h=0.72 in；22 pt | 默认不使用 | y=1.38 in | y=1.52 in |
-| 两行标题＋Subtitle（例外） | x=0.80, y=0.55, w=11.733, h=0.72 in；22 pt | x=0.80, y=1.31, w=11.733, h=0.24 in；14 pt | y=1.62 in | y=1.76 in |
+| 一行标题 | x=0.80, y=0.55, w=11.733, h=0.40 in；22 pt | 不使用 | 不使用 | y=1.52 in |
+| 一行标题＋Subtitle | x=0.80, y=0.55, w=11.733, h=0.40 in；22 pt | x=0.80, y=0.99, w=11.733, h=0.24 in；14 pt | 不使用 | y=1.66 in |
 
 三种模式共用的页眉与页脚坐标：
 
@@ -42,7 +47,7 @@ Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-
 | Source | 0.80 in | 7.05 in | 10.80 in | 0.20 in | 9 pt，苹方-简，`#646A73` |
 | 页码 | 12.20 in | 7.10 in | 1.00 in | 0.30 in | 9 pt，右对齐 |
 
-以上坐标不是“建议范围”。页眉橙色竖线、页眉文字、Action Title、Subtitle、标题分隔线、页脚分隔线、Source和页码属于固定Chrome；同一Header Profile内必须按底层EMU与受控样式完全一致，几何容差为0 EMU。普通正文对象仍可使用常规Layout容差。详细规则见`chrome-alignment-contract.md`。
+以上坐标不是“建议范围”。页眉橙色竖线、页眉文字、Action Title、Subtitle、页脚分隔线、Source和页码属于固定Chrome；同一Header Profile内必须按底层EMU与受控样式完全一致，几何容差为0 EMU。`title-divider`只作为遗留Deck或用户明确批准的特殊模板兼容角色，不属于KSIB正文默认Profile。普通正文对象仍可使用常规Layout容差。详细规则见`chrome-alignment-contract.md`。
 
 强制格式：
 
@@ -51,10 +56,10 @@ Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-
 - 页眉文字框使用垂直居中；Action Title和Subtitle使用顶端对齐。
 - Action Title与Subtitle的标准净距为0.04 in，约4 px；不得把Subtitle放到标题下方20–40 px之外。
 - Subtitle是可选解释层，不是每页必备元素；确需使用时固定14 pt，不得使用12 pt，且不得重复标题。
-- 两行Action Title默认不再叠加Subtitle；应先缩短标题或把解释性内容移入主体顶部的事实／背景行。只有用户明确要求的Leading Page才允许使用“两行标题＋Subtitle”独立Profile，且标题底边不得越过Subtitle顶边。
-- 两行标题、Subtitle和分隔线必须在最终PNG中人工检查；`slides_test.py`的画布溢出通过不能证明对象之间没有重叠。
+- Action Title不得包含硬换行、多个文本段落或渲染后的软换行。Content Gate先检查文本换行与单行容量，OOXML Gate检查`a:p`／`a:br`结构，最终全尺寸PNG检查字体渲染造成的软换行。
+- 标题超长时按“删限定词→把口径移入Subtitle→把解释移入主体→必要时拆页”的顺序处理；不得缩小22 pt字号或恢复两行标题格式。
 - 同一连续页面组优先共享相同Header模式；若Title-only与Title＋Subtitle混用，必须分别严格使用上表坐标，不能靠手工移动制造“看起来差不多”。
-- Chrome Profile名称以`design-tokens.json.crossSlideChrome.profileIds[]`为唯一枚举。单例封面、目录或章节页可以只登记Profile、不建立跨页相等组；出现两页及以上时必须建立独立相等组。同一Profile内不得存在第二套小矩形宽高、颜色、标题基线、分隔线或页脚坐标。
+- Chrome Profile名称以`design-tokens.json.crossSlideChrome.profileIds[]`为唯一枚举。单例封面、目录或章节页可以只登记Profile、不建立跨页相等组；出现两页及以上时必须建立独立相等组。同一Profile内不得存在第二套小矩形宽高、颜色、标题基线、主体起点或页脚坐标。
 - Header区域不得放置状态标签以外的附加结论；状态标签如确需保留，应固定在右上角，不改变标题、Subtitle和主体基线。
 
 ### 3.1 Title、Subtitle与Takeaway语义合同
@@ -74,6 +79,19 @@ Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-
 
 若Takeaway比Action Title更像本页结论，将Takeaway提升为Action Title并删除原Takeaway。若删除Title、Subtitle、Takeaway中的任意两个后，剩余文本仍能完整表达同一信息，则判定为层级重复。
 
+### 3.2 页面意图合同
+
+新建与重构任务的每张实质内容页必须先声明`pageIntent`，再选择Layout。合同至少包含：
+
+- `questionToAnswer`：本页必须回答的唯一问题；
+- `actionTitlePolicy`：`auto-conclusion`、`subject-colon-conclusion`、`conclusion-sentence`或`preserve`；
+- `requiredContent[]`：缺失即不能完成本页证明的内容；
+- `primaryEvidence`：最强证据及其Claim绑定；
+- `visualHierarchy`：主证据、解释与次级信息的优先级；
+- `acceptanceChecks[]`：本页可以被逐项验证的完成条件。
+
+`subject-colon-conclusion`适用于人物、产品、业务单元等明确对象页，使用“对象：核心结论”；其他页面默认使用`auto-conclusion`，由页面角色选择完整结论句。冒号结构不是全Deck强制模板。Subtitle默认`boundary-only`：只有范围、时期、方法、定义、边界或比较框架确实增加信息时才生成，否则使用Title-only。
+
 ## 4. 信息与布局
 
 - 每页只证明一个核心判断；Action Title 必须能够独立概括页面答案。
@@ -84,7 +102,7 @@ Mck原规范没有定义内容页Subtitle，BCG参考模板也主要使用Title-
 - Takeaway是例外组件，不是页面标配。仅当页面需要表达Action Title之外的行动、风险、决策含义或跨证据综合时，主体之外才允许设置一条；不得因留白、版式习惯或“每页都应有总结”而添加。
 - Takeaway不得用于封面、章节页、目录、附录、单一证据且标题已完整表达结论的页面，或已经设置主体洞察区／Implication Panel的页面。除标准来源和页码外，禁止在Takeaway附近堆叠Owner、未解问题、角色说明、补充结论、第二条总结或其他内容带。
 - Owner 价值必须在主体的“我的角色／我的判断／我的决策／责任对象”等信息中体现；未解问题必须并入主体因果链、唯一 Takeaway 或 Speaker Notes，不得另起底部模块。
-- Mck的0.8 in安全边距、动态多栏、底栏间距和逐Layout容量是强制结构基准；主体起点按Header模式固定为1.30／1.44／1.52 in；只有两行标题＋Subtitle例外Profile使用1.76 in。
+- Mck的0.8 in安全边距、动态多栏、底栏间距和逐Layout容量是强制结构基准；Title-only主体起点固定为1.52 in，Title＋Subtitle主体起点固定为1.66 in。标题与主体、Subtitle与主体的最小净距分别为0.50／0.35 in；主体与底栏净距硬下限0.15 in，默认0.30 in，高视觉重量模块可提高到0.35–0.40 in。
 - BCG增强Layout只使用其信息架构，不继承字体、绿色、顶部进度条、阴影、纹理、剪贴画或小字号。具体合同见 `bcg-layout-patterns.md`。
 - 所有新建或重制页面必须使用 `layout-system.md` 的Mck英寸坐标；既有PPT的页眉、标题、Subtitle、分隔线、主体起点、来源和页码也必须归一。
 - 每页先按Mck `layout-matrix.yaml` 选择Layout，再用KSIB `layout-matrix.json` 校验业务别名。
@@ -169,9 +187,9 @@ FORMAT_CONTRACT="<当前项目最终format-contract.json>"
 - 主体之外至多一条经门禁允许的底部Takeaway；不存在Owner、未解问题、补充结论或第二总结带与其纵向堆叠。
 - 内容容量门禁 `validate_content.mjs` 的 `passed` 必须为 `true`；空Deck、空内容页、未知Layout、缺少Layout必填字段、超栏目数、超节点数或超字符预算均阻断构建。嵌套必填路径必须在每个父节点逐一成立，不能因为另一分支存在同名子字段而放行。所有非豁免Layout必须在Matrix中定义非空`requiredFields[]`。
 - canonical Layout必须存在机读合同；`singleExhibit`、`issueTree`、`recommendationRoadmap`必须通过必填字段、容量、Proof Shape和rendererContract门禁。使用fallback renderer时必须以`ksib-renderer-usage/1.0`逐页记录实际Renderer和具体原因。
-- Header坐标、字体、文本框边距、标题与Subtitle净距符合第3节；主体遵守0.8 in边距和所选Header模式的固定起点；实体框内边距不小于0.15 in；主体与底栏不小于0.15 in。两行标题＋Subtitle必须使用独立Profile，并由人工视觉门禁确认标题、Subtitle和分隔线没有重叠。
+- Header坐标、字体、文本框边距、标题与Subtitle净距符合第3节；主体遵守0.8 in边距和所选Header模式的固定起点；格式合同以`bodyStartRoles[]`命名主体锚点并阻断上移；实体框内边距不小于0.15 in；主体与底栏硬下限0.15 in、默认0.30 in。
 - 跨页Chrome合同必须存在且覆盖所有重复模板页；同组固定角色的几何、旋转、填充、线条、文本边距、字体和段落格式逐项完全一致。任何1 EMU差异或受控样式差异均为阻断错误。
-- OOXML QA必须阻断Action Title与Subtitle正面积重叠，以及标题分隔线进入Subtitle框；几何门禁通过后仍要在最终PNG检查实际字形和换行。
+- OOXML QA必须阻断Action Title与Subtitle正面积重叠、Action Title多个段落／显式换行、超出单行容量以及主体锚点高于固定起点；最终PNG继续检查实际字形和软换行。
 
 ### 视觉门禁
 
@@ -179,6 +197,7 @@ FORMAT_CONTRACT="<当前项目最终format-contract.json>"
 - 兼容性处理前后逐像素对比应一致；若不一致，必须人工复核差异。
 - 检查页面是否通过“白底＋对齐＋细线＋留白”形成层级；若主要依靠多张等权卡片分组，即使无溢出也不得交付。
 - 检查主视觉是否承载本页最强证据；视觉重点不得落在次级说明或装饰模块。
+- `theme-color-gate.json`逐页通过；颜色Token、用途和主证据登记必须与最终PPTX提取清单逐绑定一致，不能以Renderer manifest或笼统`passed: true`替代。
 
 ### 连贯性门禁
 

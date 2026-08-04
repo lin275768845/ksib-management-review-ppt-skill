@@ -7,7 +7,7 @@
   "slideCount": 6,
   "reviewedSlideCount": 6,
   "reviewedBy": "Codex",
-  "reviewedAt": "2026-07-31T17:42:31+08:00",
+  "reviewedAt": "2026-08-03T16:00:37+08:00",
   "checks": {
     "fullSizeReview": true,
     "noOverlap": true,
@@ -18,12 +18,12 @@
   },
   "pptx": {
     "fileName": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.pptx",
-    "sha256": "a6f6cb968cb1106268cda3d71ba69807a2f07362ba11d2864bd87775e25dac35",
+    "sha256": "9f2064af8fab5719ec18ed038e0d05faf451ce09b1a387703823a893ff55813d",
     "slideCount": 6,
     "widthEmu": 12192000,
     "heightEmu": 6858000
   },
-  "renderSetHash": "794ebcd081101e9dc18617a02aba40f722e3a5b81ab3eac32a81b83a2caa7237",
+  "renderSetHash": "fc9f9f5432f33fb1ad3ae3abf8a9592c2362e5bea91a086e632a41c28f0b4038",
   "slides": [
     {
       "slide": 1,
@@ -39,57 +39,57 @@
     {
       "slide": 2,
       "renderFile": "slide-2.png",
-      "bytes": 102164,
-      "sha256": "05d99888d5b188b0ac5309801e36992826102dfbc88dfc8a9e600b54a21fa719",
-      "pixelSha256": "d358d893dabf8c09d25428a9fafa4f1f668df60e104ec70498136e5064805061",
+      "bytes": 102291,
+      "sha256": "5d20d7fa112ef288f0b5712d334bdb3e3cafddc0030313b06a6733adca6422c1",
+      "pixelSha256": "0858577d50dbadfb440943f386f64170710a0018727915dd1280c38061eee2b3",
       "width": 1600,
       "height": 900,
       "passed": true,
-      "notes": "原生横向条形图、直接标注、右侧读数区及固定页眉／页脚通过。"
+      "notes": "Action Title单行、无默认标题分隔线；原生横向条形图、直接标注、右侧读数区及下沉后的正文留白通过。"
     },
     {
       "slide": 3,
       "renderFile": "slide-3.png",
-      "bytes": 123923,
-      "sha256": "01dfa23af3524233a737b6d42354af5e72032c70036956238aac1cf4feeb276c",
-      "pixelSha256": "74999fcf3032514501c6519089daffc9605355fa03128112087090646fffa6bb",
+      "bytes": 123889,
+      "sha256": "3d2719e3586bd4d51bfdc1d38c9da2847aed375ae49ac8b27a3b9f6f86e3ef24",
+      "pixelSha256": "5323f922441ba8a18c1da79c31e0b8faec13ac8ea1ab9a44c9c5d9d379a2c77f",
       "width": 1600,
       "height": 900,
       "passed": true,
-      "notes": "白底表头、无竖线、数字对齐、独立橙色合计线及固定页眉／页脚通过。"
+      "notes": "Action Title单行、无默认标题分隔线；白底表头、无竖线、数字对齐、独立橙色合计线及正文起始位置通过。"
     },
     {
       "slide": 4,
       "renderFile": "slide-4.png",
-      "bytes": 121818,
-      "sha256": "ac7cd5ba1ece4b41f747da89f841147d73f0847247dec7c7ccf53d625cfe0eee",
-      "pixelSha256": "10308fbe50b6053c3f55f52e84e39b89589be12005248638ab7c4aa72ed82cc4",
+      "bytes": 121905,
+      "sha256": "1ca3444fe9a491232535e4021aa22f5d6b879080f01e538c7009600010bbf1a0",
+      "pixelSha256": "88fe334bf351b4573a1d2e82abe7fe5979e21c4e03a2b4f4cf24716ea5f926ac",
       "width": 1600,
       "height": 900,
       "passed": true,
-      "notes": "等宽两栏、分隔线、局部强调及固定页眉／页脚通过。"
+      "notes": "Action Title单行、无默认标题分隔线；等宽两栏、分隔线、局部强调及正文留白通过。"
     },
     {
       "slide": 5,
       "renderFile": "slide-5.png",
-      "bytes": 111813,
-      "sha256": "78a104ef35597e5cd358ac8e643870a37590cdc2c867cca575b019f7c011d673",
-      "pixelSha256": "8ff004f352a40949fae251e26cfa14e424b500f82fc58d90865da89b542faf6a",
+      "bytes": 98840,
+      "sha256": "a0cce3ec9b77ea18bf3bac720b450621b7408b08e856af68f6e527147f81aef8",
+      "pixelSha256": "0465620662694ec081f84c9ede0965b21a5030b1b72bdb07c273fffffeb346aa",
       "width": 1600,
       "height": 900,
       "passed": true,
-      "notes": "四节点流程、吸附箭头、反馈连接器及固定页眉／页脚通过。"
+      "notes": "Action Title单行、无默认标题分隔线；四节点流程、吸附箭头、反馈连接器及正文留白通过。"
     },
     {
       "slide": 6,
       "renderFile": "slide-6.png",
-      "bytes": 147827,
-      "sha256": "bcb1f13f9d0dd7bd082cbc552cd1fa74c1ad40473b08dbbf1aff76aa5c4bfb2c",
-      "pixelSha256": "0173d6969b6c51b81c8a35663512153c49dc9015e985609aea6970e782c60754",
+      "bytes": 147833,
+      "sha256": "f2eba9b38657aa124c02274d6f09bbc5eb3c9cad9171faf85fe28a38125ed18d",
+      "pixelSha256": "6602c7d4c35542cb8ef1cecefacf54b6d8e28961e8e8470ee08d49f72cb354ec",
       "width": 1600,
       "height": 900,
       "passed": true,
-      "notes": "高密度附录表、轻量横线、10pt正文、固定页眉／页脚、来源和页码通过。"
+      "notes": "Action Title单行、无默认标题分隔线；高密度附录表、轻量横线、10pt正文、来源和页码通过。"
     }
   ],
   "errors": [],

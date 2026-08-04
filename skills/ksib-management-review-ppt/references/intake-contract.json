@@ -1,0 +1,915 @@
+{
+  "schemaVersion": "ksib-intake-contract/1.1",
+  "contractId": "ksib-management-review-ppt",
+  "questionLimit": {
+    "taskTypeQuestions": 1,
+    "modeQuestions": 9,
+    "totalQuestions": 10
+  },
+  "answerSourcePrecedence": [
+    "user",
+    "workbench",
+    "default"
+  ],
+  "ui": {
+    "labels": {
+      "required": "必填",
+      "visible_optional": "选填",
+      "conditional": "选填"
+    },
+    "visibleGroups": [
+      "required",
+      "visible_optional"
+    ],
+    "collapsedGroup": "other_optional",
+    "batchPrompt": "请一次性确认缺失的必填信息；重要选填项已展示默认值，如无异议可回复‘其余按默认’。"
+  },
+  "pageIntentContract": {
+    "schemaVersion": "ksib-page-intent-contract/1.0",
+    "requiredForModes": [
+      "topic-to-deck",
+      "story-rebuild"
+    ],
+    "requiredFields": [
+      "questionToAnswer",
+      "actionTitlePolicy",
+      "requiredContent",
+      "primaryEvidence",
+      "visualHierarchy",
+      "acceptanceChecks"
+    ],
+    "defaults": {
+      "actionTitlePolicy": "auto-conclusion",
+      "subtitlePolicy": "boundary-only",
+      "bodyToBottomBandGapIn": 0.3
+    },
+    "actionTitlePolicies": [
+      "auto-conclusion",
+      "subject-colon-conclusion",
+      "conclusion-sentence",
+      "preserve"
+    ],
+    "subtitlePolicies": [
+      "boundary-only",
+      "none",
+      "preserve"
+    ]
+  },
+  "themeColorContract": {
+    "schemaVersion": "ksib-theme-color-contract/1.0",
+    "usageSchemaVersion": "ksib-theme-usage/1.1",
+    "inventorySchemaVersion": "ksib-pptx-color-inventory/1.0",
+    "defaultPrimaryColor": "#FF4906",
+    "defaultContrastColor": "#006B8F",
+    "customThemeDerivation": "ksib-srgb-mix/1.0",
+    "finalPptxColorGateRequired": true,
+    "userClarificationRequired": false
+  },
+  "taskTypeQuestion": {
+    "question_id": "task_type",
+    "applies_to_modes": [
+      "*"
+    ],
+    "question": "这次任务属于哪一种？",
+    "required_level": "required",
+    "default_value": null,
+    "choices": [
+      {
+        "value": "topic-to-deck",
+        "label": "从 Topic 新建",
+        "description": "没有现成 PPT 或故事线，从研究 Topic 开始。"
+      },
+      {
+        "value": "story-rebuild",
+        "label": "重构现有 PPT",
+        "description": "有现成 PPT，允许调整故事线、页序和页面结构。"
+      },
+      {
+        "value": "format-only",
+        "label": "只调格式与 Layout",
+        "description": "有现成 PPT，冻结内容和故事线。"
+      }
+    ],
+    "trigger_condition": null,
+    "blocking_when_missing": true,
+    "answer_source": [
+      "workbench",
+      "user"
+    ]
+  },
+  "modes": {
+    "topic-to-deck": {
+      "label": "从 Topic 新建",
+      "skillExecutionMode": "story-change",
+      "policy_defaults": {
+        "chromePolicy": "all",
+        "fontPolicy": "ksib",
+        "stylePolicy": "allow",
+        "headerPolicy": "ksib",
+        "headerModePolicy": "auto",
+        "footerPolicy": "ksib",
+        "sourcePolicy": "evidence",
+        "pageNumberPolicy": "dynamic",
+        "themePolicy": "ksib",
+        "themeColor": "#FF4906",
+        "themeContrastColor": "#006B8F",
+        "layoutStrategy": "auto",
+        "sourceScope": "public-supplement",
+        "imagePolicy": "public-research",
+        "actionTitlePolicy": "auto-conclusion",
+        "subtitlePolicy": "boundary-only",
+        "bodyToBottomBandGapPolicy": "standard"
+      },
+      "questions": [
+        {
+          "question_id": "topic_audience_decision_job",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "这份 PPT 给谁看、用于什么场合、希望支持什么决策？",
+          "required_level": "required",
+          "default_value": null,
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "topic_scope_core_questions",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "研究 Topic、范围和必须回答的核心问题是什么？",
+          "required_level": "required",
+          "default_value": null,
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "topic_materials_and_public_sources",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "是否有已有材料？是否允许补充经核验的公开资料？",
+          "required_level": "visible_optional",
+          "default_value": "public-supplement",
+          "choices": [
+            {
+              "value": "public-supplement",
+              "label": "允许公开补充"
+            },
+            {
+              "value": "provided-only",
+              "label": "仅使用用户材料"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "topic_required_sections_and_exclusions",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "是否有必须包含的章节、观点或明确不能讨论的范围？",
+          "required_level": "visible_optional",
+          "default_value": "无预设章节或额外禁区",
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "topic_length_or_duration",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "目标页数或讲述时长是多少？",
+          "required_level": "visible_optional",
+          "default_value": "按内容决定页数",
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "topic_theme_strategy",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "使用什么主题和主题色？",
+          "required_level": "visible_optional",
+          "default_value": {
+            "themePolicy": "ksib",
+            "themeColor": "#FF4906",
+            "themeContrastColor": "#006B8F",
+            "fontPolicy": "ksib"
+          },
+          "choices": [
+            {
+              "value": "ksib",
+              "label": "KSIB 橙"
+            },
+            {
+              "value": "reference",
+              "label": "经批准参考 Deck"
+            },
+            {
+              "value": "custom",
+              "label": "自定义主题色"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "topic_reference_and_layout",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "是否使用参考 Deck；版式、Action Title表达和副标题由 Skill 自动判断还是有偏好？",
+          "required_level": "visible_optional",
+          "default_value": {
+            "layoutStrategy": "auto",
+            "actionTitlePolicy": "auto-conclusion",
+            "subtitlePolicy": "boundary-only"
+          },
+          "choices": [
+            {
+              "value": "auto",
+              "label": "自动选择"
+            },
+            {
+              "value": "reference",
+              "label": "参考 Deck 抽象结构"
+            },
+            {
+              "value": "specified",
+              "label": "用户指定偏好"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "topic_data_definition",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "若包含数据，时期、单位、分母、公式和数据版本是什么？",
+          "required_level": "conditional",
+          "default_value": null,
+          "choices": [],
+          "trigger_condition": {
+            "any": [
+              {
+                "path": "answers.contains_data",
+                "operator": "equals",
+                "value": true
+              },
+              {
+                "path": "config.dataRequirements",
+                "operator": "present"
+              },
+              {
+                "path": "config.dataPeriod",
+                "operator": "present"
+              },
+              {
+                "path": "config.dataUnit",
+                "operator": "present"
+              },
+              {
+                "path": "config.dataDenominator",
+                "operator": "present"
+              },
+              {
+                "path": "config.dataVersion",
+                "operator": "present"
+              }
+            ]
+          },
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "topic_delivery_requirements",
+          "applies_to_modes": [
+            "topic-to-deck"
+          ],
+          "question": "交付语言、阶段和产物要求是什么？",
+          "required_level": "visible_optional",
+          "default_value": {
+            "language": "zh-CN",
+            "deliveryStage": "review",
+            "previewPolicy": "pptx-pdf",
+            "nativeEditable": true,
+            "qaReport": true
+          },
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        }
+      ]
+    },
+    "story-rebuild": {
+      "label": "重构现有 PPT",
+      "skillExecutionMode": "story-change",
+      "internalStateRule": "若用户提供已锁定故事线或最终内容且不授权改写，则内部转入 locked-content；不新增第四个外部任务类型。",
+      "policy_defaults": {
+        "chromePolicy": "all",
+        "fontPolicy": "ksib",
+        "stylePolicy": "allow",
+        "headerPolicy": "ksib",
+        "headerModePolicy": "auto",
+        "footerPolicy": "ksib",
+        "sourcePolicy": "evidence",
+        "pageNumberPolicy": "dynamic",
+        "themePolicy": "ksib",
+        "themeColor": "#FF4906",
+        "themeContrastColor": "#006B8F",
+        "layoutStrategy": "auto",
+        "sourceScope": "provided-only",
+        "imagePolicy": "provided-only",
+        "actionTitlePolicy": "auto-conclusion",
+        "subtitlePolicy": "boundary-only",
+        "bodyToBottomBandGapPolicy": "standard"
+      },
+      "questions": [
+        {
+          "question_id": "rebuild_audience_decision_job",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "这份 PPT 给谁看、用于什么场合、希望支持什么决策？",
+          "required_level": "required",
+          "default_value": null,
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "rebuild_source_presentation",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "哪个 PPT/PPTX 是输入真相源？",
+          "required_level": "required",
+          "default_value": null,
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "rebuild_story_scope",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "允许怎样调整故事线、页序、增删页和页面结构？",
+          "required_level": "required",
+          "default_value": "允许大幅重构",
+          "choices": [
+            {
+              "value": "major-rebuild",
+              "label": "允许大幅重构"
+            },
+            {
+              "value": "limited-rebuild",
+              "label": "仅限指定章节"
+            },
+            {
+              "value": "locked-content",
+              "label": "内容已锁定"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "rebuild_locked_elements",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "哪些结论、数字、页面、图表或品牌元素必须保留？",
+          "required_level": "required",
+          "default_value": "保留原始文件，不原地覆盖",
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "rebuild_evidence_policy",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "是否允许补充公开证据？原有数字是否需要重新核验？",
+          "required_level": "conditional",
+          "default_value": "仅使用用户材料",
+          "choices": [
+            {
+              "value": "provided-only",
+              "label": "仅使用用户材料"
+            },
+            {
+              "value": "reverify-provided",
+              "label": "复核原有数字"
+            },
+            {
+              "value": "public-supplement",
+              "label": "允许公开补充"
+            }
+          ],
+          "trigger_condition": {
+            "any": [
+              {
+                "path": "answers.reverify_existing_numbers",
+                "operator": "equals",
+                "value": true
+              },
+              {
+                "path": "answers.contains_external_claims",
+                "operator": "equals",
+                "value": true
+              },
+              {
+                "path": "config.dataRequirements",
+                "operator": "present"
+              }
+            ]
+          },
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "rebuild_length_or_duration",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "目标页数或讲述时长是多少？",
+          "required_level": "visible_optional",
+          "default_value": "按新故事线决定",
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "rebuild_visual_strategy",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "视觉系统如何处理：保留原主题、KSIB主题、参考 Deck 还是自定义主题色？",
+          "required_level": "visible_optional",
+          "default_value": {
+            "themePolicy": "ksib",
+            "themeColor": "#FF4906",
+            "themeContrastColor": "#006B8F",
+            "fontPolicy": "ksib"
+          },
+          "choices": [
+            {
+              "value": "ksib",
+              "label": "KSIB 橙＋苹方"
+            },
+            {
+              "value": "preserve",
+              "label": "保留原主题"
+            },
+            {
+              "value": "reference-or-custom",
+              "label": "参考或自定义"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "rebuild_layout_strategy",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "宏观 Layout、Action Title表达和副标题是尽量保留，还是根据新故事线重新设计？",
+          "required_level": "visible_optional",
+          "default_value": {
+            "layoutStrategy": "auto",
+            "actionTitlePolicy": "auto-conclusion",
+            "subtitlePolicy": "boundary-only"
+          },
+          "choices": [
+            {
+              "value": "auto",
+              "label": "自动判断"
+            },
+            {
+              "value": "preserve",
+              "label": "尽量保留"
+            },
+            {
+              "value": "reference",
+              "label": "跟随参考 Deck"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "rebuild_delivery_requirements",
+          "applies_to_modes": [
+            "story-rebuild"
+          ],
+          "question": "交付语言、阶段和产物要求是什么？",
+          "required_level": "visible_optional",
+          "default_value": {
+            "language": "zh-CN",
+            "deliveryStage": "review",
+            "previewPolicy": "pptx-pdf",
+            "nativeEditable": true,
+            "qaReport": true
+          },
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        }
+      ]
+    },
+    "format-only": {
+      "label": "只调格式与 Layout",
+      "skillExecutionMode": "format-only",
+      "policy_defaults": {
+        "chromePolicy": "geometry",
+        "fontPolicy": "preserve",
+        "stylePolicy": "preserve",
+        "headerPolicy": "preserve",
+        "headerModePolicy": "preserve",
+        "footerPolicy": "preserve",
+        "sourcePolicy": "preserve",
+        "pageNumberPolicy": "preserve",
+        "themePolicy": "preserve",
+        "layoutStrategy": "preserve",
+        "sourceScope": "provided-only",
+        "imagePolicy": "provided-only",
+        "actionTitlePolicy": "preserve",
+        "subtitlePolicy": "preserve",
+        "bodyToBottomBandGapPolicy": "preserve"
+      },
+      "questions": [
+        {
+          "question_id": "format_source_presentation",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "哪个 PPT/PPTX 是输入真相源？",
+          "required_level": "required",
+          "default_value": null,
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "format_audience_and_occasion",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "使用场合和主要受众是什么？",
+          "required_level": "visible_optional",
+          "default_value": "未指定",
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "format_authorized_scope",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "允许修改哪些范围：Layout、位置尺寸、页眉页脚、页码、字体、颜色或样式？",
+          "required_level": "required",
+          "default_value": "仅几何和 Layout",
+          "choices": [
+            {
+              "value": "geometry-only",
+              "label": "仅几何和 Layout"
+            },
+            {
+              "value": "style-only",
+              "label": "仅授权样式"
+            },
+            {
+              "value": "geometry-and-style",
+              "label": "几何与样式"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "format_content_freeze_confirmation",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "是否确认冻结文字、数字、页序、图表数据和对象内容绑定？",
+          "required_level": "required",
+          "default_value": true,
+          "choices": [
+            {
+              "value": true,
+              "label": "确认全部冻结"
+            },
+            {
+              "value": false,
+              "label": "不确认，需改用重构模式"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": true,
+          "answer_source": [
+            "workbench",
+            "user"
+          ]
+        },
+        {
+          "question_id": "format_font_policy",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "字体怎么处理？",
+          "required_level": "visible_optional",
+          "default_value": "preserve",
+          "choices": [
+            {
+              "value": "preserve",
+              "label": "保留原字体"
+            },
+            {
+              "value": "ksib",
+              "label": "授权统一为苹方-简"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "format_theme_policy",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "主题和颜色怎么处理？是否选择新的主题色？",
+          "required_level": "visible_optional",
+          "default_value": "保留原主题和颜色语义",
+          "choices": [
+            {
+              "value": "preserve",
+              "label": "保留原主题"
+            },
+            {
+              "value": "ksib",
+              "label": "授权 KSIB 主题"
+            },
+            {
+              "value": "custom",
+              "label": "授权自定义主题"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "format_chrome_policy",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "页眉、页脚、来源和页码是保留、统一几何还是重新定样？",
+          "required_level": "visible_optional",
+          "default_value": "保留样式，只统一必要几何",
+          "choices": [
+            {
+              "value": "geometry",
+              "label": "只统一几何"
+            },
+            {
+              "value": "preserve",
+              "label": "完全保留"
+            },
+            {
+              "value": "all",
+              "label": "授权重新定样"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "format_reference_and_density",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "是否有参考 Deck、页面密度或标题层级要求？",
+          "required_level": "visible_optional",
+          "default_value": {
+            "layoutStrategy": "preserve",
+            "actionTitlePolicy": "preserve",
+            "subtitlePolicy": "preserve"
+          },
+          "choices": [
+            {
+              "value": "preserve",
+              "label": "保留宏观结构"
+            },
+            {
+              "value": "reference",
+              "label": "跟随参考 Deck"
+            }
+          ],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        },
+        {
+          "question_id": "format_delivery_requirements",
+          "applies_to_modes": [
+            "format-only"
+          ],
+          "question": "交付产物和质检要求是什么？",
+          "required_level": "visible_optional",
+          "default_value": {
+            "previewPolicy": "pptx-pdf",
+            "nativeEditable": true,
+            "semanticFingerprint": true,
+            "qaReport": true,
+            "versionRecord": true
+          },
+          "choices": [],
+          "trigger_condition": null,
+          "blocking_when_missing": false,
+          "answer_source": [
+            "workbench",
+            "user",
+            "default"
+          ]
+        }
+      ]
+    }
+  },
+  "guardrails": [
+    {
+      "id": "preserve_original",
+      "applies_to_modes": [
+        "topic-to-deck",
+        "story-rebuild",
+        "format-only"
+      ],
+      "statement": "不覆盖用户原文件；所有修改作用于隔离工作副本或新输出路径。"
+    },
+    {
+      "id": "no_fabricated_evidence",
+      "applies_to_modes": [
+        "topic-to-deck",
+        "story-rebuild",
+        "format-only"
+      ],
+      "statement": "不伪造事实、数据、排名、来源、归因或承诺。"
+    },
+    {
+      "id": "approved_brand_assets_only",
+      "applies_to_modes": [
+        "topic-to-deck",
+        "story-rebuild",
+        "format-only"
+      ],
+      "statement": "Logo与品牌资产仅在用户提供或明确批准后使用，不重绘、不改色、不伪造。"
+    },
+    {
+      "id": "storyline_lock_before_production",
+      "applies_to_modes": [
+        "topic-to-deck",
+        "story-rebuild"
+      ],
+      "statement": "Storyline必须在正式制作前由用户锁定；该门禁不可关闭。"
+    },
+    {
+      "id": "format_only_semantic_freeze",
+      "applies_to_modes": [
+        "format-only"
+      ],
+      "statement": "文字、数字、页序、图表数据和对象内容绑定冻结；修改前后必须通过语义指纹比较。"
+    },
+    {
+      "id": "single_line_action_title",
+      "applies_to_modes": [
+        "topic-to-deck",
+        "story-rebuild",
+        "format-only"
+      ],
+      "statement": "内容页Action Title只能一行；不允许两行Profile、硬换行、多个标题段落或渲染后的软换行。"
+    }
+  ]
+}
