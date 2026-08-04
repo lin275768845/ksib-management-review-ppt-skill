@@ -1,11 +1,11 @@
 {
   "schemaVersion": "ksib-ooxml-qa/2.0",
-  "validatorSha256": "9164617d86c98f6b8a53dcfda3d3f8224e27d2ba4318639d64eeca459ca25ec3",
+  "validatorSha256": "3db2e7d4f45d78385dad3535c4cd14eb969620187fe8465f928b32c8594da29c",
   "themePolicy": "ksib",
   "fontPolicy": "ksib",
   "formatContract": {
     "file": "golden-deck-format-contract.json",
-    "sha256": "21ed869cecd92fd4c970bfe796d61636b559567ce8def223ff8f5ed6cae32db9"
+    "sha256": "0fbc1ff9e727eea7b0a4abc2eab6b73a1adae91c8250f788828c7cb43418ec9d"
   },
   "passed": true,
   "errorCount": 0,
@@ -15,7 +15,7 @@
   "reports": [
     {
       "file": "KSIB_MBB_FORMAT_GOLDEN_DECK_V1.roundtrip.pptx",
-      "sha256": "02392caee6e5a52f0fbcb53e224b4d9b6bb49d8fd87e8407c62e1d9cb4e16efe",
+      "sha256": "ad22ee097723f2600587abe4ec5502235e97dfbb5b1cd13388b3cb40aae508e8",
       "errors": [],
       "warnings": [],
       "inventory": {
@@ -106,7 +106,7 @@
             "hasReferenceData": false
           }
         ],
-        "formatContractSha256": "21ed869cecd92fd4c970bfe796d61636b559567ce8def223ff8f5ed6cae32db9",
+        "formatContractSha256": "0fbc1ff9e727eea7b0a4abc2eab6b73a1adae91c8250f788828c7cb43418ec9d",
         "formatContractSlides": [
           {
             "slide": 1,
@@ -127,7 +127,13 @@
             "hierarchyRolesPresent": [],
             "headerRoleGeometry": {
               "roles": {}
-            }
+            },
+            "actionTitleSingleLine": {
+              "objectCount": 0,
+              "evaluated": false,
+              "defaultTitleDividerPolicy": "forbid"
+            },
+            "bodyStart": null
           },
           {
             "slide": 2,
@@ -136,7 +142,7 @@
             "headerMode": "title-subtitle",
             "nativeObjectCounts": {
               "charts": 1,
-              "shapes": 3,
+              "shapes": 2,
               "textBoxes": 10
             },
             "connectorEditability": {
@@ -169,17 +175,34 @@
                     "w": 10728655,
                     "h": 219456
                   }
-                },
-                "title-divider": {
-                  "object": "title-divider",
-                  "geometryEmu": {
-                    "x": 731520,
-                    "y": 1188720,
-                    "w": 10728655,
-                    "h": 9144
-                  }
                 }
               }
+            },
+            "actionTitleSingleLine": {
+              "object": "action-title",
+              "evaluated": true,
+              "nonEmptyParagraphCount": 1,
+              "explicitBreakCount": 0,
+              "newlineCharacterCount": 0,
+              "weightedCharacters": 25.65,
+              "maximumWeightedCharacters": 38,
+              "defaultTitleDividerPolicy": "forbid",
+              "softWrapRequiresVisualGate": true
+            },
+            "bodyStart": {
+              "bodyStartYIn": 1.66,
+              "roles": [
+                {
+                  "role": "chart-main",
+                  "object": "chart-main",
+                  "geometry": {
+                    "x": 0.8,
+                    "y": 1.66,
+                    "w": 8.6,
+                    "h": 5.06
+                  }
+                }
+              ]
             }
           },
           {
@@ -188,7 +211,7 @@
             "slideRole": "content",
             "headerMode": "title-only",
             "nativeObjectCounts": {
-              "shapes": 5,
+              "shapes": 4,
               "tables": 1,
               "textBoxes": 5
             },
@@ -212,17 +235,34 @@
                     "w": 10728655,
                     "h": 365760
                   }
-                },
-                "title-divider": {
-                  "object": "title-divider",
-                  "geometryEmu": {
-                    "x": 731520,
-                    "y": 1005840,
-                    "w": 10728655,
-                    "h": 9144
-                  }
                 }
               }
+            },
+            "actionTitleSingleLine": {
+              "object": "action-title",
+              "evaluated": true,
+              "nonEmptyParagraphCount": 1,
+              "explicitBreakCount": 0,
+              "newlineCharacterCount": 0,
+              "weightedCharacters": 22.0,
+              "maximumWeightedCharacters": 38,
+              "defaultTitleDividerPolicy": "forbid",
+              "softWrapRequiresVisualGate": true
+            },
+            "bodyStart": {
+              "bodyStartYIn": 1.52,
+              "roles": [
+                {
+                  "role": "table-main",
+                  "object": "table-main",
+                  "geometry": {
+                    "x": 0.8,
+                    "y": 1.55,
+                    "w": 8.55,
+                    "h": 4.85
+                  }
+                }
+              ]
             }
           },
           {
@@ -231,7 +271,7 @@
             "slideRole": "content",
             "headerMode": "title-only",
             "nativeObjectCounts": {
-              "shapes": 4,
+              "shapes": 3,
               "textBoxes": 6
             },
             "connectorEditability": {
@@ -254,27 +294,54 @@
                     "w": 10728655,
                     "h": 365760
                   }
-                },
-                "title-divider": {
-                  "object": "title-divider",
-                  "geometryEmu": {
-                    "x": 731520,
-                    "y": 1005840,
-                    "w": 10728655,
-                    "h": 9144
-                  }
                 }
               }
+            },
+            "actionTitleSingleLine": {
+              "object": "action-title",
+              "evaluated": true,
+              "nonEmptyParagraphCount": 1,
+              "explicitBreakCount": 0,
+              "newlineCharacterCount": 0,
+              "weightedCharacters": 25.0,
+              "maximumWeightedCharacters": 38,
+              "defaultTitleDividerPolicy": "forbid",
+              "softWrapRequiresVisualGate": true
+            },
+            "bodyStart": {
+              "bodyStartYIn": 1.52,
+              "roles": [
+                {
+                  "role": "column-left",
+                  "object": "column-left",
+                  "geometry": {
+                    "x": 0.8,
+                    "y": 1.6,
+                    "w": 5.69,
+                    "h": 4.9
+                  }
+                },
+                {
+                  "role": "column-right",
+                  "object": "column-right",
+                  "geometry": {
+                    "x": 6.84,
+                    "y": 1.6,
+                    "w": 5.69,
+                    "h": 4.9
+                  }
+                }
+              ]
             }
           },
           {
             "slide": 5,
             "part": "ppt/slides/slide5.xml",
             "slideRole": "content",
-            "headerMode": "title-two-line",
+            "headerMode": "title-only",
             "nativeObjectCounts": {
               "connectors": 4,
-              "shapes": 3,
+              "shapes": 2,
               "textBoxes": 9
             },
             "connectorEditability": {
@@ -295,19 +362,66 @@
                     "x": 731520,
                     "y": 502920,
                     "w": 10728655,
-                    "h": 658368
-                  }
-                },
-                "title-divider": {
-                  "object": "title-divider",
-                  "geometryEmu": {
-                    "x": 731520,
-                    "y": 1261872,
-                    "w": 10728655,
-                    "h": 9144
+                    "h": 365760
                   }
                 }
               }
+            },
+            "actionTitleSingleLine": {
+              "object": "action-title",
+              "evaluated": true,
+              "nonEmptyParagraphCount": 1,
+              "explicitBreakCount": 0,
+              "newlineCharacterCount": 0,
+              "weightedCharacters": 25.0,
+              "maximumWeightedCharacters": 38,
+              "defaultTitleDividerPolicy": "forbid",
+              "softWrapRequiresVisualGate": true
+            },
+            "bodyStart": {
+              "bodyStartYIn": 1.52,
+              "roles": [
+                {
+                  "role": "process-node-1",
+                  "object": "process-node-1",
+                  "geometry": {
+                    "x": 0.8,
+                    "y": 2.15,
+                    "w": 2.49,
+                    "h": 2.35
+                  }
+                },
+                {
+                  "role": "process-node-2",
+                  "object": "process-node-2",
+                  "geometry": {
+                    "x": 3.8809995625546807,
+                    "y": 2.15,
+                    "w": 2.49,
+                    "h": 2.35
+                  }
+                },
+                {
+                  "role": "process-node-3",
+                  "object": "process-node-3",
+                  "geometry": {
+                    "x": 6.962000218722659,
+                    "y": 2.15,
+                    "w": 2.49,
+                    "h": 2.35
+                  }
+                },
+                {
+                  "role": "process-node-4",
+                  "object": "process-node-4",
+                  "geometry": {
+                    "x": 10.04299978127734,
+                    "y": 2.15,
+                    "w": 2.49,
+                    "h": 2.35
+                  }
+                }
+              ]
             }
           },
           {
@@ -316,7 +430,7 @@
             "slideRole": "appendix",
             "headerMode": "title-only",
             "nativeObjectCounts": {
-              "shapes": 3,
+              "shapes": 2,
               "tables": 1,
               "textBoxes": 5
             },
@@ -340,17 +454,34 @@
                     "w": 10728655,
                     "h": 365760
                   }
-                },
-                "title-divider": {
-                  "object": "title-divider",
-                  "geometryEmu": {
-                    "x": 731520,
-                    "y": 1005840,
-                    "w": 10728655,
-                    "h": 9144
-                  }
                 }
               }
+            },
+            "actionTitleSingleLine": {
+              "object": "action-title",
+              "evaluated": true,
+              "nonEmptyParagraphCount": 1,
+              "explicitBreakCount": 0,
+              "newlineCharacterCount": 0,
+              "weightedCharacters": 26.2,
+              "maximumWeightedCharacters": 38,
+              "defaultTitleDividerPolicy": "forbid",
+              "softWrapRequiresVisualGate": true
+            },
+            "bodyStart": {
+              "bodyStartYIn": 1.52,
+              "roles": [
+                {
+                  "role": "appendix-note",
+                  "object": "appendix-note",
+                  "geometry": {
+                    "x": 0.8,
+                    "y": 1.52,
+                    "w": 11.732999781277341,
+                    "h": 0.28
+                  }
+                }
+              ]
             }
           }
         ],
@@ -946,7 +1077,9 @@
             "headerMode": "title-only",
             "slides": [
               3,
-              4
+              4,
+              5,
+              6
             ],
             "referenceSlide": 3,
             "geometryToleranceEmu": 0,
@@ -1006,50 +1139,48 @@
                     "paragraph": "fdd0e4079eb37cda3d6452848679e54bc7c9c8a80ff3eb329119767a62a2d4b9"
                   },
                   "status": "inventoried"
-                }
-              ],
-              "title-divider": [
+                },
                 {
-                  "slide": 3,
-                  "part": "ppt/slides/slide3.xml",
-                  "object": "title-divider",
+                  "slide": 5,
+                  "part": "ppt/slides/slide5.xml",
+                  "object": "action-title",
                   "geometryEmu": {
                     "x": 731520,
-                    "y": 1005840,
+                    "y": 502920,
                     "w": 10728655,
-                    "h": 9144
+                    "h": 365760
                   },
-                  "objectType": "shapes",
+                  "objectType": "textBoxes",
                   "rotation": 0,
                   "styleHashes": {
-                    "fill": "68ba0ce263bed851a050b2b824972f02df2c9c7a0e2e4cb1edc229e469716f99",
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
                     "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
-                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
-                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
-                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "a88810bd6d146a12adc088b784261cf9e084784aead3e5d574e2706ca1b77f6d",
+                    "paragraph": "fdd0e4079eb37cda3d6452848679e54bc7c9c8a80ff3eb329119767a62a2d4b9"
                   },
                   "status": "inventoried"
                 },
                 {
-                  "slide": 4,
-                  "part": "ppt/slides/slide4.xml",
-                  "object": "title-divider",
+                  "slide": 6,
+                  "part": "ppt/slides/slide6.xml",
+                  "object": "action-title",
                   "geometryEmu": {
                     "x": 731520,
-                    "y": 1005840,
+                    "y": 502920,
                     "w": 10728655,
-                    "h": 9144
+                    "h": 365760
                   },
-                  "objectType": "shapes",
+                  "objectType": "textBoxes",
                   "rotation": 0,
                   "styleHashes": {
-                    "fill": "68ba0ce263bed851a050b2b824972f02df2c9c7a0e2e4cb1edc229e469716f99",
+                    "fill": "0e75a0509f6c571eba501cbe8118219f019cb8bfc96e28484ca4b614fe5ba22e",
                     "line": "0a71f60d90c5a370a4e4068154cdf0690e90bdc03aaf46ded437d3e4ed21b892",
-                    "textMargins": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
-                    "verticalAlignment": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
-                    "font": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-                    "paragraph": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                    "textMargins": "8b1a23850e6a4be294bf5f1666c23d5a54c2222048da6351071489e1b8bfe39e",
+                    "verticalAlignment": "bf665933cd5098e7b61bfd206069d265ca2e0917ca52e1932162d51ccdc1ffe9",
+                    "font": "a88810bd6d146a12adc088b784261cf9e084784aead3e5d574e2706ca1b77f6d",
+                    "paragraph": "fdd0e4079eb37cda3d6452848679e54bc7c9c8a80ff3eb329119767a62a2d4b9"
                   },
                   "status": "inventoried"
                 }

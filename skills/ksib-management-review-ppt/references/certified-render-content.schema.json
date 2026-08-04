@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ksib-certified-render-content/2.0",
+  "title": "KSIB Certified Core Render Content",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "slides"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "ksib-certified-render-content/2.0"
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slide",
+          "storylineId",
+          "layoutId",
+          "header",
+          "title",
+          "source",
+          "slotContent"
+        ],
+        "properties": {
+          "slide": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "storylineId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "layoutId": {
+            "enum": [
+              "executiveSummary",
+              "singleExhibit",
+              "evidenceInsight",
+              "tableInsight",
+              "sideBySide",
+              "structuredComparison",
+              "matrix2x2",
+              "issueTree",
+              "problemSolutionMap",
+              "processValueChain",
+              "phasePlaybook",
+              "recommendationRoadmap"
+            ]
+          },
+          "header": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 48
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 38
+          },
+          "subtitle": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 96
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180
+          },
+          "slotContent": {
+            "type": "object",
+            "minProperties": 1
+          }
+        }
+      }
+    }
+  },
+  "$comment": "Layout-specific slot shape and capacity are enforced by the deterministic renderer against the locked Render Plan; the envelope and certified layout enum are schema-validated here."
+}

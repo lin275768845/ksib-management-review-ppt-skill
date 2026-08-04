@@ -127,6 +127,7 @@ node scripts/build_release_manifest.mjs \
   --gate handoff=work/gates/storyline-handoff.json \
   --gate ooxml=work/gates/ooxml.json \
   --gate visual=work/gates/visual.json \
+  --gate powerpoint-render=work/gates/powerpoint-render.json \
   --validator storyline=scripts/validate_storyline_gate.mjs \
   --validator storyline-upstream="${CODEX_HOME:-$HOME/.codex}/skills/linzhe-mbb-storyline/scripts/validate_storyline.mjs" \
   --validator evidence=scripts/validate_evidence.mjs \
@@ -134,7 +135,8 @@ node scripts/build_release_manifest.mjs \
   --validator handoff=scripts/validate_storyline_handoff.mjs \
   --validator ooxml=scripts/ooxml_qa.py \
   --validator visual=scripts/build_visual_review_gate.py \
-  --required-gates storyline,evidence,content,handoff,ooxml,visual \
+  --validator powerpoint-render=scripts/validate_powerpoint_render.py \
+  --required-gates storyline,evidence,content,handoff,ooxml,visual,powerpoint-render \
   --renderer artifact-tool-ksib \
   --renderer-version 1.0.0 \
   --renderer-mode canonical \
@@ -146,8 +148,8 @@ node scripts/build_release_manifest.mjs \
 
 各模式的必需Gate固定如下，不能靠删减`--required-gates`绕过：
 
-- `format-only`：`fingerprint,ooxml,visual`
-- `locked-content`／`story-change`：`storyline,evidence,content,handoff,ooxml,visual`
+- `format-only`：`fingerprint,ooxml,visual,powerpoint-render`
+- `locked-content`／`story-change`：`storyline,evidence,content,handoff,ooxml,visual,powerpoint-render`
 
 Release Manifest还会检查Gate本身的Schema与生成版本，不能用一个只有`{"passed": true}`的空JSON或旧Validator报告代替：
 
@@ -159,7 +161,8 @@ Release Manifest还会检查Gate本身的Schema与生成版本，不能用一个
 - `fingerprint`必须来自format-only语义比较脚本，并显式登记`fontPolicy`与`stylePolicy`；
 - `ooxml`必须使用`ksib-ooxml-qa/2.0`，包含`reports[]`并显式登记主题与字体策略；字体报告应列出直接字体族与字号清单；
 - OOXML报告中的外部关系只保留协议与主机，必须删除路径、查询参数、片段和用户信息；日志或Manifest不得复制完整外链；
-- `visual`必须逐页全尺寸复核并满足下方合同。
+- `visual`必须逐页全尺寸复核并满足下方辅助预览合同；它不是最终视觉真相源。
+- `powerpoint-render`必须使用`ksib-powerpoint-render-gate/1.0`，绑定当前PPTX、Content、Format Contract和PowerPoint逐页截图集合，并通过标签唯一归属、图表数字、金融折线和Renderer实际字段检查。
 
 Visual Review输入示例：
 
@@ -187,7 +190,7 @@ Visual Review输入示例：
 }
 ```
 
-先用系统`Presentations` skill渲染全部页面PNG，再生成机读Visual Gate：
+先用系统`Presentations` skill渲染全部页面PNG，再生成机读Visual Gate。该结果只用于辅助预览：
 
 ```bash
 python3 scripts/build_visual_review_gate.py \
@@ -199,6 +202,36 @@ python3 scripts/build_visual_review_gate.py \
 
 脚本核对PPT页数与逐页复核记录，验证每页PNG结构、CRC、IDAT完整解码长度、逐行filter byte、尺寸、纵横比、文件SHA256及规范化解码像素SHA256唯一性，最低分辨率为960×540；当前只接受非隔行PNG。Visual Gate必须使用`ksib-visual-review/2.0`并记录当前Validator SHA256；只有PNG文件头、短解码载荷、隔行PNG、只手写全局`passed: true`、遗漏某页、同名复用、改名后复用，或仅增加`tEXt`等元数据后的同像素复用均会失败。
 
+随后必须在Microsoft PowerPoint中保存最终PPTX的逐页截图，并按`references/powerpoint-render-contract.md`生成最终视觉门禁：
+
+```bash
+python3 scripts/validate_powerpoint_render.py \
+  --pptx outputs/client-delivery.pptx \
+  --content work/content.json \
+  --format-contract work/format-contract.json \
+  --review-json work/delivery/powerpoint-review.json \
+  --screenshot-dir work/delivery/powerpoint-screenshots \
+  --output work/gates/powerpoint-render.json
+```
+
+PowerPoint截图必须逐页完成100%视图与缩小视图检查。辅助渲染和PowerPoint明显不一致、分类标签由坐标轴与外部文本重复承担、百分比精度不合规、金融时间序列使用平滑曲线，或`phasePlaybook`漏渲染共同逻辑／判断标准／行动时，均直接阻断。
+
+最终PPTX完成最后一次保存后，必须从成片提取对象颜色并交叉核对Theme Usage：
+
+```bash
+python3 scripts/extract_pptx_theme_colors.py \
+  --pptx outputs/client-delivery.pptx \
+  --output work/gates/pptx-color-inventory.json
+node scripts/validate_theme_usage.mjs \
+  --pptx outputs/client-delivery.pptx \
+  --python "$PYTHON" \
+  --usage work/delivery/theme-usage.json \
+  --inventory work/gates/pptx-color-inventory.json \
+  --report work/gates/theme-color.json
+```
+
+提取清单绑定最终PPTX SHA256、当前提取器SHA256、页码、唯一对象名与OOXML属性路径。Validator会在临时目录对同一最终PPTX现场重提取并比较语义哈希，因此手改inventory同样不能通过。每个可见颜色必须可解析并在Theme Usage中恰好登记一次；Renderer声明与最终成片不一致时，以最终PPTX为准并阻断。
+
 纯格式任务示例：
 
 ```bash
@@ -209,10 +242,14 @@ node scripts/build_release_manifest.mjs \
   --gate fingerprint=work/delivery/format-only-semantic-gate.json \
   --gate ooxml=work/gates/ooxml.json \
   --gate visual=work/gates/visual.json \
+  --gate theme-color=work/gates/theme-color.json \
+  --gate powerpoint-render=work/gates/powerpoint-render.json \
   --validator fingerprint=scripts/pptx_semantic_fingerprint.py \
   --validator ooxml=scripts/ooxml_qa.py \
   --validator visual=scripts/build_visual_review_gate.py \
-  --required-gates fingerprint,ooxml,visual \
+  --validator theme-color=scripts/validate_theme_usage.mjs \
+  --validator powerpoint-render=scripts/validate_powerpoint_render.py \
+  --required-gates fingerprint,ooxml,visual,theme-color,powerpoint-render \
   --renderer artifact-tool-template-following \
   --renderer-version 1.0.0 \
   --renderer-mode canonical \
@@ -255,7 +292,9 @@ node scripts/build_release_manifest.mjs \
 - Evidence／Content／Handoff报告的输入SHA256不对应本次Storyline、Content、Evidence或当前Layout Matrix，或三者不是基于同一Matrix运行；
 - Storyline、Content、Evidence、Handoff和Visual页数不一致，或逐页ID／页码有缺失、重复；
 - Renderer实际使用记录与Content逐页canonical／fallback合同不一致；
-- fingerprint、OOXML或Visual Gate记录的PPTX SHA256与当前最终文件不一致；
+- fingerprint、OOXML、Visual Gate、Theme Color Gate或PowerPoint Render Gate记录的PPTX SHA256与当前最终文件不一致；
+- Theme Color Gate没有逐项核对最终PPTX全部可见颜色，或存在不稳定对象名、未解析颜色、未登记／重复登记颜色、虚假绑定、Token与成片Hex不一致；
+- PowerPoint Render Gate缺少逐页PowerPoint截图、逐页审阅时间或任一P0检查未通过；
 - 最终文件不是`.pptx`、不是合法ZIP，或根`officeDocument`关系、Presentation Content Type、非空`sldId`、Presentation→Slide关系、真实slide part与Slide Content Type未完全对应；
 - format-only指纹的baseline SHA256不对应本次输入PPTX；
 - 人工PowerPoint检查的`passed`不为`true`；
@@ -275,6 +314,6 @@ node scripts/build_release_manifest.mjs --self-test
 - Release Manifest记录的是“哪些输入、门禁和人工检查支持本次交付”，不是对业务结论正确性的替代。
 - Gate报告必须来自对应最终文件；不得复用旧版本PPT的通过报告。
 - `required-gates`由当前任务合同明确。不得通过从列表中删除失败Gate来绕过阻断。
-- 最终PPTX发生任何重存、清理或人工编辑后，必须重新运行语义指纹、OOXML、视觉和Release Manifest步骤。
+- 最终PPTX发生任何重存、清理或人工编辑后，必须重新运行语义指纹、OOXML、最终颜色提取与交叉校验、视觉和Release Manifest步骤。
 - Manifest只记录文件名和Hash，不写入本机绝对路径，避免在客户交付包中暴露本地目录。
 - `generatedAt`默认使用当前UTC时间；需要可重复测试时可显式传入`--generated-at`。

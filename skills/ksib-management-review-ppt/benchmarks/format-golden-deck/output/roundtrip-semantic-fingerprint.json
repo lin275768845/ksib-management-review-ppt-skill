@@ -1,6 +1,6 @@
 {
-  "archiveSha256": "39adcd95a3c88733c6da9e71ec6d1cad15a4ba99b64a865720468906ca961b8e",
-  "overallHash": "f868a3903846a3c23a6754dacaa491071f055b98dcc81c3183f9a12c23cd2db8",
+  "archiveSha256": "ad22ee097723f2600587abe4ec5502235e97dfbb5b1cd13388b3cb40aae508e8",
+  "overallHash": "596a69d3f8fa6820360c91218223b08a2bfc0757d02b6acb75f6a92e8ffd5e91",
   "schemaVersion": "ksib-pptx-semantic-fingerprint/3.2",
   "slideCount": 6,
   "slideOrder": [
@@ -8,7 +8,7 @@
     "32c6f6ecacf7ea774d6788f3608583d3116f7f9c81fbfdc8026fc5007535b2a0",
     "b6972db969cb3a4c2fca7bb8226c00823efa2d5610a539eb3e903abcaaf31941",
     "58eafa656870afb0ff313d9328671ffd9c38e32d9da3c365ba8cddc8748d23b6",
-    "ba64d30bf267c8cf61f817c2c24f7e2f8f1083e0fb52e06f13b5694c56a4caad",
+    "74fc814649c0755e359eebb7c079dd764cb0bec953213ce9a1a14eb95781c929",
     "ba6e099992b7ecb42f0e4fd40c99cde80434f0e9f00fd61e6be5bd8c9349ec34"
   ],
   "slides": [
@@ -896,14 +896,6 @@
             "value": "D9DCE1"
           },
           {
-            "count": 1,
-            "kind": "direct",
-            "role": "fill",
-            "transforms": [],
-            "type": "srgbClr",
-            "value": "E5E6EB"
-          },
-          {
             "count": 2,
             "kind": "direct",
             "role": "fill",
@@ -918,6 +910,14 @@
             "transforms": [],
             "type": "srgbClr",
             "value": "FFFFFF"
+          },
+          {
+            "count": 1,
+            "kind": "direct",
+            "role": "line",
+            "transforms": [],
+            "type": "srgbClr",
+            "value": "E5E6EB"
           }
         ],
         "inherited": {
@@ -1162,6 +1162,25 @@
               {
                 "count": 1,
                 "kind": "direct",
+                "role": "line",
+                "transforms": [],
+                "type": "srgbClr",
+                "value": "E5E6EB"
+              }
+            ],
+            "themeReferences": []
+          },
+          "objectKey": "name:footer-divider",
+          "objectType": "sp",
+          "relatedTextColorBindings": [],
+          "textColorBindings": []
+        },
+        {
+          "colorSemantics": {
+            "direct": [
+              {
+                "count": 1,
+                "kind": "direct",
                 "role": "fill",
                 "transforms": [],
                 "type": "srgbClr",
@@ -1342,25 +1361,6 @@
               "text": "基准测试虚构数据|单系列、4个类别、单位:指数"
             }
           ]
-        },
-        {
-          "colorSemantics": {
-            "direct": [
-              {
-                "count": 1,
-                "kind": "direct",
-                "role": "fill",
-                "transforms": [],
-                "type": "srgbClr",
-                "value": "E5E6EB"
-              }
-            ],
-            "themeReferences": []
-          },
-          "objectKey": "name:title-divider",
-          "objectType": "sp",
-          "relatedTextColorBindings": [],
-          "textColorBindings": []
         }
       ],
       "objectContentSemantics": [
@@ -2146,6 +2146,49 @@
                 {
                   "path": "sp[0]/spPr[0]/ln[0]",
                   "style": {
+                    "attributes": {
+                      "w": "9525"
+                    },
+                    "children": [
+                      {
+                        "attributes": {},
+                        "children": [
+                          {
+                            "attributes": {
+                              "val": "E5E6EB"
+                            },
+                            "children": [],
+                            "tag": "srgbClr"
+                          }
+                        ],
+                        "tag": "solidFill"
+                      }
+                    ],
+                    "tag": "ln"
+                  }
+                },
+                {
+                  "path": "sp[0]/spPr[0]/noFill[0]",
+                  "style": {
+                    "attributes": {},
+                    "children": [],
+                    "tag": "noFill"
+                  }
+                }
+              ]
+            }
+          ],
+          "objectKey": "name:footer-divider",
+          "objectType": "sp"
+        },
+        {
+          "graphicStyles": [
+            {
+              "part": "ppt/slides/slide2.xml",
+              "styles": [
+                {
+                  "path": "sp[0]/spPr[0]/ln[0]",
+                  "style": {
                     "attributes": {},
                     "children": [
                       {
@@ -2442,47 +2485,6 @@
           ],
           "objectKey": "name:subtitle",
           "objectType": "sp"
-        },
-        {
-          "graphicStyles": [
-            {
-              "part": "ppt/slides/slide2.xml",
-              "styles": [
-                {
-                  "path": "sp[0]/spPr[0]/ln[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {},
-                        "children": [],
-                        "tag": "noFill"
-                      }
-                    ],
-                    "tag": "ln"
-                  }
-                },
-                {
-                  "path": "sp[0]/spPr[0]/solidFill[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {
-                          "val": "E5E6EB"
-                        },
-                        "children": [],
-                        "tag": "srgbClr"
-                      }
-                    ],
-                    "tag": "solidFill"
-                  }
-                }
-              ]
-            }
-          ],
-          "objectKey": "name:title-divider",
-          "objectType": "sp"
         }
       ],
       "objectTextStyleSemantics": [
@@ -2645,7 +2647,7 @@
       "relatedParts": [
         "ppt/slides/charts/chart1.xml"
       ],
-      "semanticHash": "941f04961d69f318b12095d1f5a03c758368f042cd7e54d33d71b7046f218d82",
+      "semanticHash": "5a20411f74e2d9c621b6d49a77899d8059c1260aed3981f43ddc8429ff0fc3e0",
       "textInventory": [
         "+39",
         "2",
@@ -2671,14 +2673,6 @@
             "value": "FFFFFF"
           },
           {
-            "count": 1,
-            "kind": "direct",
-            "role": "fill",
-            "transforms": [],
-            "type": "srgbClr",
-            "value": "E5E6EB"
-          },
-          {
             "count": 2,
             "kind": "direct",
             "role": "fill",
@@ -2701,6 +2695,14 @@
             "transforms": [],
             "type": "srgbClr",
             "value": "AEB2BA"
+          },
+          {
+            "count": 1,
+            "kind": "direct",
+            "role": "line",
+            "transforms": [],
+            "type": "srgbClr",
+            "value": "E5E6EB"
           },
           {
             "count": 6,
@@ -2897,6 +2899,25 @@
               "text": "原生表格应在高信息密度下保留单元格级格式控制"
             }
           ]
+        },
+        {
+          "colorSemantics": {
+            "direct": [
+              {
+                "count": 1,
+                "kind": "direct",
+                "role": "line",
+                "transforms": [],
+                "type": "srgbClr",
+                "value": "E5E6EB"
+              }
+            ],
+            "themeReferences": []
+          },
+          "objectKey": "name:footer-divider",
+          "objectType": "sp",
+          "relatedTextColorBindings": [],
+          "textColorBindings": []
         },
         {
           "colorSemantics": {
@@ -3414,25 +3435,6 @@
           "objectType": "sp",
           "relatedTextColorBindings": [],
           "textColorBindings": []
-        },
-        {
-          "colorSemantics": {
-            "direct": [
-              {
-                "count": 1,
-                "kind": "direct",
-                "role": "fill",
-                "transforms": [],
-                "type": "srgbClr",
-                "value": "E5E6EB"
-              }
-            ],
-            "themeReferences": []
-          },
-          "objectKey": "name:title-divider",
-          "objectType": "sp",
-          "relatedTextColorBindings": [],
-          "textColorBindings": []
         }
       ],
       "objectContentSemantics": [
@@ -3819,6 +3821,49 @@
             }
           ],
           "objectKey": "name:action-title",
+          "objectType": "sp"
+        },
+        {
+          "graphicStyles": [
+            {
+              "part": "ppt/slides/slide3.xml",
+              "styles": [
+                {
+                  "path": "sp[0]/spPr[0]/ln[0]",
+                  "style": {
+                    "attributes": {
+                      "w": "9525"
+                    },
+                    "children": [
+                      {
+                        "attributes": {},
+                        "children": [
+                          {
+                            "attributes": {
+                              "val": "E5E6EB"
+                            },
+                            "children": [],
+                            "tag": "srgbClr"
+                          }
+                        ],
+                        "tag": "solidFill"
+                      }
+                    ],
+                    "tag": "ln"
+                  }
+                },
+                {
+                  "path": "sp[0]/spPr[0]/noFill[0]",
+                  "style": {
+                    "attributes": {},
+                    "children": [],
+                    "tag": "noFill"
+                  }
+                }
+              ]
+            }
+          ],
+          "objectKey": "name:footer-divider",
           "objectType": "sp"
         },
         {
@@ -4808,47 +4853,6 @@
           ],
           "objectKey": "name:table-total-rule",
           "objectType": "sp"
-        },
-        {
-          "graphicStyles": [
-            {
-              "part": "ppt/slides/slide3.xml",
-              "styles": [
-                {
-                  "path": "sp[0]/spPr[0]/ln[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {},
-                        "children": [],
-                        "tag": "noFill"
-                      }
-                    ],
-                    "tag": "ln"
-                  }
-                },
-                {
-                  "path": "sp[0]/spPr[0]/solidFill[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {
-                          "val": "E5E6EB"
-                        },
-                        "children": [],
-                        "tag": "srgbClr"
-                      }
-                    ],
-                    "tag": "solidFill"
-                  }
-                }
-              ]
-            }
-          ],
-          "objectKey": "name:title-divider",
-          "objectType": "sp"
         }
       ],
       "objectTextStyleSemantics": [
@@ -5198,7 +5202,7 @@
       "position": 3,
       "relatedDataValues": [],
       "relatedParts": [],
-      "semanticHash": "a70819b6e0e75d9269ca408fd1099eb7039624ae2ec3e022249385f26e74cb72",
+      "semanticHash": "3e86d6e3d083e4271cc2333caaa1660ba1d90d004cd8a2853907743f5a247cb5",
       "textInventory": [
         "+12%",
         "+26%",
@@ -5253,7 +5257,7 @@
             "value": "FFFFFF"
           },
           {
-            "count": 2,
+            "count": 1,
             "kind": "direct",
             "role": "fill",
             "transforms": [],
@@ -5267,6 +5271,14 @@
             "transforms": [],
             "type": "srgbClr",
             "value": "FF4906"
+          },
+          {
+            "count": 1,
+            "kind": "direct",
+            "role": "line",
+            "transforms": [],
+            "type": "srgbClr",
+            "value": "E5E6EB"
           }
         ],
         "inherited": {
@@ -5583,6 +5595,25 @@
               {
                 "count": 1,
                 "kind": "direct",
+                "role": "line",
+                "transforms": [],
+                "type": "srgbClr",
+                "value": "E5E6EB"
+              }
+            ],
+            "themeReferences": []
+          },
+          "objectKey": "name:footer-divider",
+          "objectType": "sp",
+          "relatedTextColorBindings": [],
+          "textColorBindings": []
+        },
+        {
+          "colorSemantics": {
+            "direct": [
+              {
+                "count": 1,
+                "kind": "direct",
                 "role": "fill",
                 "transforms": [],
                 "type": "srgbClr",
@@ -5658,25 +5689,6 @@
               "text": "数据来源:KSIB Golden Deck 基准测试虚构内容;仅用于格式与编辑性测试"
             }
           ]
-        },
-        {
-          "colorSemantics": {
-            "direct": [
-              {
-                "count": 1,
-                "kind": "direct",
-                "role": "fill",
-                "transforms": [],
-                "type": "srgbClr",
-                "value": "E5E6EB"
-              }
-            ],
-            "themeReferences": []
-          },
-          "objectKey": "name:title-divider",
-          "objectType": "sp",
-          "relatedTextColorBindings": [],
-          "textColorBindings": []
         }
       ],
       "objectContentSemantics": [
@@ -6136,6 +6148,49 @@
                 {
                   "path": "sp[0]/spPr[0]/ln[0]",
                   "style": {
+                    "attributes": {
+                      "w": "9525"
+                    },
+                    "children": [
+                      {
+                        "attributes": {},
+                        "children": [
+                          {
+                            "attributes": {
+                              "val": "E5E6EB"
+                            },
+                            "children": [],
+                            "tag": "srgbClr"
+                          }
+                        ],
+                        "tag": "solidFill"
+                      }
+                    ],
+                    "tag": "ln"
+                  }
+                },
+                {
+                  "path": "sp[0]/spPr[0]/noFill[0]",
+                  "style": {
+                    "attributes": {},
+                    "children": [],
+                    "tag": "noFill"
+                  }
+                }
+              ]
+            }
+          ],
+          "objectKey": "name:footer-divider",
+          "objectType": "sp"
+        },
+        {
+          "graphicStyles": [
+            {
+              "part": "ppt/slides/slide4.xml",
+              "styles": [
+                {
+                  "path": "sp[0]/spPr[0]/ln[0]",
+                  "style": {
                     "attributes": {},
                     "children": [
                       {
@@ -6266,47 +6321,6 @@
             }
           ],
           "objectKey": "name:source-footnote",
-          "objectType": "sp"
-        },
-        {
-          "graphicStyles": [
-            {
-              "part": "ppt/slides/slide4.xml",
-              "styles": [
-                {
-                  "path": "sp[0]/spPr[0]/ln[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {},
-                        "children": [],
-                        "tag": "noFill"
-                      }
-                    ],
-                    "tag": "ln"
-                  }
-                },
-                {
-                  "path": "sp[0]/spPr[0]/solidFill[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {
-                          "val": "E5E6EB"
-                        },
-                        "children": [],
-                        "tag": "srgbClr"
-                      }
-                    ],
-                    "tag": "solidFill"
-                  }
-                }
-              ]
-            }
-          ],
-          "objectKey": "name:title-divider",
           "objectType": "sp"
         }
       ],
@@ -6506,7 +6520,7 @@
       "position": 4,
       "relatedDataValues": [],
       "relatedParts": [],
-      "semanticHash": "bc0eae2b1e888e0f68063b1a90ecd5a57a1c44e1a00510ac74bc0f4e148bfb94",
+      "semanticHash": "f7668ce1b2507bd7e923343d376d253463661b3f552919878bf5214acb42fbcc",
       "textInventory": [
         "4",
         "I-3|左右比较",
@@ -6541,14 +6555,6 @@
             "role": "fill",
             "transforms": [],
             "type": "srgbClr",
-            "value": "E5E6EB"
-          },
-          {
-            "count": 1,
-            "kind": "direct",
-            "role": "fill",
-            "transforms": [],
-            "type": "srgbClr",
             "value": "FF4906"
           },
           {
@@ -6576,7 +6582,7 @@
             "value": "646A73"
           },
           {
-            "count": 3,
+            "count": 4,
             "kind": "direct",
             "role": "line",
             "transforms": [],
@@ -6676,7 +6682,7 @@
         },
         "themeReferences": []
       },
-      "contentKey": "ba64d30bf267c8cf61f817c2c24f7e2f8f1083e0fb52e06f13b5694c56a4caad",
+      "contentKey": "74fc814649c0755e359eebb7c079dd764cb0bec953213ce9a1a14eb95781c929",
       "fontSemantics": [
         {
           "count": 1,
@@ -6700,7 +6706,7 @@
           "value": "1400"
         },
         {
-          "count": 2,
+          "count": 1,
           "kind": "size",
           "role": "text",
           "tag": "rPr",
@@ -6714,7 +6720,7 @@
           "value": "900"
         },
         {
-          "count": 18,
+          "count": 17,
           "kind": "typeface",
           "role": "text",
           "script": null,
@@ -6722,7 +6728,7 @@
           "typeface": "PingFang SC"
         },
         {
-          "count": 18,
+          "count": 17,
           "kind": "typeface",
           "role": "text",
           "script": null,
@@ -6730,7 +6736,7 @@
           "typeface": "PingFang SC"
         },
         {
-          "count": 18,
+          "count": 17,
           "kind": "typeface",
           "role": "text",
           "script": null,
@@ -6764,17 +6770,7 @@
               },
               "paragraph": 1,
               "segment": 1,
-              "text": "端到端流程通过四个原生节点形成闭环,"
-            },
-            {
-              "color": {
-                "transforms": [],
-                "type": "srgbClr",
-                "value": "1F2329"
-              },
-              "paragraph": 2,
-              "segment": 1,
-              "text": "反馈连接器将复核结果重新带回输入端"
+              "text": "四个原生节点串联端到端流程,复核反馈闭环返回输入端"
             }
           ]
         },
@@ -6874,6 +6870,25 @@
               "text": "复核反馈"
             }
           ]
+        },
+        {
+          "colorSemantics": {
+            "direct": [
+              {
+                "count": 1,
+                "kind": "direct",
+                "role": "line",
+                "transforms": [],
+                "type": "srgbClr",
+                "value": "E5E6EB"
+              }
+            ],
+            "themeReferences": []
+          },
+          "objectKey": "name:footer-divider",
+          "objectType": "sp",
+          "relatedTextColorBindings": [],
+          "textColorBindings": []
         },
         {
           "colorSemantics": {
@@ -7188,25 +7203,6 @@
               "text": "数据来源:KSIB Golden Deck 格式基准规范"
             }
           ]
-        },
-        {
-          "colorSemantics": {
-            "direct": [
-              {
-                "count": 1,
-                "kind": "direct",
-                "role": "fill",
-                "transforms": [],
-                "type": "srgbClr",
-                "value": "E5E6EB"
-              }
-            ],
-            "themeReferences": []
-          },
-          "objectKey": "name:title-divider",
-          "objectType": "sp",
-          "relatedTextColorBindings": [],
-          "textColorBindings": []
         }
       ],
       "objectContentSemantics": [
@@ -7215,8 +7211,7 @@
           "objectKey": "name:action-title",
           "objectType": "sp",
           "paragraphs": [
-            "端到端流程通过四个原生节点形成闭环,",
-            "反馈连接器将复核结果重新带回输入端"
+            "四个原生节点串联端到端流程,复核反馈闭环返回输入端"
           ],
           "relatedDataBindings": [],
           "relatedDataValues": [],
@@ -7335,14 +7330,14 @@
         {
           "fontSemantics": [
             {
-              "count": 2,
+              "count": 1,
               "kind": "size",
               "role": "text",
               "tag": "rPr",
               "value": "2200"
             },
             {
-              "count": 2,
+              "count": 1,
               "kind": "typeface",
               "role": "text",
               "script": null,
@@ -7350,7 +7345,7 @@
               "typeface": "PingFang SC"
             },
             {
-              "count": 2,
+              "count": 1,
               "kind": "typeface",
               "role": "text",
               "script": null,
@@ -7358,7 +7353,7 @@
               "typeface": "PingFang SC"
             },
             {
-              "count": 2,
+              "count": 1,
               "kind": "typeface",
               "role": "text",
               "script": null,
@@ -7924,6 +7919,49 @@
                 {
                   "path": "sp[0]/spPr[0]/ln[0]",
                   "style": {
+                    "attributes": {
+                      "w": "9525"
+                    },
+                    "children": [
+                      {
+                        "attributes": {},
+                        "children": [
+                          {
+                            "attributes": {
+                              "val": "E5E6EB"
+                            },
+                            "children": [],
+                            "tag": "srgbClr"
+                          }
+                        ],
+                        "tag": "solidFill"
+                      }
+                    ],
+                    "tag": "ln"
+                  }
+                },
+                {
+                  "path": "sp[0]/spPr[0]/noFill[0]",
+                  "style": {
+                    "attributes": {},
+                    "children": [],
+                    "tag": "noFill"
+                  }
+                }
+              ]
+            }
+          ],
+          "objectKey": "name:footer-divider",
+          "objectType": "sp"
+        },
+        {
+          "graphicStyles": [
+            {
+              "part": "ppt/slides/slide5.xml",
+              "styles": [
+                {
+                  "path": "sp[0]/spPr[0]/ln[0]",
+                  "style": {
                     "attributes": {},
                     "children": [
                       {
@@ -8259,47 +8297,6 @@
           ],
           "objectKey": "name:source-footnote",
           "objectType": "sp"
-        },
-        {
-          "graphicStyles": [
-            {
-              "part": "ppt/slides/slide5.xml",
-              "styles": [
-                {
-                  "path": "sp[0]/spPr[0]/ln[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {},
-                        "children": [],
-                        "tag": "noFill"
-                      }
-                    ],
-                    "tag": "ln"
-                  }
-                },
-                {
-                  "path": "sp[0]/spPr[0]/solidFill[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {
-                          "val": "E5E6EB"
-                        },
-                        "children": [],
-                        "tag": "srgbClr"
-                      }
-                    ],
-                    "tag": "solidFill"
-                  }
-                }
-              ]
-            }
-          ],
-          "objectKey": "name:title-divider",
-          "objectType": "sp"
         }
       ],
       "objectTextStyleSemantics": [
@@ -8312,13 +8309,7 @@
               "bold": "1",
               "paragraph": 1,
               "segment": 1,
-              "text": "端到端流程通过四个原生节点形成闭环,"
-            },
-            {
-              "bold": "1",
-              "paragraph": 2,
-              "segment": 1,
-              "text": "反馈连接器将复核结果重新带回输入端"
+              "text": "四个原生节点串联端到端流程,复核反馈闭环返回输入端"
             }
           ]
         },
@@ -8477,8 +8468,7 @@
       ],
       "paragraphs": [
         "I-4|流程与连接器",
-        "端到端流程通过四个原生节点形成闭环,",
-        "反馈连接器将复核结果重新带回输入端",
+        "四个原生节点串联端到端流程,复核反馈闭环返回输入端",
         "数据来源:KSIB Golden Deck 格式基准规范",
         "5",
         "01",
@@ -8499,7 +8489,7 @@
       "position": 5,
       "relatedDataValues": [],
       "relatedParts": [],
-      "semanticHash": "7aaf179adb0f21d84552e4d9383ad166689c91a9203c31a22e2c063fb8ab6687",
+      "semanticHash": "e5762961987ba16837445104d9594eef35a226ec211ea4b5f4f2dada60dd7275",
       "textInventory": [
         "01",
         "02",
@@ -8509,13 +8499,12 @@
         "I-4|流程与连接器",
         "写入原生文本 图表与表格",
         "匹配结构合同与容量",
-        "反馈连接器将复核结果重新带回输入端",
+        "四个原生节点串联端到端流程,复核反馈闭环返回输入端",
         "复核反馈",
         "接收输入",
         "数据来源:KSIB Golden Deck 格式基准规范",
         "校验交付",
         "生成页面",
-        "端到端流程通过四个原生节点形成闭环,",
         "读取固定内容与约束",
         "运行结构、视觉 与交互检查",
         "选择版式"
@@ -8531,14 +8520,6 @@
             "transforms": [],
             "type": "srgbClr",
             "value": "FFFFFF"
-          },
-          {
-            "count": 1,
-            "kind": "direct",
-            "role": "fill",
-            "transforms": [],
-            "type": "srgbClr",
-            "value": "E5E6EB"
           },
           {
             "count": 7,
@@ -8573,7 +8554,7 @@
             "value": "AEB2BA"
           },
           {
-            "count": 42,
+            "count": 43,
             "kind": "direct",
             "role": "line",
             "transforms": [],
@@ -9409,6 +9390,25 @@
               {
                 "count": 1,
                 "kind": "direct",
+                "role": "line",
+                "transforms": [],
+                "type": "srgbClr",
+                "value": "E5E6EB"
+              }
+            ],
+            "themeReferences": []
+          },
+          "objectKey": "name:footer-divider",
+          "objectType": "sp",
+          "relatedTextColorBindings": [],
+          "textColorBindings": []
+        },
+        {
+          "colorSemantics": {
+            "direct": [
+              {
+                "count": 1,
+                "kind": "direct",
                 "role": "fill",
                 "transforms": [],
                 "type": "srgbClr",
@@ -9484,25 +9484,6 @@
               "text": "数据来源:KSIB Golden Deck 格式基准规范"
             }
           ]
-        },
-        {
-          "colorSemantics": {
-            "direct": [
-              {
-                "count": 1,
-                "kind": "direct",
-                "role": "fill",
-                "transforms": [],
-                "type": "srgbClr",
-                "value": "E5E6EB"
-              }
-            ],
-            "themeReferences": []
-          },
-          "objectKey": "name:title-divider",
-          "objectType": "sp",
-          "relatedTextColorBindings": [],
-          "textColorBindings": []
         }
       ],
       "objectContentSemantics": [
@@ -12207,6 +12188,49 @@
                 {
                   "path": "sp[0]/spPr[0]/ln[0]",
                   "style": {
+                    "attributes": {
+                      "w": "9525"
+                    },
+                    "children": [
+                      {
+                        "attributes": {},
+                        "children": [
+                          {
+                            "attributes": {
+                              "val": "E5E6EB"
+                            },
+                            "children": [],
+                            "tag": "srgbClr"
+                          }
+                        ],
+                        "tag": "solidFill"
+                      }
+                    ],
+                    "tag": "ln"
+                  }
+                },
+                {
+                  "path": "sp[0]/spPr[0]/noFill[0]",
+                  "style": {
+                    "attributes": {},
+                    "children": [],
+                    "tag": "noFill"
+                  }
+                }
+              ]
+            }
+          ],
+          "objectKey": "name:footer-divider",
+          "objectType": "sp"
+        },
+        {
+          "graphicStyles": [
+            {
+              "part": "ppt/slides/slide6.xml",
+              "styles": [
+                {
+                  "path": "sp[0]/spPr[0]/ln[0]",
+                  "style": {
                     "attributes": {},
                     "children": [
                       {
@@ -12337,47 +12361,6 @@
             }
           ],
           "objectKey": "name:source-footnote",
-          "objectType": "sp"
-        },
-        {
-          "graphicStyles": [
-            {
-              "part": "ppt/slides/slide6.xml",
-              "styles": [
-                {
-                  "path": "sp[0]/spPr[0]/ln[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {},
-                        "children": [],
-                        "tag": "noFill"
-                      }
-                    ],
-                    "tag": "ln"
-                  }
-                },
-                {
-                  "path": "sp[0]/spPr[0]/solidFill[0]",
-                  "style": {
-                    "attributes": {},
-                    "children": [
-                      {
-                        "attributes": {
-                          "val": "E5E6EB"
-                        },
-                        "children": [],
-                        "tag": "srgbClr"
-                      }
-                    ],
-                    "tag": "solidFill"
-                  }
-                }
-              ]
-            }
-          ],
-          "objectKey": "name:title-divider",
           "objectType": "sp"
         }
       ],
@@ -12858,7 +12841,7 @@
       "position": 6,
       "relatedDataValues": [],
       "relatedParts": [],
-      "semanticHash": "8c5d4c50bb4ab4bee377b24df026c0b79c5bce301a52e8732444760e4336b31a",
+      "semanticHash": "6e7562ca1c6d2907847c1c2a216074d77f96e09768dd4e792acb7b295bb37680",
       "textInventory": [
         "#",
         "1",

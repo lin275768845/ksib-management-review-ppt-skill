@@ -6,6 +6,30 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const MATRIX_PATH = path.resolve(HERE, "../references/layout-matrix.json");
 const SCHEMA_VERSION = "ksib-content-gate/2.0";
+const ACTION_TITLE_SINGLE_LINE_EXEMPT_LAYOUTS = new Set([
+  "cover",
+  "toc",
+  "agenda",
+  "section",
+  "sectionDivider",
+  "appendixDivider",
+]);
+const PAGE_INTENT_EXEMPT_LAYOUTS = new Set([
+  "cover",
+  "toc",
+  "agenda",
+  "section",
+  "sectionDivider",
+  "appendixDivider",
+  "styleboardSystem",
+  "styleboardDensity",
+]);
+const ACTION_TITLE_POLICIES = new Set([
+  "auto-conclusion",
+  "subject-colon-conclusion",
+  "conclusion-sentence",
+  "preserve",
+]);
 
 function sha256(value) {
   return crypto.createHash("sha256").update(value).digest("hex");
@@ -29,6 +53,16 @@ function parseArgs(argv) {
 
 function visibleLength(value) {
   return [...String(value ?? "").replace(/\s+/g, "")].length;
+}
+
+function weightedTitleLength(value) {
+  return [...String(value ?? "")].reduce((total, character) => {
+    if (/\s/u.test(character)) return total + 0.3;
+    if (/[\u0000-\u007f]/u.test(character)) {
+      return total + (/[A-Za-z0-9]/u.test(character) ? 0.55 : 0.45);
+    }
+    return total + 1;
+  }, 0);
 }
 
 function hasText(value) {
@@ -202,7 +236,44 @@ function checkHierarchyPair({
   }
 }
 
-function validateSlide(slide, slideIndex, matrix) {
+function validatePageIntent(slide, slideIndex, slideType, title, errors, { requirePageIntent = false } = {}) {
+  if (PAGE_INTENT_EXEMPT_LAYOUTS.has(slideType)) return;
+  const intent = slide.pageIntent;
+  if (!isPresent(intent)) {
+    if (requirePageIntent) {
+      addError(errors, slideIndex, slideType, "page_intent_missing", "新建与重构内容页必须声明pageIntent");
+    }
+    return;
+  }
+  if (intent == null || typeof intent !== "object" || Array.isArray(intent)) {
+    addError(errors, slideIndex, slideType, "page_intent_invalid", "pageIntent必须是对象");
+    return;
+  }
+  for (const field of ["questionToAnswer", "actionTitlePolicy", "primaryEvidence", "visualHierarchy"]) {
+    if (!hasText(intent[field])) addError(errors, slideIndex, slideType, "page_intent_required_field", `pageIntent.${field}不能为空`);
+  }
+  for (const field of ["requiredContent", "acceptanceChecks"]) {
+    if (!Array.isArray(intent[field]) || !intent[field].some(hasText)) {
+      addError(errors, slideIndex, slideType, "page_intent_required_field", `pageIntent.${field}[]不能为空`);
+    }
+  }
+  if (hasText(intent.actionTitlePolicy) && !ACTION_TITLE_POLICIES.has(intent.actionTitlePolicy)) {
+    addError(errors, slideIndex, slideType, "action_title_policy_invalid", `actionTitlePolicy=${intent.actionTitlePolicy}`);
+  }
+  if (intent.actionTitlePolicy === "subject-colon-conclusion" && !/^[^：:\n]{1,20}[：:]\s*\S+/u.test(String(title))) {
+    addError(errors, slideIndex, slideType, "subject_colon_action_title_invalid", "对象页标题必须使用“对象：核心结论”结构");
+  }
+  if (intent.actionTitlePolicy !== "preserve" && hasText(title)) {
+    if (/[?？]\s*$/u.test(String(title))) {
+      addError(errors, slideIndex, slideType, "action_title_is_question", "Action Title必须回答问题，不能仍是问句");
+    }
+    if (normalizeComparable(title) === normalizeComparable(intent.questionToAnswer)) {
+      addError(errors, slideIndex, slideType, "action_title_repeats_question", "Action Title不能原样重复questionToAnswer");
+    }
+  }
+}
+
+function validateSlide(slide, slideIndex, matrix, options = {}) {
   const errors = [];
   const warnings = [];
   const slideType = slideLayoutName(slide, matrix);
@@ -234,6 +305,29 @@ function validateSlide(slide, slideIndex, matrix) {
   const subtitlePurposes = new Set(matrix.global.subtitlePurposes || []);
   const takeawayPurposes = new Set(matrix.global.takeawayPurposes || []);
   const forbiddenTakeawayLayouts = new Set(matrix.global.takeawayForbiddenLayouts || []);
+  validatePageIntent(slide, slideIndex, slideType, title, errors, options);
+
+  const enforceSingleLineActionTitle = !ACTION_TITLE_SINGLE_LINE_EXEMPT_LAYOUTS.has(slideType);
+  if (enforceSingleLineActionTitle && /[\r\n\u2028\u2029]/u.test(String(title))) {
+    addError(
+      errors,
+      slideIndex,
+      slideType,
+      "action_title_multiline_forbidden",
+      "内容页Action Title只能一行，不得包含硬换行或Unicode换行符",
+    );
+  }
+  const weightedTitleBudget = matrix.global.titleWeightedCharacters ?? matrix.global.titleChars;
+  const weightedTitle = weightedTitleLength(title);
+  if (enforceSingleLineActionTitle && hasText(title) && weightedTitle > weightedTitleBudget) {
+    addError(
+      errors,
+      slideIndex,
+      slideType,
+      "action_title_single_line_budget",
+      `title weighted length: ${weightedTitle.toFixed(2)} > ${weightedTitleBudget}`,
+    );
+  }
 
   for (const pattern of spec.requiredFields || []) {
     const missingLocations = requiredPathIssues(
@@ -357,14 +451,15 @@ function validateSlide(slide, slideIndex, matrix) {
   });
 
   const globalChecks = [
-    ["title", matrix.global.titleChars],
+    ["title", matrix.global.titleChars, title],
     ["subtitle", matrix.global.subtitleChars],
     ["source", matrix.global.sourceChars],
     ["takeaway", matrix.global.takeawayChars],
   ];
-  for (const [field, limit] of globalChecks) {
-    if (slide[field] != null && visibleLength(slide[field]) > limit) {
-      addError(errors, slideIndex, slideType, "global_char_budget", `${field}: ${visibleLength(slide[field])} > ${limit}`);
+  for (const [field, limit, resolvedValue] of globalChecks) {
+    const value = resolvedValue ?? slide[field];
+    if (value != null && visibleLength(value) > limit) {
+      addError(errors, slideIndex, slideType, "global_char_budget", `${field}: ${visibleLength(value)} > ${limit}`);
     }
   }
 
@@ -381,6 +476,22 @@ function validateSlide(slide, slideIndex, matrix) {
     } else {
       const actual = values.filter((value) => value != null).length;
       if (actual > limit) addError(errors, slideIndex, slideType, "max_items", `${pattern}: ${actual} > ${limit}`);
+    }
+  }
+
+  for (const [pattern, limit] of Object.entries(spec.minItems || {})) {
+    const values = getValues(slide, pattern);
+    const collections = values.filter(Array.isArray);
+    if (collections.length) {
+      collections.forEach((collection, collectionIndex) => {
+        if (collection.length < limit) {
+          const suffix = collections.length > 1 ? `[collection ${collectionIndex + 1}]` : "";
+          addError(errors, slideIndex, slideType, "min_items", `${pattern}${suffix}: ${collection.length} < ${limit}`);
+        }
+      });
+    } else {
+      const actual = values.filter((value) => value != null).length;
+      if (actual < limit) addError(errors, slideIndex, slideType, "min_items", `${pattern}: ${actual} < ${limit}`);
     }
   }
 
@@ -576,7 +687,22 @@ async function main() {
           : [];
       });
     const validResult = validateSlide(slide, 0, matrix);
+    const validPageIntent = {
+      questionToAnswer: "哪个阶段应成为资源投入重点？",
+      actionTitlePolicy: "subject-colon-conclusion",
+      requiredContent: ["对象", "核心结论", "支撑证据"],
+      primaryEvidence: "已绑定的主证据",
+      visualHierarchy: "主证据优先，解释与边界信息次之",
+      acceptanceChecks: ["标题回答唯一问题", "主证据支撑标题"],
+    };
+    const validPageIntentResult = validateSlide({ ...slide, title: "核心阶段：以证据闭环成为资源投入重点", pageIntent: validPageIntent }, 0, matrix, { requirePageIntent: true });
+    const missingPageIntentResult = validateSlide(slide, 0, matrix, { requirePageIntent: true });
+    const invalidSubjectColonTitleResult = validateSlide({ ...slide, title: "以证据闭环成为资源投入重点", pageIntent: validPageIntent }, 0, matrix, { requirePageIntent: true });
     const validSubtitleResult = validateSlide({ ...slide, subtitle: "数据范围为示例市场过去12个月", subtitlePurpose: "scope" }, 0, matrix);
+    const multilineCoverTitleResult = validateSlide({ slideType: "cover", slideRole: "cover", title: "封面主标题第一行\n封面主标题第二行" }, 0, matrix);
+    const multilineTitleResult = validateSlide({ ...slide, title: "第一行结论\n第二行解释" }, 0, matrix);
+    const multilineActionTitleAliasResult = validateSlide({ ...slide, title: undefined, actionTitle: "第一行结论\n第二行解释" }, 0, matrix);
+    const longSingleLineTitleResult = validateSlide({ ...slide, title: "这是一个明显超过单行安全容量的超长结论型标题用于验证内容门禁不会依靠缩小字号或自动换行掩盖信息过载问题" }, 0, matrix);
     const validTakeawayResult = validateSlide({ ...slide, takeaway: "下一阶段应优先验证高潜客群与供给匹配", takeawayPurpose: "decision_implication" }, 0, matrix);
     const validSemanticImplicationWithTakeawayResult = validateSlide({
       ...slide,
@@ -587,6 +713,39 @@ async function main() {
     const invalidResult = validateSlide({ ...slide, columns: [...slide.columns, { title: "阶段5" }] }, 0, matrix);
     const stackedResult = validateSlide({ ...slide, takeaway: "一个管理结论", takeawayPurpose: "decision_implication", ownerLine: "额外Owner说明" }, 0, matrix);
     const phaseOverflowResult = validateSlide({ slideType: "phasePlaybook", title: "阶段打法", phases: [1, 2, 3, 4, 5].map((n) => ({ title: `阶段${n}` })) }, 0, matrix);
+    const validPhasePlaybookResult = validateSlide({
+      slideType: "phasePlaybook",
+      slideRole: "recommendation",
+      proofShape: "stages",
+      title: "三阶段打法形成从验证到放大的闭环",
+      phases: [1, 2, 3].map((n) => ({
+        title: `阶段${n}`,
+        logic: `第${n}阶段共同逻辑`,
+        successCriterion: `第${n}阶段判断标准`,
+        action: `完成第${n}阶段关键行动`,
+      })),
+    }, 0, matrix);
+    const phaseUnderflowResult = validateSlide({
+      slideType: "phasePlaybook",
+      slideRole: "recommendation",
+      title: "阶段打法",
+      phases: [1, 2].map((n) => ({
+        title: `阶段${n}`,
+        logic: `逻辑${n}`,
+        successCriterion: `标准${n}`,
+        action: `行动${n}`,
+      })),
+    }, 0, matrix);
+    const phaseMissingCriterionResult = validateSlide({
+      slideType: "phasePlaybook",
+      slideRole: "recommendation",
+      title: "阶段打法",
+      phases: [1, 2, 3].map((n) => ({
+        title: `阶段${n}`,
+        logic: `逻辑${n}`,
+        action: `行动${n}`,
+      })),
+    }, 0, matrix);
     const missingPurposeResult = validateSlide({ ...slide, takeaway: "下一阶段应优先验证高潜客群与供给匹配" }, 0, matrix);
     const duplicateSubtitleResult = validateSlide({ ...slide, subtitle: "结论型标题", subtitlePurpose: "scope" }, 0, matrix);
     const duplicateTakeawayResult = validateSlide({ ...slide, title: "平台B品牌格局较平台A更加分散", takeaway: "平台B品牌格局较平台A更加分散，因此需要关注长尾品牌", takeawayPurpose: "decision_implication" }, 0, matrix);
@@ -757,7 +916,14 @@ async function main() {
       || unroutedSubstantiveLayouts.length
       || proofShapeContractMismatches.length
       || validResult.errors.length
+      || validPageIntentResult.errors.length
+      || !missingPageIntentResult.errors.some((error) => error.rule === "page_intent_missing")
+      || !invalidSubjectColonTitleResult.errors.some((error) => error.rule === "subject_colon_action_title_invalid")
       || validSubtitleResult.errors.length
+      || multilineCoverTitleResult.errors.length
+      || !multilineTitleResult.errors.some((error) => error.rule === "action_title_multiline_forbidden")
+      || !multilineActionTitleAliasResult.errors.some((error) => error.rule === "action_title_multiline_forbidden")
+      || !longSingleLineTitleResult.errors.some((error) => error.rule === "action_title_single_line_budget")
       || validTakeawayResult.errors.length
       || validSemanticImplicationWithTakeawayResult.errors.length
       || validSingleExhibitResult.errors.length
@@ -766,6 +932,9 @@ async function main() {
       || !invalidResult.errors.some((error) => error.rule === "max_items")
       || !stackedResult.errors.some((error) => error.rule === "bottom_stack")
       || !phaseOverflowResult.errors.some((error) => error.rule === "max_items")
+      || validPhasePlaybookResult.errors.length
+      || !phaseUnderflowResult.errors.some((error) => error.rule === "min_items")
+      || !phaseMissingCriterionResult.errors.some((error) => error.rule === "required_field")
       || !missingPurposeResult.errors.some((error) => error.rule === "takeaway_purpose_missing")
       || !duplicateSubtitleResult.errors.some((error) => error.rule === "hierarchy_duplication")
       || !duplicateTakeawayResult.errors.some((error) => error.rule === "hierarchy_duplication")
@@ -800,7 +969,14 @@ async function main() {
         unroutedSubstantiveLayouts,
         proofShapeContractMismatches,
         validResult,
+        validPageIntentResult,
+        missingPageIntentResult,
+        invalidSubjectColonTitleResult,
         validSubtitleResult,
+        multilineCoverTitleResult,
+        multilineTitleResult,
+        multilineActionTitleAliasResult,
+        longSingleLineTitleResult,
         validTakeawayResult,
         validSemanticImplicationWithTakeawayResult,
         validSingleExhibitResult,
@@ -809,6 +985,9 @@ async function main() {
         invalidResult,
         stackedResult,
         phaseOverflowResult,
+        validPhasePlaybookResult,
+        phaseUnderflowResult,
+        phaseMissingCriterionResult,
         missingPurposeResult,
         duplicateSubtitleResult,
         duplicateTakeawayResult,
@@ -836,7 +1015,14 @@ async function main() {
       passed: true,
       tests: [
         "fourColumn_valid",
+        "page_intent_valid",
+        "page_intent_required_when_requested",
+        "subject_colon_action_title_enforced",
         "valid_subtitle_contract",
+        "multiline_cover_title_allowed",
+        "multiline_title_rejected",
+        "multiline_action_title_alias_rejected",
+        "single_line_title_capacity_enforced",
         "valid_takeaway_contract",
         "semantic_implication_is_not_a_competing_visual_box",
         "fourColumn_overflow_rejected",
@@ -849,6 +1035,9 @@ async function main() {
         "all_substantive_layouts_are_proof_routed",
         "layout_proof_shape_contract_is_bidirectional",
         "phasePlaybook_overflow_rejected",
+        "phasePlaybook_valid_contract",
+        "phasePlaybook_underflow_rejected",
+        "phasePlaybook_success_criterion_required",
         "takeaway_purpose_required",
         "duplicate_subtitle_rejected",
         "duplicate_takeaway_rejected",
@@ -885,11 +1074,12 @@ async function main() {
   const content = JSON.parse(contentPayload);
   const slides = Array.isArray(content) ? content : content.slides;
   if (!Array.isArray(slides)) throw new Error("Content must be an array or contain slides[]");
+  const requirePageIntent = args["require-page-intent"] === true;
   const results = slides.map((slide, index) => ({
     slide: index + 1,
     storylineId: slide?.storylineId ?? null,
     slideType: slideLayoutName(slide, matrix),
-    ...validateSlide(slide, index, matrix),
+    ...validateSlide(slide, index, matrix, { requirePageIntent }),
   }));
   const deckValidation = validateDeck(slides, matrix);
   const errors = [
@@ -916,6 +1106,7 @@ async function main() {
     slideCount: results.length,
     errorCount: errors.length,
     warningCount: warnings.length,
+    pageIntentRequired: requirePageIntent,
     errors,
     warnings,
     deckErrors: deckValidation.errors,

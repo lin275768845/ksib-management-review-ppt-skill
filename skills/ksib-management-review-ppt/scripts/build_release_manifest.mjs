@@ -27,6 +27,8 @@ const CANONICAL_VALIDATOR_PATHS = {
   fingerprint: path.resolve(HERE, "pptx_semantic_fingerprint.py"),
   ooxml: path.resolve(HERE, "ooxml_qa.py"),
   visual: path.resolve(HERE, "build_visual_review_gate.py"),
+  "theme-color": path.resolve(HERE, "validate_theme_usage.mjs"),
+  "powerpoint-render": path.resolve(HERE, "validate_powerpoint_render.py"),
 };
 const REQUIRED_POWERPOINT_CHECKS = [
   "noRepairPrompt",
@@ -47,9 +49,9 @@ const CONDITIONAL_POWERPOINT_CHECKS = {
 const DELIVERY_MODES = new Set(["format-only", "locked-content", "story-change"]);
 const RENDERER_MODES = new Set(["canonical", "fallback"]);
 const MANDATORY_GATES_BY_MODE = {
-  "format-only": ["fingerprint", "ooxml", "visual"],
-  "locked-content": ["storyline", "evidence", "content", "handoff", "ooxml", "visual"],
-  "story-change": ["storyline", "evidence", "content", "handoff", "ooxml", "visual"],
+  "format-only": ["fingerprint", "ooxml", "visual", "theme-color", "powerpoint-render"],
+  "locked-content": ["storyline", "evidence", "content", "handoff", "ooxml", "visual", "theme-color", "powerpoint-render"],
+  "story-change": ["storyline", "evidence", "content", "handoff", "ooxml", "visual", "theme-color", "powerpoint-render"],
 };
 const REQUIRED_VISUAL_CHECKS = [
   "fullSizeReview",
@@ -552,6 +554,55 @@ function validateGateContract(name, report) {
     for (const checkName of REQUIRED_VISUAL_CHECKS) {
       requireValue(report.checks?.[checkName] === true, `visual.checks.${checkName}必须为true`);
     }
+  } else if (name === "theme-color") {
+    requireValue(report.schemaVersion === "ksib-theme-color-gate/1.1", "theme-color schemaVersion无效");
+    requireValue(Boolean(report.artifactSha256), "theme-color.artifactSha256缺失");
+    requireValue(Boolean(report.inventorySha256), "theme-color.inventorySha256缺失");
+    requireValue(Boolean(report.inventorySemanticSha256), "theme-color.inventorySemanticSha256缺失");
+    requireValue(Boolean(report.reExtractedInventorySemanticSha256), "theme-color.reExtractedInventorySemanticSha256缺失");
+    requireValue(report.inventorySemanticSha256 === report.reExtractedInventorySemanticSha256, "theme-color保存清单与现场重提取结果不一致");
+    requireValue(Boolean(report.usageSha256), "theme-color.usageSha256缺失");
+    requireValue(Boolean(report.extractorSha256), "theme-color.extractorSha256缺失");
+    requireValue(Number.isInteger(report.checkedSlides) && report.checkedSlides > 0, "theme-color.checkedSlides必须为正整数");
+    requireValue(Number.isInteger(report.checkedVisibleBindings) && report.checkedVisibleBindings > 0, "theme-color必须逐项核对最终PPTX可见颜色");
+  } else if (name === "powerpoint-render") {
+    requireValue(
+      report.schemaVersion === "ksib-powerpoint-render-gate/1.0",
+      "powerpoint-render schemaVersion无效",
+    );
+    requireValue(Boolean(report.pptx?.sha256), "powerpoint-render.pptx.sha256缺失");
+    requireValue(Number.isInteger(report.pptx?.slideCount) && report.pptx.slideCount > 0, "powerpoint-render.pptx.slideCount无效");
+    requireValue(
+      report.review?.source === "Microsoft PowerPoint"
+        && Boolean(report.review?.reviewedBy)
+        && Boolean(report.review?.reviewedAt),
+      "powerpoint-render必须绑定Microsoft PowerPoint审阅者与时间",
+    );
+    requireValue(Boolean(report.powerpointScreenshotSetHash), "powerpoint-render.powerpointScreenshotSetHash缺失");
+    requireValue(
+      report.reviewedSlideCount === report.pptx?.slideCount
+        && Array.isArray(report.slides)
+        && report.slides.length === report.pptx?.slideCount
+        && report.slides.every((slide) => (
+          Number.isInteger(slide.slide)
+          && slide.passed === true
+          && Boolean(slide.sha256)
+          && Boolean(slide.pixelSha256)
+          && Boolean(slide.reviewedAt)
+        )),
+      "powerpoint-render必须逐页绑定PowerPoint截图、复核时间与通过状态",
+    );
+    for (const checkName of [
+      "powerpointScreenshots",
+      "labelOwnership",
+      "numberDisplay",
+      "financialChartSemantics",
+      "rendererImplementation",
+    ]) {
+      requireValue(report.checks?.[checkName] === true, `powerpoint-render.checks.${checkName}必须为true`);
+    }
+    requireValue(Boolean(report.inputHashes?.contentSha256), "powerpoint-render.inputHashes.contentSha256缺失");
+    requireValue(Boolean(report.inputHashes?.formatContractSha256), "powerpoint-render.inputHashes.formatContractSha256缺失");
   }
   return issues;
 }
@@ -559,6 +610,8 @@ function validateGateContract(name, report) {
 function gateArtifactSha256(name, report) {
   if (name === "fingerprint") return report.candidate?.archiveSha256 ?? null;
   if (name === "visual") return report.pptx?.sha256 ?? null;
+  if (name === "theme-color") return report.artifactSha256 ?? null;
+  if (name === "powerpoint-render") return report.pptx?.sha256 ?? null;
   if (name === "ooxml" && report.reports?.length === 1) {
     return report.reports[0]?.sha256 ?? null;
   }
@@ -709,6 +762,8 @@ async function buildManifest(options) {
     fingerprint: [inputPath, finalPath],
     ooxml: [finalPath],
     visual: [finalPath],
+    "theme-color": [finalPath],
+    "powerpoint-render": [finalPath, contentArtifactPath],
   };
   for (const gateArgument of gateArguments) {
     const report = await readJson(gateArgument.filePath, `gate ${gateArgument.name}`);
@@ -864,7 +919,7 @@ async function buildManifest(options) {
       );
     }
   }
-  for (const gateName of ["fingerprint", "ooxml", "visual"]) {
+  for (const gateName of ["fingerprint", "ooxml", "visual", "theme-color", "powerpoint-render"]) {
     const gate = gatesByName.get(gateName);
     if (gate && gate.artifactSha256 !== finalArtifact.sha256) {
       addBlocker(
@@ -1321,6 +1376,8 @@ async function selfTest() {
       "fingerprint",
       "ooxml",
       "visual",
+      "theme-color",
+      "powerpoint-render",
     ]) {
       validatorPaths[name] = CANONICAL_VALIDATOR_PATHS[name];
       validatorHashes[name] = await sha256File(validatorPaths[name]);
@@ -1440,6 +1497,55 @@ async function selfTest() {
         height: 720,
       }],
     });
+    const themeColorGate = await write("theme-color.json", {
+      schemaVersion: "ksib-theme-color-gate/1.1",
+      passed: true,
+      errorCount: 0,
+      errors: [],
+      validatorSha256: validatorHashes["theme-color"],
+      artifactSha256: finalSha256,
+      inventorySha256: "inventory-sha",
+      inventorySemanticSha256: "inventory-semantic-sha",
+      reExtractedInventorySemanticSha256: "inventory-semantic-sha",
+      usageSha256: "usage-sha",
+      extractorSha256: "extractor-sha",
+      checkedSlides: 1,
+      checkedVisibleBindings: 1,
+    });
+    const powerpointRenderGate = await write("powerpoint-render.json", {
+      schemaVersion: "ksib-powerpoint-render-gate/1.0",
+      passed: true,
+      errorCount: 0,
+      errors: [],
+      validatorSha256: validatorHashes["powerpoint-render"],
+      pptx: { sha256: finalSha256, slideCount: 1 },
+      inputHashes: {
+        contentSha256: contentArtifactSha256,
+        formatContractSha256: "format-contract-sha",
+      },
+      review: {
+        source: "Microsoft PowerPoint",
+        reviewedBy: "reviewer",
+        reviewedAt: "2026-07-20T00:00:00Z",
+        reviewerRole: "independent",
+      },
+      powerpointScreenshotSetHash: "powerpoint-screenshot-set-sha",
+      reviewedSlideCount: 1,
+      slides: [{
+        slide: 1,
+        passed: true,
+        sha256: "powerpoint-slide-sha",
+        pixelSha256: "powerpoint-slide-pixel-sha",
+        reviewedAt: "2026-07-20T00:00:00Z",
+      }],
+      checks: {
+        powerpointScreenshots: true,
+        labelOwnership: true,
+        numberDisplay: true,
+        financialChartSemantics: true,
+        rendererImplementation: true,
+      },
+    });
     const powerpoint = await write("powerpoint.json", {
       passed: true,
       checkedBy: "reviewer",
@@ -1479,6 +1585,8 @@ async function selfTest() {
         `handoff=${handoffGate}`,
         `ooxml=${ooxmlGate}`,
         `visual=${visualGate}`,
+        `theme-color=${themeColorGate}`,
+        `powerpoint-render=${powerpointRenderGate}`,
       ],
       validator: [
         `storyline=${validatorPaths.storyline}`,
@@ -1488,12 +1596,28 @@ async function selfTest() {
         `handoff=${validatorPaths.handoff}`,
         `ooxml=${validatorPaths.ooxml}`,
         `visual=${validatorPaths.visual}`,
+        `theme-color=${validatorPaths["theme-color"]}`,
+        `powerpoint-render=${validatorPaths["powerpoint-render"]}`,
       ],
-      "required-gates": "storyline,evidence,content,handoff,ooxml,visual",
+      "required-gates": "storyline,evidence,content,handoff,ooxml,visual,theme-color,powerpoint-render",
       "generated-at": "2026-07-20T00:00:00Z",
     };
 
     const valid = await buildManifest(base);
+    const weakPowerpointRenderGatePath = await write("weak-powerpoint-render.json", {
+      ...(await readJson(powerpointRenderGate, "valid PowerPoint render gate")),
+      passed: true,
+      checks: {
+        ...(await readJson(powerpointRenderGate, "valid PowerPoint render gate")).checks,
+        labelOwnership: false,
+      },
+    });
+    const weakPowerpointRenderGate = await buildManifest({
+      ...base,
+      gate: base.gate.map((value) => value.startsWith("powerpoint-render=")
+        ? `powerpoint-render=${weakPowerpointRenderGatePath}`
+        : value),
+    });
     const failedGatePath = await write("failed.json", { passed: false, errorCount: 1 });
     const failedGate = await buildManifest({
       ...base,
@@ -1503,6 +1627,12 @@ async function selfTest() {
       ...base,
       gate: base.gate.filter((value) => !value.startsWith("ooxml=")),
       validator: base.validator.filter((value) => !value.startsWith("ooxml=")),
+    });
+    const missingThemeColorGate = await buildManifest({
+      ...base,
+      gate: base.gate.filter((value) => !value.startsWith("theme-color=")),
+      validator: base.validator.filter((value) => !value.startsWith("theme-color=")),
+      "required-gates": "storyline,evidence,content,handoff,ooxml,visual,powerpoint-render",
     });
     const unlockedPath = await write("unlocked.json", {
       lockStatus: "draft",
@@ -1634,21 +1764,23 @@ async function selfTest() {
       ...base,
       "delivery-mode": "format-only",
       "storyline-lock": undefined,
-      gate: [`fingerprint=${fingerprintGate}`, `ooxml=${ooxmlGate}`, `visual=${visualGate}`],
+      gate: [`fingerprint=${fingerprintGate}`, `ooxml=${ooxmlGate}`, `visual=${visualGate}`, `theme-color=${themeColorGate}`, `powerpoint-render=${powerpointRenderGate}`],
       validator: [
         `fingerprint=${validatorPaths.fingerprint}`,
         `ooxml=${validatorPaths.ooxml}`,
         `visual=${validatorPaths.visual}`,
+        `theme-color=${validatorPaths["theme-color"]}`,
+        `powerpoint-render=${validatorPaths["powerpoint-render"]}`,
       ],
-      "required-gates": "fingerprint,ooxml,visual",
+      "required-gates": "fingerprint,ooxml,visual,theme-color,powerpoint-render",
     });
     const formatOnlyMissingFingerprint = await buildManifest({
       ...base,
       "delivery-mode": "format-only",
       "storyline-lock": undefined,
-      gate: [`ooxml=${ooxmlGate}`, `visual=${visualGate}`],
-      validator: [`ooxml=${validatorPaths.ooxml}`, `visual=${validatorPaths.visual}`],
-      "required-gates": "ooxml,visual",
+      gate: [`ooxml=${ooxmlGate}`, `visual=${visualGate}`, `theme-color=${themeColorGate}`, `powerpoint-render=${powerpointRenderGate}`],
+      validator: [`ooxml=${validatorPaths.ooxml}`, `visual=${validatorPaths.visual}`, `theme-color=${validatorPaths["theme-color"]}`, `powerpoint-render=${validatorPaths["powerpoint-render"]}`],
+      "required-gates": "ooxml,visual,theme-color,powerpoint-render",
     });
     const staleFingerprintBaselinePath = await write("stale-fingerprint-baseline.json", {
       schemaVersion: "ksib-pptx-semantic-compare/3.2",
@@ -1670,13 +1802,17 @@ async function selfTest() {
         `fingerprint=${staleFingerprintBaselinePath}`,
         `ooxml=${ooxmlGate}`,
         `visual=${visualGate}`,
+        `theme-color=${themeColorGate}`,
+        `powerpoint-render=${powerpointRenderGate}`,
       ],
       validator: [
         `fingerprint=${validatorPaths.fingerprint}`,
         `ooxml=${validatorPaths.ooxml}`,
         `visual=${validatorPaths.visual}`,
+        `theme-color=${validatorPaths["theme-color"]}`,
+        `powerpoint-render=${validatorPaths["powerpoint-render"]}`,
       ],
-      "required-gates": "fingerprint,ooxml,visual",
+      "required-gates": "fingerprint,ooxml,visual,theme-color,powerpoint-render",
     });
     const fallbackWithoutUsage = await buildManifest({
       ...base,
@@ -2115,11 +2251,17 @@ async function selfTest() {
       valid_gate_validators_are_hash_bound: valid.gates.every(
         (gate) => gate.validator?.matched === true,
       ),
+      passed_true_cannot_bypass_powerpoint_render_contract: weakPowerpointRenderGate.blockers.some(
+        (item) => item.rule === "required_gate_failed" && item.detail === "powerpoint-render",
+      ),
       storyline_upstream_validator_is_hash_bound: valid.gates.find(
         (gate) => gate.name === "storyline",
       )?.upstreamValidator?.matched === true,
       failed_required_gate_blocks: failedGate.blockers.some((item) => item.rule === "required_gate_failed"),
       missing_required_gate_blocks: missingGate.blockers.some((item) => item.rule === "required_gate_missing"),
+      final_pptx_theme_color_gate_is_mandatory: missingThemeColorGate.blockers.some(
+        (item) => item.rule === "mandatory_gate_not_required" && item.detail.includes("theme-color"),
+      ),
       unlocked_storyline_blocks: unlocked.blockers.some((item) => item.rule === "storyline_not_locked"),
       incomplete_powerpoint_check_blocks: incompletePowerpoint.blockers.some(
         (item) => item.rule === "powerpoint_subcheck_missing",

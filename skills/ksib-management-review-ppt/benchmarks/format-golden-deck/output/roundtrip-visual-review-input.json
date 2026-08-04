@@ -1,6 +1,6 @@
 {
   "reviewedBy": "Codex",
-  "reviewedAt": "2026-07-31T17:42:31+08:00",
+  "reviewedAt": "2026-08-03T16:00:37+08:00",
   "checks": {
     "fullSizeReview": true,
     "noOverlap": true,
@@ -22,35 +22,35 @@
       "renderFile": "slide-2.png",
       "passed": true,
       "issues": [],
-      "notes": "回读图表、直接标注及固定页眉／页脚一致。"
+      "notes": "回读Action Title保持单行且无默认标题分隔线；图表、直接标注、正文留白及固定页眉／页脚一致。"
     },
     {
       "slide": 3,
       "renderFile": "slide-3.png",
       "passed": true,
       "issues": [],
-      "notes": "回读表格、独立橙色合计线及固定页眉／页脚一致。"
+      "notes": "回读Action Title保持单行且无默认标题分隔线；表格、独立橙色合计线、正文起点及固定页眉／页脚一致。"
     },
     {
       "slide": 4,
       "renderFile": "slide-4.png",
       "passed": true,
       "issues": [],
-      "notes": "回读左右比较页及固定页眉／页脚一致。"
+      "notes": "回读Action Title保持单行且无默认标题分隔线；左右比较页、正文留白及固定页眉／页脚一致。"
     },
     {
       "slide": 5,
       "renderFile": "slide-5.png",
       "passed": true,
       "issues": [],
-      "notes": "回读流程节点、连接器及固定页眉／页脚一致。"
+      "notes": "回读Action Title保持单行且无默认标题分隔线；流程节点、连接器、正文留白及固定页眉／页脚一致。"
     },
     {
       "slide": 6,
       "renderFile": "slide-6.png",
       "passed": true,
       "issues": [],
-      "notes": "回读附录表及固定页眉／页脚一致。"
+      "notes": "回读Action Title保持单行且无默认标题分隔线；附录表、正文留白及固定页眉／页脚一致。"
     }
   ]
 }

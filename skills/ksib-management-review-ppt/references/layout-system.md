@@ -26,6 +26,8 @@
 
 每个canonical Layout都必须解析到Renderer合同。`layout-matrix.json`中的Layout专属`rendererContract`优先；未单独覆盖时继承`global.rendererDefaults`，canonical Renderer名称等于canonical Layout名。内容门禁会逐页输出`storylineId`、provider、canonicalRenderer、允许的fallbackRenderer和原生可编辑要求；任何一项缺失都阻断构建。Release Manifest按`storylineId`绑定实际Renderer；使用fallback必须以版本化usage文件逐页证明该Renderer在合同允许范围内并记录原因。
 
+Layout Matrix只锁定语义类别、容量和Renderer接口，不等于正文几何已经认证。只有`certified-layout-registry.json`登记的Layout／Variant才可称为Certified Layout。当前Certified Core覆盖12类MBB高频正文Layout、18个固定Variant；它们必须在Storyline Lock后生成Render Plan，使用固定Slot和字体角色，并通过`ksib-layout-fidelity-gate/1.0`。完整流程见`certified-layout-system.md`。
+
 每个非豁免Layout还必须声明非空`requiredFields[]`，至少包含Action Title与该Layout的主体证据锚点。只写`slideType`和标题、主体为空，或整个`slides[]`为空，均由内容门禁阻断。
 
 Layout不自行决定页面是否可豁免，必须同时满足`slideRole`合同。`cover`只允许`cover`；`toc`、`agenda`、`section`、`sectionDivider`和styleboard只允许`navigator`；`appendixDivider`只允许`appendix`，附录内容Layout除`appendix`外仅接受Matrix登记的`methodology`、`scope_boundary`或`legal_disclaimer`等边界角色；其余Layout只接受Matrix登记的实质内容角色。导航与章节Layout已在Matrix中正式注册，不得用未登记别名或把实质内容塞入导航页以绕过Evidence与语义门禁。
@@ -36,12 +38,10 @@ Layout不自行决定页面是否可豁免，必须同时满足`slideRole`合同
 
 ### 固定Header模式
 
-| 模式 | Action Title | Subtitle | 分隔线 | 主体起点 |
+| 模式 | Action Title | Subtitle | 标题分隔线 | 主体起点 |
 |---|---|---|---:|---:|
-| 一行标题 | x=0.80, y=0.55, w=11.733, h=0.40 in | 无 | y=1.10 | y=1.30 |
-| 一行标题＋Subtitle | x=0.80, y=0.55, w=11.733, h=0.40 in | x=0.80, y=0.99, w=11.733, h=0.24 in | y=1.30 | y=1.44 |
-| 两行标题 | x=0.80, y=0.55, w=11.733, h=0.72 in | 默认无 | y=1.38 | y=1.52 |
-| 两行标题＋Subtitle（例外） | x=0.80, y=0.55, w=11.733, h=0.72 in | x=0.80, y=1.31, w=11.733, h=0.24 in | y=1.62 | y=1.76 |
+| 一行标题 | x=0.80, y=0.55, w=11.733, h=0.40 in | 无 | 不使用 | y=1.52 |
+| 一行标题＋Subtitle | x=0.80, y=0.55, w=11.733, h=0.40 in | x=0.80, y=0.99, w=11.733, h=0.24 in | 不使用 | y=1.66 |
 
 共用页眉和页脚：页眉橙色竖线x=0.80, y=0.15, w=0.03, h=0.20 in；页眉文字x=0.92, y=0.15, w=11.61, h=0.20 in；页脚分隔线x=0.80, y=6.95, w=11.733 in；Source y=7.05 in；页码x=12.20, y=7.10, w=1.00, h=0.30 in。
 
@@ -56,22 +56,23 @@ Layout不自行决定页面是否可豁免，必须同时满足`slideRole`合同
 - Action Title与Subtitle的净距固定0.04 in，约4 px；Subtitle不得远离标题形成第二个标题区。
 - Subtitle可选；确需使用时固定14 pt，不使用12 pt，只解释Action Title，不重复标题。
 - Subtitle只承担范围、时期、方法、定义、边界或比较框架；使用时必须声明`subtitlePurpose`。若Subtitle包含本页主结论，应并入Action Title或移入主体。
-- 两行Action Title默认不配Subtitle；先压缩文案，再使用两行标题模式。
-- 用户明确要求保留两行标题和Subtitle时，必须使用独立例外Profile；标题底边不得越过Subtitle顶边，并在最终PNG中人工检查对象重叠，不能只依赖画布溢出测试。
+- Action Title只允许一行；Content Gate拒绝换行与超出38个加权字符的标题，OOXML Gate拒绝多个非空段落和`a:br`，最终PNG继续检查字体软换行。
+- 内容页标题下默认不绘制横向分隔线；`title-divider`只用于遗留Deck或用户明确批准的特殊模板，不得进入KSIB默认正文Profile。
+- Title-only主体起点固定为1.52 in，标题下净留白至少0.50 in；Title＋Subtitle主体起点固定为1.66 in，Subtitle下净留白至少0.35 in。格式合同必须用`bodyStartRoles[]`标记最上方主体锚点。
 - 一组连续页面必须共享相同Header模式和绝对一致的Chrome签名，不得逐页手工微调；即使误差小于0.03 in，只要固定角色存在1 EMU或样式差异也必须修正。
 
 ## 3. Mck间距
 
 - 实体框中的文字必须从框边缘内缩至少0.15 in。
 - 水平动态多栏使用至少0.35 in间距；栏宽按 `(content_width - gap × (n - 1)) / n` 计算。
-- 主体内容底部与Bottom Bar之间至少0.15 in，默认0.20 in。
+- 主体内容底部与Bottom Bar之间硬下限为0.15 in，默认0.30 in。大面积填色、深色或高视觉重量模块可在逐页视觉复核中提高到0.35–0.40 in；不得把0.30 in机械理解为所有对象的固定值。
 - Bottom Bar位于y=6.10–6.40 in。
 - 任何主体对象不得越过x=12.533 in或y=6.95 in。
 - 不通过压缩栏距、框内边距或任意降字号塞入超量内容；先按Mck容量矩阵删减。
 
 ## 4. Mck与BCG增强Layout合同
 
-每页只选择一个主Layout。Mck `references/layout-matrix.yaml` 是通用真相源；`bcg-layout-patterns.md` 提供证据型增强；KSIB `layout-matrix.json` 负责业务别名、增强Layout与机读校验。
+每页只选择一个主Layout。Mck `references/layout-matrix.yaml` 是通用方法和容量参考；`bcg-layout-patterns.md` 提供证据型增强；KSIB `layout-matrix.json` 负责业务别名、增强Layout与机读校验；`certified-layout-registry.json`负责已认证正文结构的精确Region、Slot和Variant。
 
 若页面需要“证据→洞见”“阶段打法”“问题→解法”“多模式流程”“分层运营模型”“战略与支撑能力”或“角色演进”，可选择 `bcg-layout-patterns.md` 定义的增强Layout。增强Layout仍使用Mck安全边距、动态间距、正文容量和KSIB视觉系统，不复刻BCG视觉皮肤。
 
@@ -110,10 +111,10 @@ Layout不自行决定页面是否可豁免，必须同时满足`slideRole`合同
 - 使用白底文字、细分隔线、编号和对齐建立结构。
 - 无阴影、无3D、无渐变、无玻璃拟态；使用纯色和平面化形状。
 - 禁止卡片套卡片、每段文字一个容器和大面积圆角卡片墙。
-- 同类页面共享所选Header模式的坐标、标题基线、Subtitle基线、分隔线、主体起点、来源和页码位置。
+- 同类页面共享所选Header模式的坐标、标题基线、Subtitle基线、主体起点、来源和页码位置。
 - 同类页面必须共享同一个机读Chrome Profile；不得在一个Deck中并存两套“几乎一样”的小矩形、页眉文字、标题区或脚注样式。
-- 相邻页面原则上不重复同一Layout；连续论证页面需要同构时可由用户指令覆盖。
-- 留白不是空洞面积，而是Mck固定边距、0.35 in栏距、0.15 in框内边距和清晰层级之间的间隔。
+- 不为了表面多样性强制相邻页面更换Layout。不同市场、客群、支柱或阶段采用同构证据时，连续复用同一Certified Layout有助于比较；只阻止没有证明逻辑的机械重复，并在Render Plan中保留选择理由。
+- 留白不是空洞面积，而是Mck固定边距、0.35 in栏距、0.15 in框内边距、主体与底栏默认0.30 in净距和清晰层级之间的间隔。
 - 结果页优先一张主证据；图表、表格或事实区域应直接标注关键发现，不把全部洞见挪到远离证据的底部。
 - 参考Deck先抽取功能类型和内容Schema，再复用几何；不以逐页截图模仿替代Layout判断。
 - Kwai橙色代替Mck Navy及多Accent色；苹方-简代替Georgia、Arial和楷体。
@@ -126,14 +127,14 @@ Layout不自行决定页面是否可豁免，必须同时满足`slideRole`合同
 - Takeaway不得复述Title、Subtitle、图表标注或主体洞察区；若Takeaway是更强结论，应提升为Action Title并删除Bottom Bar。
 - `cover`、章节／目录、附录、`evidenceInsight`、`singleExhibit`、`issueTree`、`recommendationRoadmap`，以及包含`insight`、`insights`或其他可见Implication Panel的页面不得再设置Takeaway。结构化内容中的单数`implication`是锁定的Storyline语义元数据，本身不等于可见洞察框。
 - 4页及以上的内容Deck中，Takeaway默认不超过实质内容页的25%；不足4页时最多1页。连续两页均使用时必须人工复核其必要性。
-- Bottom Bar位于Mck y=6.10–6.40 in区间，与主体至少0.15 in。
+- Bottom Bar位于Mck y=6.10–6.40 in区间，与主体硬下限0.15 in、默认0.30 in；高视觉重量模块由PowerPoint逐页复核决定是否增加。
 - Takeaway必须是一个完整判断，不得拆成“结论＋未解问题”两层。
 - Owner、未解问题、角色说明或补充结论不得在Takeaway附近另起模块。
 - Source固定在y=7.05 in；页码固定在右下角y=7.10 in，不得逐页漂移。
 
 ## 7. 既有PPT修改边界
 
-- 用户要求只调Layout时，不改文字或颜色；字体是否允许归一化必须单独确认。未授权时保留字体族和字号并使用`font-policy preserve`，先识别并统一Header模式、分隔线、主体起点、来源和页码，再在原主Layout内调整。自动归一化必须使用geometry scope，不能顺带复制颜色、字体或段落样式。
+- 用户要求只调Layout时，不改文字或颜色；字体是否允许归一化必须单独确认。未授权时保留字体族和字号并使用`font-policy preserve`，先识别并统一Header模式、主体起点、来源和页码，再在原主Layout内调整。遗留标题分隔线是否删除属于样式授权，不能由geometry scope静默改变；自动归一化不能顺带复制颜色、字体或段落样式。
 - 用户要求保留左右、三列、矩阵或漏斗时，保留其宏观结构，但使用Mck边距、动态间距和容量规则。
 - 不为追求版式多样性破坏连续页面的一一对应关系。
 - 默认继承Mck的图文版式与版式多样性要求；用户明确禁止图片时覆盖。

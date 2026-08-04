@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 11,
   "source": "locked storyline proof contracts + likaku/Mck-ppt-design-skill references/layout-matrix.yaml + user-provided BCG management review layout benchmark",
   "overrides": [
     "KSIB/Kwai color palette",
@@ -7,9 +7,11 @@
     "customer body sizes 16/14/12 pt; 10 pt only for footnotes or approved compact appendices",
     "BCG-derived lower action-title baseline and evidence-led layout contracts",
     "optional content-page subtitle extension",
+    "single-line action-title and modern-open body spacing with no default title divider",
     "semantic hierarchy contract for title, subtitle, and takeaway",
     "editable OOXML normalization",
-    "canonical layout aliases and renderer contracts"
+    "canonical layout aliases and renderer contracts",
+    "page-intent contract and 0.30 in default body-to-bottom-band spacing"
   ],
   "global": {
     "slideWidthIn": 13.333,
@@ -24,21 +26,24 @@
     "subtitleTopIn": 0.99,
     "subtitleFontPt": 14,
     "titleSubtitleGapIn": 0.04,
-    "dividerYIn": 1.3,
-    "contentStartIn": 1.44,
+    "dividerPolicy": "none",
+    "contentStartIn": 1.52,
     "headerModes": {
-      "titleOnly": { "actionTitleTopIn": 0.55, "actionTitleHeightIn": 0.4, "dividerYIn": 1.1, "contentStartIn": 1.3 },
-      "titleSubtitle": { "actionTitleTopIn": 0.55, "actionTitleHeightIn": 0.4, "subtitleTopIn": 0.99, "subtitleHeightIn": 0.24, "dividerYIn": 1.3, "contentStartIn": 1.44 },
-      "twoLineTitle": { "actionTitleTopIn": 0.55, "actionTitleHeightIn": 0.72, "subtitleAllowed": false, "dividerYIn": 1.38, "contentStartIn": 1.52 }
+      "titleOnly": { "actionTitleTopIn": 0.55, "actionTitleHeightIn": 0.4, "dividerPolicy": "none", "contentStartIn": 1.52, "titleBodyGapMinIn": 0.5, "maxActionTitleLines": 1 },
+      "titleSubtitle": { "actionTitleTopIn": 0.55, "actionTitleHeightIn": 0.4, "subtitleTopIn": 0.99, "subtitleHeightIn": 0.24, "dividerPolicy": "none", "contentStartIn": 1.66, "subtitleBodyGapMinIn": 0.35, "maxActionTitleLines": 1 }
     },
     "sourceYIn": 7.05,
     "pageNumberYIn": 7.1,
     "panelPaddingIn": 0.15,
     "columnGapIn": 0.35,
-    "bottomBarGapIn": 0.15,
+    "bottomBarGapMinimumIn": 0.15,
+    "bottomBarGapIn": 0.3,
     "bottomBarYMinIn": 6.1,
     "bottomBarYMaxIn": 6.4,
-    "titleChars": 40,
+    "titleChars": 38,
+    "titleMaxLines": 1,
+    "titleForbidExplicitLineBreaks": true,
+    "titleWeightedCharacters": 38,
     "subtitleChars": 64,
     "sourceChars": 100,
     "takeawayChars": 72,
@@ -284,6 +289,14 @@
     },
     "evidenceInsight": {
       "proofShape": ["trend", "decision-to-impact", "single-exhibit"],
+      "certifiedLayoutContract": {
+        "registry": "certified-layout-registry.json",
+        "layoutId": "evidenceInsight",
+        "registryVersion": "1.0.0",
+        "allowedVariants": ["right-panel-standard", "right-panel-subtitle"],
+        "renderPlanRequired": true,
+        "layoutFidelityGateRequired": true
+      },
       "requiredFields": ["title", "evidenceBlocks[]", "evidenceBlocks[].title", "insights[]"],
       "maxItems": { "evidenceBlocks": 2, "insights": 4, "metrics": 4 },
       "charBudget": { "evidenceBlocks[].title": 22, "evidenceBlocks[].note": 44, "insights[]": 48 }
@@ -384,9 +397,14 @@
     },
     "phasePlaybook": {
       "proofShape": ["stages"],
-      "requiredFields": ["title", "phases[]", "phases[].title"],
+      "requiredFields": ["title", "phases[]", "phases[].title", "phases[].logic", "phases[].successCriterion", "phases[].action"],
+      "minItems": { "phases": 3 },
       "maxItems": { "phases": 4 },
-      "charBudget": { "phases[].title": 20, "phases[].logic": 48, "phases[].metric": 30, "phases[].action": 60, "phases[].unresolved": 42, "takeaway": 72 }
+      "charBudget": { "phases[].title": 20, "phases[].logic": 48, "phases[].successCriterion": 34, "phases[].action": 60, "phases[].unresolved": 42, "takeaway": 72 },
+      "renderValidation": {
+        "requiredRows": ["phases[].title", "phases[].logic", "phases[].successCriterion", "phases[].action"],
+        "rule": "每一阶段的共同逻辑行、判断标准与行动必须由独立命名对象实际渲染，不得退化为普通时间线"
+      }
     },
     "problemSolutionMap": {
       "proofShape": ["causal-chain"],

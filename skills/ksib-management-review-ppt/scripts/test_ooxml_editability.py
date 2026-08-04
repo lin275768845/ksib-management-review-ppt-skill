@@ -1481,6 +1481,10 @@ class EditabilityNormalizationTest(unittest.TestCase):
                 archive.writestr("ppt/vbaProject.bin", b"macro")
             report = audit(str(pptx))
             preserve_report = audit(str(pptx), font_policy="preserve")
+            benchmark_report = audit(
+                str(pptx),
+                allow_unresolved_markers=True,
+            )
         error_kinds = {item["kind"] for item in report["errors"]}
         warning_kinds = {item["kind"] for item in report["warnings"]}
         preserve_error_kinds = {
@@ -1491,6 +1495,10 @@ class EditabilityNormalizationTest(unittest.TestCase):
         }
         self.assertIn("macro_payload_present", error_kinds)
         self.assertIn("unresolved_placeholder", error_kinds)
+        self.assertNotIn(
+            "unresolved_placeholder",
+            {item["kind"] for item in benchmark_report["errors"]},
+        )
         self.assertIn("unapproved_direct_typeface", error_kinds)
         self.assertIn("unapproved_direct_font_size", error_kinds)
         self.assertNotIn("unapproved_direct_typeface", preserve_error_kinds)

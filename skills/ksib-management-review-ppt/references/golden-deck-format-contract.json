@@ -12,6 +12,18 @@
     "chartDataPolicy": "native-data-required",
     "slideNumberPolicy": "static-allowed"
   },
+  "titlePolicy": {
+    "scope": "content-action-title",
+    "maxActionTitleLines": 1,
+    "forbidExplicitLineBreaks": true,
+    "forbidMultipleParagraphs": true,
+    "maxWeightedCharacters": 38,
+    "defaultTitleDividerPolicy": "forbid",
+    "softWrapRequiresVisualGate": true
+  },
+  "bodyStartPolicy": {
+    "requireNamedAnchors": true
+  },
   "hierarchy": {
     "roles": [
       "action-title",
@@ -57,11 +69,12 @@
       "referenceSlide": 3,
       "slides": [
         3,
-        4
+        4,
+        5,
+        6
       ],
       "roles": [
-        "action-title",
-        "title-divider"
+        "action-title"
       ],
       "geometryToleranceEmu": 0
     }
@@ -140,17 +153,18 @@
       "roleGeometry": {}
     },
     "title-only": {
+      "bodyStartY": 1.52,
       "requiredRoles": [
         "header-accent",
         "header-text",
         "action-title",
-        "title-divider",
         "footer-divider",
         "source-footnote",
         "page-number"
       ],
       "forbiddenRoles": [
-        "subtitle"
+        "subtitle",
+        "title-divider"
       ],
       "roleGeometry": {
         "action-title": {
@@ -164,32 +178,23 @@
             "h": 0.4
           },
           "zeroTextMargins": true
-        },
-        "title-divider": {
-          "objectTypes": [
-            "shapes"
-          ],
-          "geometry": {
-            "x": 0.8,
-            "y": 1.1,
-            "w": 11.733,
-            "h": 0.01
-          }
         }
       }
     },
     "title-subtitle": {
+      "bodyStartY": 1.66,
       "requiredRoles": [
         "header-accent",
         "header-text",
         "action-title",
         "subtitle",
-        "title-divider",
         "footer-divider",
         "source-footnote",
         "page-number"
       ],
-      "forbiddenRoles": [],
+      "forbiddenRoles": [
+        "title-divider"
+      ],
       "roleGeometry": {
         "action-title": {
           "objectTypes": [
@@ -214,56 +219,6 @@
             "h": 0.24
           },
           "zeroTextMargins": true
-        },
-        "title-divider": {
-          "objectTypes": [
-            "shapes"
-          ],
-          "geometry": {
-            "x": 0.8,
-            "y": 1.3,
-            "w": 11.733,
-            "h": 0.01
-          }
-        }
-      }
-    },
-    "title-two-line": {
-      "requiredRoles": [
-        "header-accent",
-        "header-text",
-        "action-title",
-        "title-divider",
-        "footer-divider",
-        "source-footnote",
-        "page-number"
-      ],
-      "forbiddenRoles": [
-        "subtitle"
-      ],
-      "roleGeometry": {
-        "action-title": {
-          "objectTypes": [
-            "textBoxes"
-          ],
-          "geometry": {
-            "x": 0.8,
-            "y": 0.55,
-            "w": 11.733,
-            "h": 0.72
-          },
-          "zeroTextMargins": true
-        },
-        "title-divider": {
-          "objectTypes": [
-            "shapes"
-          ],
-          "geometry": {
-            "x": 0.8,
-            "y": 1.38,
-            "w": 11.733,
-            "h": 0.01
-          }
         }
       }
     }
@@ -361,6 +316,9 @@
       "slide": 2,
       "slideRole": "content",
       "headerMode": "title-subtitle",
+      "bodyStartRoles": [
+        "chart-main"
+      ],
       "requiredRoles": [
         "chart-main"
       ],
@@ -374,9 +332,9 @@
           ],
           "geometry": {
             "x": 0.8,
-            "y": 1.52,
+            "y": 1.66,
             "w": 8.6,
-            "h": 5.2
+            "h": 5.06
           }
         }
       },
@@ -389,6 +347,9 @@
       "slide": 3,
       "slideRole": "content",
       "headerMode": "title-only",
+      "bodyStartRoles": [
+        "table-main"
+      ],
       "requiredRoles": [
         "table-main",
         "table-total-rule",
@@ -454,6 +415,10 @@
       "slide": 4,
       "slideRole": "content",
       "headerMode": "title-only",
+      "bodyStartRoles": [
+        "column-left",
+        "column-right"
+      ],
       "requiredRoles": [
         "column-left",
         "column-right"
@@ -469,9 +434,9 @@
           ],
           "geometry": {
             "x": 0.8,
-            "y": 1.34,
+            "y": 1.6,
             "w": 5.69,
-            "h": 5.16
+            "h": 4.9
           }
         },
         "column-right": {
@@ -480,9 +445,9 @@
           ],
           "geometry": {
             "x": 6.84,
-            "y": 1.34,
+            "y": 1.6,
             "w": 5.69,
-            "h": 5.16
+            "h": 4.9
           }
         }
       },
@@ -494,7 +459,13 @@
     {
       "slide": 5,
       "slideRole": "content",
-      "headerMode": "title-two-line",
+      "headerMode": "title-only",
+      "bodyStartRoles": [
+        "process-node-1",
+        "process-node-2",
+        "process-node-3",
+        "process-node-4"
+      ],
       "requiredRoles": [
         "process-node-1",
         "process-node-2",
@@ -523,6 +494,9 @@
       "slide": 6,
       "slideRole": "appendix",
       "headerMode": "title-only",
+      "bodyStartRoles": [
+        "appendix-note"
+      ],
       "requiredRoles": [
         "appendix-note",
         "appendix-table"
@@ -538,7 +512,7 @@
           ],
           "geometry": {
             "x": 0.8,
-            "y": 1.32,
+            "y": 1.52,
             "w": 11.733,
             "h": 0.28
           }
@@ -549,9 +523,9 @@
           ],
           "geometry": {
             "x": 0.8,
-            "y": 1.7,
+            "y": 1.9,
             "w": 11.733,
-            "h": 5.1
+            "h": 4.9
           }
         }
       },

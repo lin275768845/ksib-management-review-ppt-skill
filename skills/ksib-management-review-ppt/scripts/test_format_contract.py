@@ -80,6 +80,32 @@ def text_shape(
 </p:sp>"""
 
 
+def structured_text_shape(
+    object_id: int,
+    name: str,
+    geometry: tuple[float, float, float, float],
+    paragraphs: list[str],
+    *,
+    explicit_break: bool = False,
+) -> str:
+    x, y, width, height = geometry
+    if explicit_break:
+        paragraph_xml = (
+            '<a:p><a:r><a:rPr sz="2200"/><a:t>第一部分</a:t></a:r>'
+            '<a:br/><a:r><a:rPr sz="2200"/><a:t>第二部分</a:t></a:r></a:p>'
+        )
+    else:
+        paragraph_xml = "".join(
+            f'<a:p><a:r><a:rPr sz="2200"/><a:t>{text}</a:t></a:r></a:p>'
+            for text in paragraphs
+        )
+    return f"""<p:sp>
+  <p:nvSpPr><p:cNvPr id="{object_id}" name="{name}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+  <p:spPr><a:xfrm><a:off x="{emu(x)}" y="{emu(y)}"/><a:ext cx="{emu(width)}" cy="{emu(height)}"/></a:xfrm></p:spPr>
+  <p:txBody><a:bodyPr lIns="0" rIns="0" tIns="0" bIns="0"/><a:lstStyle/>{paragraph_xml}</p:txBody>
+</p:sp>"""
+
+
 def chart_frame(
     object_id: int,
     name: str,
@@ -714,6 +740,192 @@ class FormatContractTest(unittest.TestCase):
             "format_header_role_overlap",
             {item["kind"] for item in errors},
         )
+
+    def test_action_title_policy_rejects_multiple_paragraphs(self) -> None:
+        root = slide(
+            structured_text_shape(
+                2,
+                "action-title",
+                (0.8, 0.55, 11.733, 0.4),
+                ["第一段结论", "第二段解释"],
+            ),
+        )
+        payload = contract()
+        payload["titlePolicy"] = {
+            "forbidMultipleParagraphs": True,
+            "forbidExplicitLineBreaks": True,
+            "maxWeightedCharacters": 38,
+        }
+        errors, inventory = validate_slide_format_contract(
+            slide_number=2,
+            slide_part="ppt/slides/slide2.xml",
+            slide_root=root,
+            slide_width_emu=emu(13.333),
+            slide_height_emu=emu(7.5),
+            contract=payload,
+            slide_contract={
+                "slide": 2,
+                "slideRole": "content",
+                "headerMode": "title-only",
+            },
+        )
+        self.assertIn(
+            "format_action_title_multiline",
+            {item["kind"] for item in errors},
+        )
+        self.assertEqual(
+            inventory["actionTitleSingleLine"]["nonEmptyParagraphCount"],
+            2,
+        )
+
+    def test_action_title_policy_rejects_explicit_break_and_width(self) -> None:
+        payload = contract()
+        payload["titlePolicy"] = {
+            "forbidMultipleParagraphs": True,
+            "forbidExplicitLineBreaks": True,
+            "maxWeightedCharacters": 7,
+        }
+        root = slide(
+            structured_text_shape(
+                2,
+                "action-title",
+                (0.8, 0.55, 11.733, 0.4),
+                ["ignored"],
+                explicit_break=True,
+            ),
+        )
+        errors, _ = validate_slide_format_contract(
+            slide_number=2,
+            slide_part="ppt/slides/slide2.xml",
+            slide_root=root,
+            slide_width_emu=emu(13.333),
+            slide_height_emu=emu(7.5),
+            contract=payload,
+            slide_contract={
+                "slide": 2,
+                "slideRole": "content",
+                "headerMode": "title-only",
+            },
+        )
+        kinds = {item["kind"] for item in errors}
+        self.assertIn("format_action_title_multiline", kinds)
+        self.assertIn("format_action_title_width_budget_exceeded", kinds)
+
+    def test_body_start_policy_blocks_content_above_open_header(self) -> None:
+        payload = contract()
+        payload["headerModes"]["title-only"]["bodyStartY"] = 1.52
+        payload["bodyStartPolicy"] = {"requireNamedAnchors": True}
+        root = slide(
+            text_shape(
+                2,
+                "action-title",
+                "本页标题结论",
+                (0.8, 0.55, 11.733, 0.4),
+            ),
+            text_shape(
+                3,
+                "body-main",
+                "主体证据",
+                (0.8, 1.40, 5.0, 1.0),
+            ),
+        )
+        errors, inventory = validate_slide_format_contract(
+            slide_number=2,
+            slide_part="ppt/slides/slide2.xml",
+            slide_root=root,
+            slide_width_emu=emu(13.333),
+            slide_height_emu=emu(7.5),
+            contract=payload,
+            slide_contract={
+                "slide": 2,
+                "slideRole": "content",
+                "headerMode": "title-only",
+                "bodyStartRoles": ["body-main"],
+            },
+        )
+        self.assertIn(
+            "format_body_starts_above_header_clearance",
+            {item["kind"] for item in errors},
+        )
+        self.assertEqual(inventory["bodyStart"]["bodyStartYIn"], 1.52)
+
+    def test_body_start_policy_accepts_exact_boundary(self) -> None:
+        payload = contract()
+        payload["headerModes"]["title-only"]["bodyStartY"] = 1.52
+        payload["bodyStartPolicy"] = {"requireNamedAnchors": True}
+        root = slide(
+            text_shape(
+                2,
+                "action-title",
+                "本页标题结论",
+                (0.8, 0.55, 11.733, 0.4),
+            ),
+            text_shape(
+                3,
+                "body-main",
+                "主体证据",
+                (0.8, 1.52, 5.0, 1.0),
+            ),
+        )
+        errors, _ = validate_slide_format_contract(
+            slide_number=2,
+            slide_part="ppt/slides/slide2.xml",
+            slide_root=root,
+            slide_width_emu=emu(13.333),
+            slide_height_emu=emu(7.5),
+            contract=payload,
+            slide_contract={
+                "slide": 2,
+                "slideRole": "content",
+                "headerMode": "title-only",
+                "bodyStartRoles": ["body-main"],
+            },
+        )
+        self.assertNotIn(
+            "format_body_starts_above_header_clearance",
+            {item["kind"] for item in errors},
+        )
+
+    def test_single_line_policy_rejects_two_line_mode_and_title_divider(self) -> None:
+        payload = contract()
+        payload["titlePolicy"] = {
+            "maxActionTitleLines": 1,
+            "forbidMultipleParagraphs": True,
+            "forbidExplicitLineBreaks": True,
+            "maxWeightedCharacters": 38,
+            "defaultTitleDividerPolicy": "forbid",
+        }
+        payload["headerModes"]["title-two-line"] = payload["headerModes"]["title-only"]
+        root = slide(
+            text_shape(
+                2,
+                "action-title",
+                "本页标题结论",
+                (0.8, 0.55, 11.733, 0.4),
+            ),
+            text_shape(
+                3,
+                "title-divider",
+                "",
+                (0.8, 1.10, 11.733, 0.01),
+            ),
+        )
+        errors, _ = validate_slide_format_contract(
+            slide_number=2,
+            slide_part="ppt/slides/slide2.xml",
+            slide_root=root,
+            slide_width_emu=emu(13.333),
+            slide_height_emu=emu(7.5),
+            contract=payload,
+            slide_contract={
+                "slide": 2,
+                "slideRole": "content",
+                "headerMode": "title-two-line",
+            },
+        )
+        kinds = {item["kind"] for item in errors}
+        self.assertIn("format_two_line_header_mode_forbidden", kinds)
+        self.assertIn("format_default_title_divider_forbidden", kinds)
 
     def test_shape_classification_requires_non_empty_text(self) -> None:
         empty_text_body = ET.fromstring(

@@ -126,6 +126,9 @@ function addHeader(slide, {
   source,
   page,
 }) {
+  if (!["title-only", "title-subtitle"].includes(mode)) {
+    throw new Error(`Unsupported single-line header mode: ${mode}`);
+  }
   addRect(slide, {
     name: "header-accent",
     x: 0.8,
@@ -146,18 +149,16 @@ function addHeader(slide, {
     bold: true,
     vertical: "middle",
   });
-  const titleHeight = mode === "title-two-line" ? 0.72 : 0.4;
   addText(slide, {
     name: "action-title",
     text: title,
     x: 0.8,
     y: 0.55,
     w: 11.733,
-    h: titleHeight,
+    h: 0.4,
     fontPt: 22,
     bold: true,
   });
-  let dividerY = 1.1;
   if (mode === "title-subtitle") {
     addText(slide, {
       name: "subtitle",
@@ -169,18 +170,7 @@ function addHeader(slide, {
       fontPt: 14,
       color: C.gray,
     });
-    dividerY = 1.3;
-  } else if (mode === "title-two-line") {
-    dividerY = 1.38;
   }
-  addRect(slide, {
-    name: "title-divider",
-    x: 0.8,
-    y: dividerY,
-    w: 11.733,
-    h: 0.01,
-    fill: C.line,
-  });
   addLine(slide, {
     name: "footer-divider",
     x: 0.8,
@@ -374,9 +364,9 @@ function buildChartSlide(presentation) {
   const chart = slide.charts.add("bar", {
     position: {
       left: inch(0.8),
-      top: inch(1.52),
+      top: inch(1.66),
       width: inch(8.6),
-      height: inch(5.2),
+      height: inch(5.06),
     },
     categories: ["A", "B", "C", "D"],
     series: [{
@@ -599,18 +589,18 @@ function buildComparisonSlide(presentation) {
   addRect(slide, {
     name: "column-divider",
     x: 6.665,
-    y: 1.34,
+    y: 1.6,
     w: 0.01,
-    h: 5.16,
+    h: 4.9,
     fill: C.line,
   });
   const left = addText(slide, {
     name: "column-left",
     text: "",
     x: 0.8,
-    y: 1.34,
+    y: 1.6,
     w: 5.69,
-    h: 5.16,
+    h: 4.9,
     fontPt: 14,
   });
   left.text.set([
@@ -632,9 +622,9 @@ function buildComparisonSlide(presentation) {
     name: "column-right",
     text: "",
     x: 6.84,
-    y: 1.34,
+    y: 1.6,
     w: 5.69,
-    h: 5.16,
+    h: 4.9,
     fontPt: 14,
   });
   right.text.set([
@@ -659,8 +649,8 @@ function buildProcessSlide(presentation) {
   slide.background.fill = C.white;
   addHeader(slide, {
     header: "I-4｜流程与连接器",
-    title: "端到端流程通过四个原生节点形成闭环，\n反馈连接器将复核结果重新带回输入端",
-    mode: "title-two-line",
+    title: "四个原生节点串联端到端流程，复核反馈闭环返回输入端",
+    mode: "title-only",
     source: "数据来源：KSIB Golden Deck 格式基准规范",
     page: 5,
   });
@@ -751,7 +741,7 @@ function buildAppendixSlide(presentation) {
     name: "appendix-note",
     text: "基准对象清单｜仅用于对象类型与交互动作检查",
     x: 0.8,
-    y: 1.32,
+    y: 1.52,
     w: 11.733,
     h: 0.28,
     fontPt: 12,
@@ -771,9 +761,9 @@ function buildAppendixSlide(presentation) {
     rows: values.length,
     columns: values[0].length,
     left: inch(0.8),
-    top: inch(1.7),
+    top: inch(1.9),
     width: inch(11.733),
-    height: inch(5.1),
+    height: inch(4.9),
     columnWidths: [0.65, 1.95, 1.3, 0.9, 1.7, 2.6, 2.633].map(inch),
     values,
   });

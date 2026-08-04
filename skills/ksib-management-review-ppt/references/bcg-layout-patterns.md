@@ -16,6 +16,7 @@ BCG来源页：P4、P7、P23、P24。
 - 几何：主证据区占内容宽度65%–75%；右侧或下方洞见区占25%–35%。
 - 结构：事实标题 → 主证据 → 2–4条洞见／管理含义；洞见区承担本页Implication，不再另设Takeaway。
 - 约束：不得再并列第二张同权图表；洞见必须解释证据，不复述数字；`evidenceInsight`属于Takeaway禁用Layout。
+- Certified实现：正式采用右侧洞见时只使用`certified-layout-registry.json`中的`right-panel-standard`或`right-panel-subtitle`；主证据、洞见容器、标题、Lead和2–3条洞见分别绑定固定Slot。超过3条时先压缩未锁定内容、改用其他已批准Variant或拆页，不得缩字号和自由移动。
 - 不适用：三个项目并列、纯文字清单、没有主证据的观点页。
 
 ### 2.2 `phasePlaybook`｜阶段打法表

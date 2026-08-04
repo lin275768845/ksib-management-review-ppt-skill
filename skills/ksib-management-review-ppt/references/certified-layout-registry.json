@@ -1,0 +1,2001 @@
+{
+  "schemaVersion": "ksib-certified-layout-registry/1.0",
+  "registryVersion": "2.0.0",
+  "status": "certified-core",
+  "deck": {
+    "widthIn": 13.333,
+    "heightIn": 7.5,
+    "bodyRightIn": 12.533,
+    "bodyBottomIn": 6.65
+  },
+  "overflowPolicies": {
+    "story-change": [
+      "compress-unlocked-copy",
+      "switch-approved-variant",
+      "split-slide",
+      "block"
+    ],
+    "locked-content": [
+      "switch-approved-variant",
+      "split-if-authorized",
+      "block"
+    ],
+    "format-only": [
+      "preserve-compatible-geometry",
+      "block"
+    ]
+  },
+  "layouts": {
+    "executiveSummary": {
+      "label": "执行摘要／决策请求",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "summary-lead",
+          "summary-pillar",
+          "summary-ask"
+        ]
+      },
+      "proofShapes": [
+        "decision-to-impact",
+        "portfolio"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "three-pillar-standard": {
+          "label": "三支柱决策摘要",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "decisionLead": {
+              "region": "body",
+              "allowedComponents": [
+                "summary-lead"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 11.733,
+                "h": 0.78
+              },
+              "required": true,
+              "typographyRole": "decision-lead-18"
+            },
+            "pillar1": {
+              "region": "body",
+              "allowedComponents": [
+                "summary-pillar"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 2.65,
+                "w": 3.678,
+                "h": 2.65
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "pillar2": {
+              "region": "body",
+              "allowedComponents": [
+                "summary-pillar"
+              ],
+              "geometry": {
+                "x": 4.828,
+                "y": 2.65,
+                "w": 3.678,
+                "h": 2.65
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "pillar3": {
+              "region": "body",
+              "allowedComponents": [
+                "summary-pillar"
+              ],
+              "geometry": {
+                "x": 8.856,
+                "y": 2.65,
+                "w": 3.677,
+                "h": 2.65
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "decisionAsk": {
+              "region": "body",
+              "allowedComponents": [
+                "summary-ask"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 5.68,
+                "w": 11.733,
+                "h": 0.97
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            }
+          }
+        }
+      }
+    },
+    "singleExhibit": {
+      "label": "单一主证据",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "native-chart",
+          "native-table"
+        ]
+      },
+      "proofShapes": [
+        "trend",
+        "single-exhibit"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "full-width-chart": {
+          "label": "全宽原生图表",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "mainExhibit": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "mainExhibit": {
+              "region": "mainExhibit",
+              "allowedComponents": [
+                "native-chart"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 11.733,
+                "h": 5.13
+              },
+              "required": true
+            }
+          }
+        },
+        "full-width-table": {
+          "label": "全宽原生表格",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "mainExhibit": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "mainExhibit": {
+              "region": "mainExhibit",
+              "allowedComponents": [
+                "native-table"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 11.733,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 6,
+              "maxItems": 42
+            }
+          }
+        }
+      }
+    },
+    "evidenceInsight": {
+      "label": "证据＋洞察",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "native-chart",
+          "insight-panel",
+          "insight-title",
+          "insight-lead",
+          "insight-list"
+        ]
+      },
+      "proofShapes": [
+        "trend",
+        "decision-to-impact",
+        "single-exhibit"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "right-panel-standard": {
+          "label": "主证据左侧＋洞察右侧",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "mainExhibit": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 7.7,
+              "h": 5.13
+            },
+            "insightPanel": {
+              "x": 8.85,
+              "y": 1.52,
+              "w": 3.683,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "mainExhibit": {
+              "region": "mainExhibit",
+              "allowedComponents": [
+                "native-chart"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 7.7,
+                "h": 5.13
+              },
+              "required": true
+            },
+            "insightPanel": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-panel"
+              ],
+              "geometry": {
+                "x": 8.85,
+                "y": 1.52,
+                "w": 3.683,
+                "h": 5.13
+              },
+              "required": true
+            },
+            "insightTitle": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-title"
+              ],
+              "geometry": {
+                "x": 9.05,
+                "y": 1.72,
+                "w": 3.283,
+                "h": 0.28
+              },
+              "required": true,
+              "typographyRole": "module-title-14"
+            },
+            "insightLead": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-lead"
+              ],
+              "geometry": {
+                "x": 9.05,
+                "y": 2.18,
+                "w": 3.283,
+                "h": 0.72
+              },
+              "required": true,
+              "typographyRole": "insight-lead-14"
+            },
+            "insightItems": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-list"
+              ],
+              "geometry": {
+                "x": 9.05,
+                "y": 3.1,
+                "w": 3.283,
+                "h": 3.35
+              },
+              "required": true,
+              "typographyRole": "body-secondary-12",
+              "minItems": 2,
+              "maxItems": 3
+            }
+          }
+        },
+        "right-panel-subtitle": {
+          "label": "边界副标题＋洞察右侧",
+          "headerProfile": "content-title-subtitle",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.66,
+            "w": 11.733,
+            "h": 4.99
+          },
+          "regions": {
+            "mainExhibit": {
+              "x": 0.8,
+              "y": 1.66,
+              "w": 7.7,
+              "h": 4.99
+            },
+            "insightPanel": {
+              "x": 8.85,
+              "y": 1.66,
+              "w": 3.683,
+              "h": 4.99
+            }
+          },
+          "slots": {
+            "mainExhibit": {
+              "region": "mainExhibit",
+              "allowedComponents": [
+                "native-chart"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.66,
+                "w": 7.7,
+                "h": 4.99
+              },
+              "required": true
+            },
+            "insightPanel": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-panel"
+              ],
+              "geometry": {
+                "x": 8.85,
+                "y": 1.66,
+                "w": 3.683,
+                "h": 4.99
+              },
+              "required": true
+            },
+            "insightTitle": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-title"
+              ],
+              "geometry": {
+                "x": 9.05,
+                "y": 1.86,
+                "w": 3.283,
+                "h": 0.28
+              },
+              "required": true,
+              "typographyRole": "module-title-14"
+            },
+            "insightLead": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-lead"
+              ],
+              "geometry": {
+                "x": 9.05,
+                "y": 2.32,
+                "w": 3.283,
+                "h": 0.72
+              },
+              "required": true,
+              "typographyRole": "insight-lead-14"
+            },
+            "insightItems": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-list"
+              ],
+              "geometry": {
+                "x": 9.05,
+                "y": 3.24,
+                "w": 3.283,
+                "h": 3.21
+              },
+              "required": true,
+              "typographyRole": "body-secondary-12",
+              "minItems": 2,
+              "maxItems": 3
+            }
+          }
+        },
+        "bottom-panel-standard": {
+          "label": "主证据上方＋洞察底部",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "mainExhibit": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 3.45
+            },
+            "insightPanel": {
+              "x": 0.8,
+              "y": 5.22,
+              "w": 11.733,
+              "h": 1.43
+            }
+          },
+          "slots": {
+            "mainExhibit": {
+              "region": "mainExhibit",
+              "allowedComponents": [
+                "native-chart"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 11.733,
+                "h": 3.45
+              },
+              "required": true
+            },
+            "insightPanel": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-panel"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 5.22,
+                "w": 11.733,
+                "h": 1.43
+              },
+              "required": true
+            },
+            "insightTitle": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-title"
+              ],
+              "geometry": {
+                "x": 1,
+                "y": 5.48,
+                "w": 1.35,
+                "h": 0.28
+              },
+              "required": true,
+              "typographyRole": "module-title-14"
+            },
+            "insightLead": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-lead"
+              ],
+              "geometry": {
+                "x": 2.65,
+                "y": 5.43,
+                "w": 4.35,
+                "h": 0.72
+              },
+              "required": true,
+              "typographyRole": "insight-lead-14"
+            },
+            "insightItems": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-list"
+              ],
+              "geometry": {
+                "x": 7.35,
+                "y": 5.42,
+                "w": 4.98,
+                "h": 0.93
+              },
+              "required": true,
+              "typographyRole": "body-secondary-12",
+              "minItems": 2,
+              "maxItems": 3
+            }
+          }
+        }
+      }
+    },
+    "tableInsight": {
+      "label": "表格＋洞察",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "native-table",
+          "insight-panel",
+          "insight-title",
+          "insight-lead",
+          "insight-list"
+        ]
+      },
+      "proofShapes": [
+        "comparison",
+        "portfolio",
+        "single-exhibit"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "right-panel-standard": {
+          "label": "原生表格＋右侧洞察",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "mainExhibit": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 8,
+              "h": 5.13
+            },
+            "insightPanel": {
+              "x": 9.15,
+              "y": 1.52,
+              "w": 3.383,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "mainExhibit": {
+              "region": "mainExhibit",
+              "allowedComponents": [
+                "native-table"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 8,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 9,
+              "maxItems": 42
+            },
+            "insightPanel": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-panel"
+              ],
+              "geometry": {
+                "x": 9.15,
+                "y": 1.52,
+                "w": 3.383,
+                "h": 5.13
+              },
+              "required": true
+            },
+            "insightTitle": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-title"
+              ],
+              "geometry": {
+                "x": 9.35,
+                "y": 1.72,
+                "w": 2.983,
+                "h": 0.28
+              },
+              "required": true,
+              "typographyRole": "module-title-14"
+            },
+            "insightLead": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-lead"
+              ],
+              "geometry": {
+                "x": 9.35,
+                "y": 2.18,
+                "w": 2.983,
+                "h": 0.82
+              },
+              "required": true,
+              "typographyRole": "insight-lead-14"
+            },
+            "insightItems": {
+              "region": "insightPanel",
+              "allowedComponents": [
+                "insight-list"
+              ],
+              "geometry": {
+                "x": 9.35,
+                "y": 3.2,
+                "w": 2.983,
+                "h": 3.25
+              },
+              "required": true,
+              "typographyRole": "body-secondary-12",
+              "minItems": 2,
+              "maxItems": 3
+            }
+          }
+        }
+      }
+    },
+    "sideBySide": {
+      "label": "左右对比／取舍",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "comparison-column",
+          "divider-line"
+        ]
+      },
+      "proofShapes": [
+        "comparison",
+        "decision-to-impact"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "balanced": {
+          "label": "左右等宽比较",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "left": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 5.65,
+              "h": 5.13
+            },
+            "right": {
+              "x": 6.883,
+              "y": 1.52,
+              "w": 5.65,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "leftColumn": {
+              "region": "left",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 5.65,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 6
+            },
+            "divider": {
+              "region": "body",
+              "allowedComponents": [
+                "divider-line"
+              ],
+              "geometry": {
+                "x": 6.666,
+                "y": 1.52,
+                "w": 0.001,
+                "h": 5.13
+              },
+              "required": true
+            },
+            "rightColumn": {
+              "region": "right",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 6.883,
+                "y": 1.52,
+                "w": 5.65,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 6
+            }
+          }
+        }
+      }
+    },
+    "structuredComparison": {
+      "label": "三／四列结构比较",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "comparison-column"
+        ]
+      },
+      "proofShapes": [
+        "comparison",
+        "portfolio"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "three-column": {
+          "label": "三列结构比较",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "column1": {
+              "region": "body",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 3.678,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 6
+            },
+            "column2": {
+              "region": "body",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 4.828,
+                "y": 1.52,
+                "w": 3.678,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 6
+            },
+            "column3": {
+              "region": "body",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 8.856,
+                "y": 1.52,
+                "w": 3.677,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 6
+            }
+          }
+        },
+        "four-column": {
+          "label": "四列结构比较",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "column1": {
+              "region": "body",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 2.671,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 5
+            },
+            "column2": {
+              "region": "body",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 3.821,
+                "y": 1.52,
+                "w": 2.671,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 5
+            },
+            "column3": {
+              "region": "body",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 6.842,
+                "y": 1.52,
+                "w": 2.671,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 5
+            },
+            "column4": {
+              "region": "body",
+              "allowedComponents": [
+                "comparison-column"
+              ],
+              "geometry": {
+                "x": 9.863,
+                "y": 1.52,
+                "w": 2.67,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 5
+            }
+          }
+        }
+      }
+    },
+    "matrix2x2": {
+      "label": "2×2优先级矩阵",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "matrix-quadrant",
+          "axis-label"
+        ]
+      },
+      "proofShapes": [
+        "portfolio",
+        "comparison"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "quadrant-standard": {
+          "label": "四象限优先级矩阵",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "yAxisLabel": {
+              "region": "body",
+              "allowedComponents": [
+                "axis-label"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 2.2,
+                "h": 0.28
+              },
+              "required": true,
+              "typographyRole": "small-label-12"
+            },
+            "quadrant1": {
+              "region": "body",
+              "allowedComponents": [
+                "matrix-quadrant"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.95,
+                "w": 5.666,
+                "h": 2.08
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "quadrant2": {
+              "region": "body",
+              "allowedComponents": [
+                "matrix-quadrant"
+              ],
+              "geometry": {
+                "x": 6.866,
+                "y": 1.95,
+                "w": 5.667,
+                "h": 2.08
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "quadrant3": {
+              "region": "body",
+              "allowedComponents": [
+                "matrix-quadrant"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 4.38,
+                "w": 5.666,
+                "h": 2.08
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "quadrant4": {
+              "region": "body",
+              "allowedComponents": [
+                "matrix-quadrant"
+              ],
+              "geometry": {
+                "x": 6.866,
+                "y": 4.38,
+                "w": 5.667,
+                "h": 2.08
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "xAxisLabel": {
+              "region": "body",
+              "allowedComponents": [
+                "axis-label"
+              ],
+              "geometry": {
+                "x": 10.333,
+                "y": 6.38,
+                "w": 2.2,
+                "h": 0.27
+              },
+              "required": true,
+              "typographyRole": "small-label-12"
+            }
+          }
+        }
+      }
+    },
+    "issueTree": {
+      "label": "Issue／Driver Tree",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "tree-node",
+          "native-connector"
+        ]
+      },
+      "proofShapes": [
+        "causal-chain",
+        "portfolio"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "three-branch": {
+          "label": "一个根问题＋三个分支",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "root": {
+              "region": "body",
+              "allowedComponents": [
+                "tree-node"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 3.05,
+                "w": 2.5,
+                "h": 1.1
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "branch1": {
+              "region": "body",
+              "allowedComponents": [
+                "tree-node"
+              ],
+              "geometry": {
+                "x": 4.25,
+                "y": 1.52,
+                "w": 8.283,
+                "h": 1.25
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "branch2": {
+              "region": "body",
+              "allowedComponents": [
+                "tree-node"
+              ],
+              "geometry": {
+                "x": 4.25,
+                "y": 3.46,
+                "w": 8.283,
+                "h": 1.25
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "branch3": {
+              "region": "body",
+              "allowedComponents": [
+                "tree-node"
+              ],
+              "geometry": {
+                "x": 4.25,
+                "y": 5.4,
+                "w": 8.283,
+                "h": 1.25
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "connector1": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 3.3,
+                "y": 2.145,
+                "w": 0.95,
+                "h": 1.455
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            },
+            "connector2": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 3.3,
+                "y": 3.6,
+                "w": 0.95,
+                "h": 0.485
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            },
+            "connector3": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 3.3,
+                "y": 3.6,
+                "w": 0.95,
+                "h": 2.425
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            }
+          }
+        }
+      }
+    },
+    "problemSolutionMap": {
+      "label": "问题—解法映射",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "mapping-cell"
+        ]
+      },
+      "proofShapes": [
+        "causal-chain",
+        "decision-to-impact"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "three-row": {
+          "label": "三组问题—行动—结果",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "problem1": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.52,
+                "w": 3.45,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "action1": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 4.6,
+                "y": 1.52,
+                "w": 4,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "outcome1": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 8.95,
+                "y": 1.52,
+                "w": 3.583,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "problem2": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 3.24,
+                "w": 3.45,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "action2": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 4.6,
+                "y": 3.24,
+                "w": 4,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "outcome2": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 8.95,
+                "y": 3.24,
+                "w": 3.583,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "problem3": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 4.96,
+                "w": 3.45,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "action3": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 4.6,
+                "y": 4.96,
+                "w": 4,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "outcome3": {
+              "region": "body",
+              "allowedComponents": [
+                "mapping-cell"
+              ],
+              "geometry": {
+                "x": 8.95,
+                "y": 4.96,
+                "w": 3.583,
+                "h": 1.42
+              },
+              "required": true,
+              "minItems": 1,
+              "maxItems": 2
+            }
+          }
+        }
+      }
+    },
+    "processValueChain": {
+      "label": "流程／价值链",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "stage-node",
+          "native-connector"
+        ]
+      },
+      "proofShapes": [
+        "stages",
+        "system",
+        "decision-to-impact"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "four-stage": {
+          "label": "四阶段端到端流程",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "stage1": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 2.12,
+                "w": 2.671,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "stage2": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 3.8209999999999997,
+                "y": 2.12,
+                "w": 2.671,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "stage3": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 6.842,
+                "y": 2.12,
+                "w": 2.671,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "stage4": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 9.863,
+                "y": 2.12,
+                "w": 2.671,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "connector1": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 3.471,
+                "y": 3.87,
+                "w": 0.35,
+                "h": 0
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            },
+            "connector2": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 6.492,
+                "y": 3.87,
+                "w": 0.35,
+                "h": 0
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            },
+            "connector3": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 9.513,
+                "y": 3.87,
+                "w": 0.35,
+                "h": 0
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            }
+          }
+        },
+        "five-stage": {
+          "label": "五阶段端到端流程",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "stage1": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 2.12,
+                "w": 2.017,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "stage2": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 3.167,
+                "y": 2.12,
+                "w": 2.017,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "stage3": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 5.534,
+                "y": 2.12,
+                "w": 2.017,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "stage4": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 7.901,
+                "y": 2.12,
+                "w": 2.017,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "stage5": {
+              "region": "body",
+              "allowedComponents": [
+                "stage-node"
+              ],
+              "geometry": {
+                "x": 10.268,
+                "y": 2.12,
+                "w": 2.017,
+                "h": 3.5
+              },
+              "required": true,
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "connector1": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 2.817,
+                "y": 3.87,
+                "w": 0.35,
+                "h": 0
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            },
+            "connector2": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 5.184,
+                "y": 3.87,
+                "w": 0.35,
+                "h": 0
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            },
+            "connector3": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 7.551,
+                "y": 3.87,
+                "w": 0.35,
+                "h": 0
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            },
+            "connector4": {
+              "region": "body",
+              "allowedComponents": [
+                "native-connector"
+              ],
+              "geometry": {
+                "x": 9.918,
+                "y": 3.87,
+                "w": 0.35,
+                "h": 0
+              },
+              "required": true,
+              "geometryToleranceEmu": 27432
+            }
+          }
+        }
+      }
+    },
+    "phasePlaybook": {
+      "label": "阶段打法／Playbook",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "logic-labels",
+          "phase-column"
+        ]
+      },
+      "proofShapes": [
+        "stages",
+        "decision-to-impact"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "three-stage": {
+          "label": "三阶段共同逻辑打法",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "logicLabels": {
+              "region": "body",
+              "allowedComponents": [
+                "logic-labels"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.78,
+                "w": 1.2,
+                "h": 1.2
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 3,
+              "typographyRole": "body-secondary-12"
+            },
+            "phase1": {
+              "region": "body",
+              "allowedComponents": [
+                "phase-column"
+              ],
+              "geometry": {
+                "x": 2.35,
+                "y": 1.52,
+                "w": 3.161,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "phase2": {
+              "region": "body",
+              "allowedComponents": [
+                "phase-column"
+              ],
+              "geometry": {
+                "x": 5.861,
+                "y": 1.52,
+                "w": 3.161,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "phase3": {
+              "region": "body",
+              "allowedComponents": [
+                "phase-column"
+              ],
+              "geometry": {
+                "x": 9.372,
+                "y": 1.52,
+                "w": 3.161,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            }
+          }
+        },
+        "four-stage": {
+          "label": "四阶段共同逻辑打法",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "logicLabels": {
+              "region": "body",
+              "allowedComponents": [
+                "logic-labels"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.78,
+                "w": 1.2,
+                "h": 1.2
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 3,
+              "typographyRole": "body-secondary-12"
+            },
+            "phase1": {
+              "region": "body",
+              "allowedComponents": [
+                "phase-column"
+              ],
+              "geometry": {
+                "x": 2.35,
+                "y": 1.52,
+                "w": 2.283,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "phase2": {
+              "region": "body",
+              "allowedComponents": [
+                "phase-column"
+              ],
+              "geometry": {
+                "x": 4.983,
+                "y": 1.52,
+                "w": 2.283,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "phase3": {
+              "region": "body",
+              "allowedComponents": [
+                "phase-column"
+              ],
+              "geometry": {
+                "x": 7.616,
+                "y": 1.52,
+                "w": 2.283,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "phase4": {
+              "region": "body",
+              "allowedComponents": [
+                "phase-column"
+              ],
+              "geometry": {
+                "x": 10.249,
+                "y": 1.52,
+                "w": 2.284,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            }
+          }
+        }
+      }
+    },
+    "recommendationRoadmap": {
+      "label": "建议路线图",
+      "certificationLevel": "certified-core",
+      "renderer": {
+        "status": "certified",
+        "entrypoint": "scripts/render_certified_layout.mjs",
+        "contentSchema": "references/certified-render-content.schema.json",
+        "goldenFixture": "benchmarks/certified-layouts/core-library",
+        "supportedComponents": [
+          "logic-labels",
+          "roadmap-phase"
+        ]
+      },
+      "proofShapes": [
+        "stages",
+        "decision-to-impact"
+      ],
+      "customLayoutAllowed": false,
+      "variants": {
+        "four-phase": {
+          "label": "四阶段建议—里程碑—Owner",
+          "headerProfile": "content-title-only",
+          "geometryToleranceEmu": 0,
+          "bodyRegion": {
+            "x": 0.8,
+            "y": 1.52,
+            "w": 11.733,
+            "h": 5.13
+          },
+          "regions": {
+            "body": {
+              "x": 0.8,
+              "y": 1.52,
+              "w": 11.733,
+              "h": 5.13
+            }
+          },
+          "slots": {
+            "logicLabels": {
+              "region": "body",
+              "allowedComponents": [
+                "logic-labels"
+              ],
+              "geometry": {
+                "x": 0.8,
+                "y": 1.78,
+                "w": 1.2,
+                "h": 1.2
+              },
+              "required": true,
+              "minItems": 3,
+              "maxItems": 3,
+              "typographyRole": "body-secondary-12"
+            },
+            "phase1": {
+              "region": "body",
+              "allowedComponents": [
+                "roadmap-phase"
+              ],
+              "geometry": {
+                "x": 2.35,
+                "y": 1.52,
+                "w": 2.283,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "phase2": {
+              "region": "body",
+              "allowedComponents": [
+                "roadmap-phase"
+              ],
+              "geometry": {
+                "x": 4.983,
+                "y": 1.52,
+                "w": 2.283,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "phase3": {
+              "region": "body",
+              "allowedComponents": [
+                "roadmap-phase"
+              ],
+              "geometry": {
+                "x": 7.616,
+                "y": 1.52,
+                "w": 2.283,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "phase4": {
+              "region": "body",
+              "allowedComponents": [
+                "roadmap-phase"
+              ],
+              "geometry": {
+                "x": 10.249,
+                "y": 1.52,
+                "w": 2.284,
+                "h": 5.13
+              },
+              "required": true,
+              "minItems": 4,
+              "maxItems": 4
+            }
+          }
+        }
+      }
+    }
+  }
+}

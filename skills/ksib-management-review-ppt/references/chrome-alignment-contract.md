@@ -4,18 +4,17 @@
 
 ## 1. 适用对象
 
-固定Chrome角色包括：
+KSIB默认固定Chrome角色包括：
 
 - `header-accent`
 - `header-text`
 - `action-title`
 - `subtitle`
-- `title-divider`
 - `footer-divider`
 - `source-footnote`
 - `page-number`
 
-封面、目录、章节分隔、标准正文、标题＋Subtitle、两行标题和附录可以使用不同Profile；同一Profile内的固定角色必须绝对一致。不得把合法的页面类型差异误判为漂移，也不得用“页面类型不同”掩盖同类页面之间的手工偏移。
+`title-divider`只作为遗留Deck或用户明确批准的特殊模板兼容角色；KSIB默认正文Profile禁用。封面、目录、章节分隔、标准正文、标题＋Subtitle和附录可以使用不同Profile；同一Profile内的固定角色必须绝对一致。不得把合法的页面类型差异误判为漂移，也不得用“页面类型不同”掩盖同类页面之间的手工偏移。
 
 ## 2. 绝对一致的含义
 
@@ -45,8 +44,6 @@ Profile名称只能使用`design-tokens.json.crossSlideChrome.profileIds[]`中�
 
 - `content-title-only`
 - `content-title-subtitle`
-- `content-title-two-line`
-- `content-title-two-line-subtitle`（仅用于用户明确要求的例外页）
 - `appendix-title-only`
 - `appendix-title-subtitle`
 
@@ -98,15 +95,15 @@ Profile名称只能使用`design-tokens.json.crossSlideChrome.profileIds[]`中�
 - 需要比较的样式属性；
 - 必需角色策略与别名映射。
 
-OOXML QA拒绝空角色组、不存在的显式页码、参考页不在组内，以及实际覆盖少于两页的“空通过”。输出每组的参考签名、覆盖页、对象类型、有效垂直对齐、缺失角色和差异清单。任何已纳入`compareFields[]`的固定Chrome差异均为错误，不降级为警告。若同页Action Title与Subtitle发生正面积重叠，或标题分隔线进入Subtitle框，输出`format_header_role_overlap`并阻断。
+OOXML QA拒绝空角色组、不存在的显式页码、参考页不在组内，以及实际覆盖少于两页的“空通过”。输出每组的参考签名、覆盖页、对象类型、有效垂直对齐、缺失角色和差异清单。任何已纳入`compareFields[]`的固定Chrome差异均为错误，不降级为警告。若同页Action Title与Subtitle发生正面积重叠，输出`format_header_role_overlap`并阻断；若遗留合同显式保留`title-divider`，仍检查其不得进入Subtitle框。
 
 自动门禁之后，仍需生成跨页叠图或快速翻页复核，重点检查：
 
 - 小矩形是否发生宽高或颜色跳动；
 - 页眉、标题和Subtitle基线是否跳动；
-- 分隔线与正文起点是否跳动；
+- 主体起点是否跳动，正文是否至少从1.52／1.66 in开始；
 - Source和页码是否漂移；
-- 两行标题是否使用了合法独立Profile。
-- 两行标题与Subtitle是否仍有字形层面的光学冲突；机器已检查对象框重叠，但画布溢出测试和几何框通过仍不能替代最终PNG人工检查。
+- Action Title是否保持单行，是否出现字体渲染造成的软换行；
+- 默认正文是否误带标题下横线，或遗留横线是否得到明确授权。
 
 自动检查通过不代表光学质量已经通过；但自动检查失败时不得依靠人工“看起来差不多”放行。

@@ -1,5 +1,5 @@
 interface:
   display_name: "KSIB咨询与管理汇报PPT"
   short_description: "将证据与锁定故事线制作成严肃、可编辑、可追溯的咨询型PPT"
-  default_prompt: "Use $ksib-management-review-ppt to turn my evidence-backed locked storyline into a native editable and traceable KSIB consulting deck."
+  default_prompt: "Use $ksib-management-review-ppt to validate the intake and page-intent contracts, reuse any workbench answers, and produce a native editable, traceable KSIB consulting deck with conclusion-led single-line action titles."
   brand_color: "#FF4906"
