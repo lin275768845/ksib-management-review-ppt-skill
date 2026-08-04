@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "ksib-typography-roles/1.0",
+  "defaultTypeface": "PingFang SC",
+  "fallbackTypefaces": [
+    "苹方-简",
+    "Microsoft YaHei"
+  ],
+  "roles": {
+    "action-title-22": {
+      "fontSizePt": 22,
+      "fontWeight": 700,
+      "lineCountMax": 1,
+      "purposes": [
+        "action-title"
+      ]
+    },
+    "decision-lead-18": {
+      "fontSizePt": 18,
+      "fontWeight": 700,
+      "lineCountMax": 2,
+      "purposes": [
+        "decision-lead"
+      ]
+    },
+    "module-title-16": {
+      "fontSizePt": 16,
+      "fontWeight": 700,
+      "lineCountMax": 2,
+      "purposes": [
+        "module-title"
+      ]
+    },
+    "module-title-14": {
+      "fontSizePt": 14,
+      "fontWeight": 700,
+      "lineCountMax": 1,
+      "purposes": [
+        "module-title",
+        "insight-panel-title"
+      ]
+    },
+    "insight-lead-14": {
+      "fontSizePt": 14,
+      "fontWeight": 700,
+      "lineCountMax": 3,
+      "purposes": [
+        "insight-lead"
+      ]
+    },
+    "body-primary-14": {
+      "fontSizePt": 14,
+      "fontWeight": 400,
+      "purposes": [
+        "body-primary"
+      ]
+    },
+    "body-secondary-12": {
+      "fontSizePt": 12,
+      "fontWeight": 400,
+      "purposes": [
+        "body-secondary",
+        "insight-list"
+      ]
+    },
+    "chart-label-10": {
+      "fontSizePt": 10,
+      "fontWeight": 400,
+      "purposes": [
+        "chart-label",
+        "annotation"
+      ]
+    },
+    "small-label-12": {
+      "fontSizePt": 12,
+      "fontWeight": 700,
+      "purposes": [
+        "axis-label",
+        "row-label"
+      ]
+    },
+    "source-9": {
+      "fontSizePt": 9,
+      "fontWeight": 400,
+      "purposes": [
+        "source",
+        "page-number"
+      ]
+    }
+  },
+  "rules": {
+    "rendererMayChooseRawFontSize": false,
+    "shrinkBelowRoleForbidden": true,
+    "overflowMustUseLayoutPolicy": true
+  }
+}

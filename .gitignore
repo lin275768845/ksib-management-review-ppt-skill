@@ -6,3 +6,7 @@ __pycache__/
 *.tmp
 .env
 .env.*
+skills/ksib-management-review-ppt/.template-build/
+skills/ksib-management-review-ppt/templates/master-gate.json
+skills/ksib-management-review-ppt/templates/rendered/
+skills/ksib-management-review-ppt/templates/~$*

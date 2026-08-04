@@ -1,7 +1,7 @@
 # KSIB 咨询与管理汇报 PPT Skill
 
 发行日期：2026-08-04
-发行版本：v4.4
+发行版本：v5.1.4
 主 Skill：`ksib-management-review-ppt`
 
 这是一套面向中文咨询报告、管理汇报和市场研究演示文稿的 Codex Skill。它把故事线、证据链、版式合同、原生可编辑性和交付门禁连接成一套工作流，适合：
@@ -18,18 +18,22 @@
 
 本版把`ksib-theme-color-contract/1.0`升级为最终成片门禁：主色按深／主／浅／极浅四级色阶使用，对比辅色只承担真实对照，浅灰只表示“其他”、基线、参考、弱化或较差对比，深灰不作为默认数据填充。最终PPTX必须先由`extract_pptx_theme_colors.py`逐对象提取真实颜色，再以`ksib-theme-usage/1.1`把每个可见绑定与Token交叉核对；Renderer声明、虚假绑定、漏登记颜色、Token与成片Hex不一致都会阻断。
 
+v5.0把确定性版式从单页纵切扩展为高频生产库：`certified-layout-registry.json`登记12类MBB高频正文Layout、18个固定Variant及精确Region／Slot／字体角色；`resolve_render_plan.mjs`在制作前锁定内容到Slot的绑定，`render_certified_layout.mjs`直接消费Render Plan构建原生图表、原生表格、复合面板和连接线，`validate_layout_fidelity.py`再对最终PPTX逐对象核对真实几何、组件、字号、容量和合同外自由对象。36页Golden Library分别覆盖每类版式的稀疏、标准和最大容量状态。
+
+v5.1新增正式PowerPoint母版层：`KSIB_MBB_Master_v1.0.potx`提供Cover、Navigator、章节页、两类内容页和三类附录页共8个基础Profile；`KSIB_MBB_Layout_Library_v1.0.pptx`提供对应可编辑样板。母版与Certified Renderer共同读取`design-tokens.json`，母版负责Theme、字体、Chrome、基础Placeholder和动态页码，Renderer继续负责复杂正文Region、Slot、组件和Overflow Policy。Intake Contract同时与12类／18 Variant注册表完成对齐，不再只登记单一版式。v5.1.1进一步把母版Layout类型收敛到ECMA-376允许的OOXML枚举；v5.1.4把含正文Placeholder的Profile统一改为`cust`，将页眉固定为Layout Chrome，并保留零幻灯片`.potx`仍引用的Notes Master关系，Validator同步阻断`hdr`提升和悬空关系。
+
 本版同时把内容页Header升级为更接近MBB的开放式结构：Action Title固定单行，移除默认标题下划线，Title-only正文从1.52 in起，Title＋Subtitle正文从1.66 in起。内容、OOXML和全页PNG形成三层门禁；封面标题与章节名称不受内容页单行结构门禁限制，但仍须通过视觉复核。v4.2的固定Chrome跨页0 EMU绝对对齐能力继续保留。
 
 ## 1. 包内文件
 
 ```text
-KSIB_PPT_Skill_20260804_v4.4/
+KSIB_PPT_Skill_20260804_v5.1.4/
 ├── README.md
 ├── DISTRIBUTION_NOTICE.md
 ├── PACKAGE_MANIFEST.json
 ├── CHECKSUMS.sha256
 ├── skills/
-│   ├── ksib-management-review-ppt/   # 主 Skill，内含Golden Deck回归夹具
+│   ├── ksib-management-review-ppt/   # 主 Skill，内含母版与Golden Deck回归夹具
 │   └── linzhe-mbb-storyline/         # 新建／重构故事线所需依赖
 └── third_party/
     └── mck-ppt-design/               # 版式方法参考，Apache-2.0
@@ -244,6 +248,8 @@ node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_evidence.mj
 node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_content.mjs" --self-test
 node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_storyline_handoff.mjs" --self-test
 node --test "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_theme_color_contract.mjs"
+node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/resolve_render_plan.mjs" --self-test
+node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/render_certified_layout.mjs" --self-test
 node "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/build_release_manifest.mjs" --self-test
 
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/build_visual_review_gate.py" --self-test
@@ -255,7 +261,12 @@ python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_design_token
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_exhibit_styles.py"
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_chrome_normalizer.py"
 python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_pptx_theme_colors.py"
+python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_layout_fidelity.py"
+python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/test_powerpoint_master.py"
+python3 "$CODEX_HOME/skills/ksib-management-review-ppt/scripts/validate_powerpoint_master.py"
 ```
+
+母版结构门禁通过后，仍必须分别用Microsoft PowerPoint打开`.pptx`样板库和`.potx`模板；任何“修复内容”或“无法读取 ^0”提示均视为阻断，不能以LibreOffice、ZIP/XML解析或单元测试替代。
 
 如果上述Python测试提示缺少`lxml`，请改用Codex工作区提供的bundled Python，或在独立Python环境中安装`lxml`后重试。
 

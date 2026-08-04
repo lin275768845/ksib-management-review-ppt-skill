@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "ksib-render-plan-input/1.0",
+  "executionMode": "story-change",
+  "slides": [
+    {
+      "slide": 1,
+      "storylineId": "GOLDEN-EI-SPARSE",
+      "layoutId": "evidenceInsight",
+      "variantId": "right-panel-standard",
+      "headerProfile": "content-title-only",
+      "slotBindings": {
+        "mainExhibit": { "componentId": "native-chart", "objectName": "G01-main-exhibit" },
+        "insightPanel": { "componentId": "insight-panel", "objectName": "G01-insight-panel" },
+        "insightTitle": { "componentId": "insight-title", "objectName": "G01-insight-title" },
+        "insightLead": { "componentId": "insight-lead", "objectName": "G01-insight-lead" },
+        "insightItems": { "componentId": "insight-list", "objectName": "G01-insight-items", "itemCount": 2 }
+      }
+    },
+    {
+      "slide": 2,
+      "storylineId": "GOLDEN-EI-STANDARD",
+      "layoutId": "evidenceInsight",
+      "variantId": "right-panel-standard",
+      "headerProfile": "content-title-only",
+      "slotBindings": {
+        "mainExhibit": { "componentId": "native-chart", "objectName": "G02-main-exhibit" },
+        "insightPanel": { "componentId": "insight-panel", "objectName": "G02-insight-panel" },
+        "insightTitle": { "componentId": "insight-title", "objectName": "G02-insight-title" },
+        "insightLead": { "componentId": "insight-lead", "objectName": "G02-insight-lead" },
+        "insightItems": { "componentId": "insight-list", "objectName": "G02-insight-items", "itemCount": 3 }
+      }
+    },
+    {
+      "slide": 3,
+      "storylineId": "GOLDEN-EI-MAX",
+      "layoutId": "evidenceInsight",
+      "variantId": "right-panel-subtitle",
+      "headerProfile": "content-title-subtitle",
+      "slotBindings": {
+        "mainExhibit": { "componentId": "native-chart", "objectName": "G03-main-exhibit" },
+        "insightPanel": { "componentId": "insight-panel", "objectName": "G03-insight-panel" },
+        "insightTitle": { "componentId": "insight-title", "objectName": "G03-insight-title" },
+        "insightLead": { "componentId": "insight-lead", "objectName": "G03-insight-lead" },
+        "insightItems": { "componentId": "insight-list", "objectName": "G03-insight-items", "itemCount": 3 }
+      }
+    }
+  ]
+}

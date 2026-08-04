@@ -12,6 +12,7 @@ import {
 } from "./validate_intake.mjs";
 
 const contract = JSON.parse(await fs.readFile(DEFAULT_CONTRACT_PATH, "utf8"));
+const certifiedRegistry = JSON.parse(await fs.readFile(new URL("../references/certified-layout-registry.json", import.meta.url), "utf8"));
 const clone = (value) => structuredClone(value);
 
 function topicTask() {
@@ -120,6 +121,25 @@ test("page intent contract defines general title, subtitle, and spacing defaults
   assert.equal(contract.pageIntentContract.defaults.bodyToBottomBandGapIn, 0.3);
   assert(contract.pageIntentContract.requiredFields.includes("questionToAnswer"));
   assert(contract.pageIntentContract.requiredFields.includes("acceptanceChecks"));
+});
+
+test("intake hands layout planning to the certified registry without adding a user question", () => {
+  assert.equal(contract.certifiedLayoutContract.registrySchemaVersion, "ksib-certified-layout-registry/1.0");
+  assert.equal(contract.certifiedLayoutContract.renderPlanSchemaVersion, "ksib-render-plan/1.0");
+  assert.equal(contract.certifiedLayoutContract.layoutFidelityGateSchemaVersion, "ksib-layout-fidelity-gate/1.0");
+  assert.equal(contract.certifiedLayoutContract.userClarificationRequired, false);
+  assert.equal(contract.certifiedLayoutContract.customLayoutRequiresApproval, true);
+  assert.deepEqual(
+    Object.fromEntries(contract.certifiedLayoutContract.certifiedLayouts.map((item) => [item.layoutId, [...item.variants].sort()])),
+    Object.fromEntries(Object.entries(certifiedRegistry.layouts).map(([layoutId, layout]) => [layoutId, Object.keys(layout.variants).sort()])),
+  );
+  for (const mode of Object.values(contract.modes)) assert.equal(mode.questions.length, 9);
+});
+
+test("intake contract validation blocks an incompatible certified layout toolchain", () => {
+  const payload = clone(contract);
+  payload.certifiedLayoutContract.renderPlanSchemaVersion = "ksib-render-plan/0.9";
+  assert(validateContract(payload).some((item) => item.rule === "certified_layout_contract_version_invalid" && item.field === "renderPlanSchemaVersion"));
 });
 
 test("question ids are globally unique", () => {

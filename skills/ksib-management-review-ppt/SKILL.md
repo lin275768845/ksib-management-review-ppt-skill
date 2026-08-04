@@ -17,18 +17,18 @@ description: Build, revise, evidence-check, format, and QA serious, editable Chi
 4. 不替用户决定最终故事线，不补写未经提供的业务事实、数字、排名、归因或承诺。新建／重构Deck必须先使用`linzhe-mbb-storyline`；只改格式时必须跳过Storyline重构，并用语义指纹证明文字、数字、页序、颜色和加粗语义未漂移。
 5. 示例内容统一显式标记 `[占位]`；模板内容统一显式标记 `[替换]`。
 6. 外部发布、发送、提交、品牌 Logo 使用和不可逆修改仍需人工确认。
-7. 接到任务先完整读取`references/intake-contract.md`与`references/intake-contract.json`并通过Intake Gate；正式制作或交付前，完整读取 `references/production-standard.md`、`references/design-tokens.json`、`references/theme-color-contract.md`、`references/theme-color-contract.json`、`references/layout-system.md`、`references/bcg-layout-patterns.md`、`references/format-engineering-contract.md`、`references/chrome-alignment-contract.md`与`references/powerpoint-render-contract.md`；页面包含图表或表格时还必须读取`references/mbb-exhibit-style-contract.md`；需要选择或研发Waterfall、Mekko、Gantt、自动标签避让等高级组件时读取`references/think-cell-open-source-landscape.md`；含外部事实、数据、市场或竞品判断时读取`references/evidence-contract.md`，交付前读取`references/delivery-contract.md`。
+7. 接到任务先完整读取`references/intake-contract.md`与`references/intake-contract.json`并通过Intake Gate；正式制作或交付前，完整读取 `references/production-standard.md`、`references/design-tokens.json`、`references/powerpoint-master-contract.json`、`references/theme-color-contract.md`、`references/theme-color-contract.json`、`references/layout-system.md`、`references/bcg-layout-patterns.md`、`references/format-engineering-contract.md`、`references/chrome-alignment-contract.md`与`references/powerpoint-render-contract.md`；页面包含图表或表格时还必须读取`references/mbb-exhibit-style-contract.md`；需要选择或研发Waterfall、Mekko、Gantt、自动标签避让等高级组件时读取`references/think-cell-open-source-landscape.md`；含外部事实、数据、市场或竞品判断时读取`references/evidence-contract.md`，交付前读取`references/delivery-contract.md`。
 8. 在选Layout和填内容前读取本地已安装的`mck-ppt-design` skill及其`references/layout-matrix.yaml`；只吸收其咨询版式方法和容量边界，不调用其`python-pptx`生产路径。本 skill 的`references/layout-matrix.json`补充KSIB页面别名、增强Layout与机读容量，不得凭感觉决定栏目数、节点数或字符容量。
 9. 新建或重构Deck时读取`references/storyline-layout-handoff.md`，并以已通过门禁且由用户锁定的`storyline.json`作为Governing Thought、2–4个支撑论点、页面顺序、Action Title和证据含义的真相源。
 10. 使用参考Deck时，先抽取页面功能类型、内容Schema、标题节奏和几何合同，再选择性复用；不得只按截图逐页模仿，也不得把参考Deck的业务结论带入当前材料。
 11. 任何客户可见数字和外部事实必须映射到`claimIds[]`；任何派生指标必须登记公式、时期、单位、分母和数据版本。自然语言脚注不能代替Evidence Contract。
-12. 本Skill提供Layout与Renderer合同，但不声称自带完整渲染引擎。实际构建使用系统`Presentations` skill与`@oai/artifact-tool`，或项目中已验证的原生构建器；缺少renderer时只能使用合同声明的fallback并记录到release manifest。
+12. 本Skill提供Layout与Renderer合同，并为12类MBB高频正文Layout、18个固定Variant提供基于`@oai/artifact-tool`的确定性构建器；Certified Core以外的页面继续使用系统`Presentations` skill或项目中已验证的原生构建器。缺少renderer时只能使用合同声明的fallback并记录到release manifest，不得冒充Certified成片。
 
 ## 默认视觉系统
 
 设计、结构、留白、页面体例、容量和门禁以本地安装的`mck-ppt-design` skill为基础规范；只吸收其咨询版式方法，不采用其`python-pptx`实现。在此基础上吸收用户提供的BCG管理者任命模板中可复用的标题纵向节奏与证据型Layout。只保留三项品牌覆盖：KSIB配色、苹方-简字体、客户Deck正文16／14／12 pt；原生可编辑性和主题色板归一化属于工程增强。
 
-`references/design-tokens.json`是画布、字体、字号、主题色、Header/Footer几何与基础间距的机读真相源；文档、Renderer、Sanitizer、OOXML QA、格式合同和Release Manifest不得各自维护另一套无校验数值。修改这些值时必须同步通过`test_design_tokens.py`。
+`references/design-tokens.json`是画布、字体、字号、主题色、Header/Footer几何与基础间距的机读真相源；文档、PowerPoint母版、Renderer、Sanitizer、OOXML QA、格式合同和Release Manifest不得各自维护另一套无校验数值。`templates/KSIB_MBB_Master_v1.0.potx`提供8个基础Profile，`templates/KSIB_MBB_Layout_Library_v1.0.pptx`提供对应可编辑样板；两者只负责Theme、Chrome和基础Placeholder，复杂正文继续由Certified Layout Registry与Renderer控制。修改Design Tokens时必须重新生成母版、重建Golden Deck并通过全部门禁。
 
 - 画布：Mck宽屏 `13.333 × 7.5 in`（16:9；等效1280 × 720）。
 - 颜色：以`ksib-theme-color-contract/1.0`为唯一语义合同。主色采用深／主／浅／极浅四级橙色阶，对比辅色默认`#006B8F`；浅灰只承担“其他”、基线、参考、弱化或较差对比，深灰只用于文字与必要线条。Renderer不得直接使用任意Hex或把辅色、功能色当装饰。
@@ -67,7 +67,7 @@ description: Build, revise, evidence-check, format, and QA serious, editable Chi
 - `twoColumn`、`threeColumn`、`fourColumn`：左右、三列和四列编辑式布局；以留白和细线分组，不使用卡片墙。
 - `horizontalMatrix`、`tableInsight`：高密度矩阵与表格＋洞见布局。
 - `funnel`、`horizontalEvolution`：有效供给漏斗、角色演进和阶段迁移。
-- `evidenceInsight`：65%–75%主证据区＋25%–35%洞见／管理含义区；适合一页回答“事实说明什么”。
+- `evidenceInsight`：65%–75%主证据区＋25%–35%洞见／管理含义区；适合一页回答“事实说明什么”。该Layout与其他Certified Core一样必须使用登记Variant、固定Slot和Layout Fidelity Gate，不得只引用Layout名称后自由拼版。
 - `phasePlaybook`：3–4个横向阶段共享同一组逻辑行；适合阶段打法、验证标准和递进关系。
 - `problemSolutionMap`：问题／卡点与解决动作逐行映射；适合组织补洞、经营诊断和协同机制。
 - `processModeMatrix`：同一端到端流程的不同模式或方案横向比较；适合SOP、Managed Service与产品化路径。
@@ -88,6 +88,8 @@ description: Build, revise, evidence-check, format, and QA serious, editable Chi
 
 新建与重构任务必须同时声明`ksib-page-intent-contract/1.0`。每张实质内容页先定义`questionToAnswer`、`actionTitlePolicy`、`requiredContent[]`、`primaryEvidence`、`visualHierarchy`和`acceptanceChecks[]`，再选择Layout。默认`actionTitlePolicy=auto-conclusion`、`subtitlePolicy=boundary-only`、`bodyToBottomBandGapIn=0.30`；Format-only默认保留原标题层级与间距，只有授权归一化时才应用新默认。
 
+版式生产还必须读取`references/certified-layout-system.md`。Layout Matrix负责语义选择和容量；Certified Layout Registry负责已经认证的正文Region、Slot、Variant与字体角色。当前Certified Core覆盖执行摘要、单一证据、证据＋洞察、表格＋洞察、双栏对比、同构多栏、2×2矩阵、问题树、问题—行动—结果、流程价值链、阶段打法和建议路线图；Registry之外的Layout不得冒充已经完成确定性认证。
+
 若PPT Studio或其他工作台已提供任务JSON／manifest，优先读取已有答案与来源，只询问缺失或冲突项，不重复确认受众、场合、决策、页数、主题或Layout策略。工作台必须声明`intake_contract_version`；版本缺失或不匹配时不能把任务描述为Intake已完成。若上游只粘贴`task.md`，其中还必须提供对应`manifest.json`安全路径或嵌入最小任务JSON；纯自然语言合同不能替代机读门禁。
 
 ```bash
@@ -107,7 +109,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/vali
 
 研究、策略和数据型Deck的生产顺序固定为：
 
-`Intake完成 → Source核验 → Calculation登记 → Claim登记 → Evidence registry门禁 → Storyline引用claimId并锁定 → Content引用claimIds → Evidence完整门禁 → Storyline交接门禁 → 构建与视觉QA → Release manifest`
+`Intake完成 → Source核验 → Calculation登记 → Claim登记 → Evidence registry门禁 → Storyline引用claimId并锁定 → Content引用claimIds → Evidence完整门禁 → Storyline交接门禁 → Master Profile与Render Plan锁定 → 构建与视觉QA → Release manifest`
 
 `format-only`任务先调用`codex_app__load_workspace_dependencies`设置`$PYTHON`，再在修改前后分别运行：
 
@@ -214,6 +216,16 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/vali
 
 只有报告中 `passed: true` 才能进入构建。超限时删次要信息或短句化，不得绕过门禁或临时缩小字号。
 
+若Content使用Certified Layout，在Storyline Lock之后、构建之前创建`ksib-render-plan-input/1.0`，逐页锁定`layoutId`、`variantId`、Header Profile和内容到Slot的绑定；然后解析为不可自由修改几何的`ksib-render-plan/1.0`：
+
+```bash
+node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/resolve_render_plan.mjs" \
+  --input work/render-plan-input.json \
+  --output work/render-plan.json
+```
+
+LLM不得直接生成Certified正文对象的`x/y/w/h`或任意字号。构建器只接收Render Plan、结构化内容和Theme Tokens；格式专修不得通过压缩文案、拆页或更换语义结构解决溢出。完整Slot与模式相关Overflow Policy见`references/certified-layout-system.md`。
+
 含事实或数据的Deck还必须运行Evidence完整门禁：
 
 ```bash
@@ -237,6 +249,31 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/vali
 ### 4. 构建
 
 默认按系统`Presentations` skill使用`@oai/artifact-tool`生成或编辑PPTX。每页先由内容门禁把canonical Layout解析为`rendererContract`：Layout专属合同优先，其余按`global.rendererDefaults`以canonical Layout名作为Renderer接口。每页必须明确provider、canonicalRenderer与`editableNative: true`；不得把fallback renderer悄悄当作canonical renderer。
+
+新建或重构Deck必须从`references/powerpoint-master-contract.json`选择一个基础Profile；默认内容页使用`content-title-only`，只有Subtitle真实承担范围、时期、方法、定义或比较边界时才使用`content-title-subtitle`。PowerPoint母版锁定Theme、字体、Chrome、标题／正文锚点／来源Placeholder和动态页码；页眉保持固定Layout Chrome，不提升为`hdr` Placeholder。正文Region与Slot仍由Render Plan锁定。Renderer与母版必须共同读取`references/design-tokens.json`；禁止把`.potx`截图当背景，也禁止在母版之外复制另一套Chrome坐标。`format-only`只有在用户授权套用新母版时才允许改变原Deck的Master／Layout关系。
+
+母版资产可复现生成并独立验证：
+
+```bash
+node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/build_powerpoint_master.mjs"
+python3 "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/validate_powerpoint_master.py" \
+  --report work/presentations/ksib-management-review/tmp/qa/master-gate.json
+```
+
+结构门禁通过后必须分别在Microsoft PowerPoint中打开`.pptx`样板库和`.potx`模板。出现“修复内容”或“无法读取 ^0”即阻断；ZIP/XML可解析、LibreOffice可打开或单元测试通过都不能替代这一步。
+
+对于Certified页面，Renderer接口还必须读取已解析Render Plan，按`expectedObjects[]`中的稳定对象名、组件类型、Slot几何和字体角色创建对象。系统Presentations、Artifact Tool或项目构建器都不能以“底层实现不同”为由改变Region、缩小字体或新增计划外正文对象。
+
+当前12类Certified Core页面可直接使用本Skill确定性构建器。输入必须通过`ksib-certified-render-content/2.0`，并与Render Plan逐页、逐Storyline ID及逐Slot容量完全一致：
+
+```bash
+node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/render_certified_layout.mjs" \
+  --render-plan work/render-plan.json \
+  --content work/certified-render-content.json \
+  --output work/output.pptx
+```
+
+当前构建器已认证原生横向条形图、原生表格、可编辑复合面板和原生连接线，并由36页Golden Library覆盖12类Layout的稀疏、标准和最大容量状态。浏览器Wireframe与母版样张都不能替代真实PPTX、Layout Fidelity Gate和PowerPoint逐页视觉门禁。
 
 构建前创建`ksib-format-contract/1.0`，把页眉、Action Title、Subtitle、来源、页码和主证据对象命名为稳定英文角色，并声明Header模式、单行标题策略、`bodyStartRoles[]`、几何、跨页一致性组、原生对象类型及编辑性策略。默认正文不得创建`title-divider`。固定Chrome使用0 EMU容差逐属性比较；普通正文Layout才可使用常规几何容差。若用户只授权部分格式属性，用`crossSlideEqualityGroups[].compareFields[]`把机器门禁限制到同一授权范围，不得把未比较的颜色或字体描述为“已统一”。图表、表格和流程必须分别保留为原生Chart、Table与吸附节点的Connector；静态文本页码和只含literal数据的Chart只能在合同明确降级且PowerPoint人工验收通过时使用。完整字段与Golden Deck见`references/format-engineering-contract.md`，既有PPT归一流程见`references/chrome-alignment-contract.md`。
 
@@ -275,7 +312,8 @@ node --check "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scri
 node --check "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/validate_evidence.mjs"
 node --check "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/validate_storyline_gate.mjs"
 node --check "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/build_release_manifest.mjs"
-"$PYTHON" -m py_compile "$OOXML_SANITIZE" "$OOXML_QA" "$VISUAL_GATE" "$COLOR_EXTRACTOR"
+node --check "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/resolve_render_plan.mjs"
+"$PYTHON" -m py_compile "$OOXML_SANITIZE" "$OOXML_QA" "$VISUAL_GATE" "$COLOR_EXTRACTOR" "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/validate_layout_fidelity.py"
 "$PYTHON" -m json.tool "$CONTENT_JSON" >/dev/null
 node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/validate_content.mjs" --content "$CONTENT_JSON" --report work/presentations/ksib-management-review/tmp/qa/content-gate.json
 [ ! -f ppt/qa.js ] || node ppt/qa.js --layout-root work/presentations/ksib-management-review/tmp/layout --report work/presentations/ksib-management-review/tmp/qa/layout-qa.json
@@ -311,6 +349,17 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/vali
   --inventory work/presentations/ksib-management-review/tmp/qa/pptx-color-inventory.json \
   --report work/presentations/ksib-management-review/tmp/qa/theme-color-gate.json
 ```
+
+若最终Deck包含Certified页面，还必须把最终PPTX与锁定Render Plan交叉核对：
+
+```bash
+"$PYTHON" "${CODEX_HOME:-$HOME/.codex}/skills/ksib-management-review-ppt/scripts/validate_layout_fidelity.py" \
+  --pptx <final.pptx> \
+  --render-plan work/render-plan.json \
+  --output work/presentations/ksib-management-review/tmp/qa/layout-fidelity-gate.json
+```
+
+任何必需对象缺失、类型不符、Slot几何漂移、字体角色错误、条目未完整渲染或正文出现计划外自由对象，均阻断Certified页面交付。12类以外的Layout继续使用现有Content、OOXML、视觉和PowerPoint门禁，但必须如实标记为非Certified。
 
 `--preserve-theme`保留主题色板，但仍会清理与段落默认色完全相同的冗余run颜色覆盖并规范化默认加粗；清理范围覆盖slide、notes、表格单元格以及关联Chart／Diagram中的DrawingML文本。语义指纹比较最终有效颜色与加粗状态，并把Chart／Diagram文本样式绑定到关联part，因此存储方式清理不会被误判为内容漂移。
 若用户已明确授权字体归一化，语义指纹使用`--font-policy allow`，OOXML QA使用`--font-policy ksib`；主题仍按用户是否授权改变颜色决定`preserve`或`ksib`。

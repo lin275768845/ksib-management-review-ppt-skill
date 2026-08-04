@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "ksib-powerpoint-master/1.0",
+  "templateVersion": "1.0.4",
+  "templateFile": "templates/KSIB_MBB_Master_v1.0.potx",
+  "layoutLibraryFile": "templates/KSIB_MBB_Layout_Library_v1.0.pptx",
+  "designTokens": "references/design-tokens.json",
+  "policy": {
+    "masterOwns": [
+      "theme-colors",
+      "theme-fonts",
+      "slide-size",
+      "header-chrome",
+      "title-placeholders",
+      "subtitle-placeholders",
+      "footer-chrome",
+      "source-placeholder",
+      "page-number"
+    ],
+    "certifiedRendererOwns": [
+      "body-regions",
+      "slot-bindings",
+      "native-charts",
+      "native-tables",
+      "editable-diagrams",
+      "overflow-policy"
+    ],
+    "freeformBodyGeometryAllowed": false
+  },
+  "profiles": [
+    {
+      "profileId": "cover",
+      "layoutName": "KSIB 01 - Cover",
+      "layoutType": "title",
+      "sampleTitle": "[主题]：用一句话说明本次汇报的核心任务",
+      "sampleSubtitle": "[场合／对象／日期]",
+      "placeholders": ["action-title", "subtitle"]
+    },
+    {
+      "profileId": "navigator",
+      "layoutName": "KSIB 02 - Navigator",
+      "layoutType": "cust",
+      "sampleTitle": "汇报导航：先判断，再用证据支持行动",
+      "sampleSubtitle": "[可选] 汇报边界或版本说明",
+      "placeholders": ["action-title", "subtitle", "navigator-block-1", "navigator-block-2", "navigator-block-3", "source-footnote"]
+    },
+    {
+      "profileId": "section-divider",
+      "layoutName": "KSIB 03 - Section Divider",
+      "layoutType": "secHead",
+      "sampleTitle": "01｜[章节名称]",
+      "sampleSubtitle": "[可选] 章节要回答的核心问题",
+      "placeholders": ["action-title", "subtitle"]
+    },
+    {
+      "profileId": "content-title-only",
+      "layoutName": "KSIB 04 - Content Title Only",
+      "layoutType": "cust",
+      "sampleTitle": "[对象]：[结论及其管理含义]",
+      "sampleSubtitle": null,
+      "placeholders": ["action-title", "content-body", "source-footnote"]
+    },
+    {
+      "profileId": "content-title-subtitle",
+      "layoutName": "KSIB 05 - Content Title + Subtitle",
+      "layoutType": "cust",
+      "sampleTitle": "[对象]：[结论及其管理含义]",
+      "sampleSubtitle": "[范围／时期／方法／定义／比较边界]",
+      "placeholders": ["action-title", "subtitle", "content-body", "source-footnote"]
+    },
+    {
+      "profileId": "appendix-divider",
+      "layoutName": "KSIB 06 - Appendix Divider",
+      "layoutType": "secHead",
+      "sampleTitle": "附录｜[章节名称]",
+      "sampleSubtitle": "[可选] 方法、口径或备查内容",
+      "placeholders": ["action-title", "subtitle"]
+    },
+    {
+      "profileId": "appendix-title-only",
+      "layoutName": "KSIB 07 - Appendix Title Only",
+      "layoutType": "cust",
+      "sampleTitle": "[附录主题]：[本页用途]",
+      "sampleSubtitle": null,
+      "placeholders": ["action-title", "content-body", "source-footnote"]
+    },
+    {
+      "profileId": "appendix-title-subtitle",
+      "layoutName": "KSIB 08 - Appendix Title + Subtitle",
+      "layoutType": "cust",
+      "sampleTitle": "[附录主题]：[本页用途]",
+      "sampleSubtitle": "[范围／时期／方法／定义／比较边界]",
+      "placeholders": ["action-title", "subtitle", "content-body", "source-footnote"]
+    }
+  ],
+  "certifiedLayoutBinding": {
+    "registry": "references/certified-layout-registry.json",
+    "renderer": "scripts/render_certified_layout.mjs",
+    "defaultHeaderProfile": "content-title-only",
+    "subtitleHeaderProfile": "content-title-subtitle",
+    "requireTemplateVersionInRenderResult": true
+  }
+}

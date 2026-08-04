@@ -289,6 +289,14 @@
     },
     "evidenceInsight": {
       "proofShape": ["trend", "decision-to-impact", "single-exhibit"],
+      "certifiedLayoutContract": {
+        "registry": "certified-layout-registry.json",
+        "layoutId": "evidenceInsight",
+        "registryVersion": "1.0.0",
+        "allowedVariants": ["right-panel-standard", "right-panel-subtitle"],
+        "renderPlanRequired": true,
+        "layoutFidelityGateRequired": true
+      },
       "requiredFields": ["title", "evidenceBlocks[]", "evidenceBlocks[].title", "insights[]"],
       "maxItems": { "evidenceBlocks": 2, "insights": 4, "metrics": 4 },
       "charBudget": { "evidenceBlocks[].title": 22, "evidenceBlocks[].note": 44, "insights[]": 48 }

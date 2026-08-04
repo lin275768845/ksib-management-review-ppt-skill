@@ -2189,6 +2189,7 @@ def audit(
     theme_policy: str = "ksib",
     font_policy: str = "ksib",
     format_contract_path: str | None = None,
+    allow_unresolved_markers: bool = False,
 ) -> dict:
     errors: list[dict] = []
     warnings: list[dict] = []
@@ -2588,7 +2589,7 @@ def audit(
                 unresolved = [
                     marker for marker in UNRESOLVED_MARKERS if marker in slide_text
                 ]
-                if unresolved:
+                if unresolved and not allow_unresolved_markers:
                     errors.append({
                         "kind": "unresolved_placeholder",
                         "part": name,
@@ -3141,6 +3142,11 @@ def main() -> None:
         "--output",
         help="optional JSON report path",
     )
+    parser.add_argument(
+        "--allow-unresolved-markers",
+        action="store_true",
+        help="benchmark fixtures only: permit explicit [占位]/[替换]/[TBD]/[待验证] markers",
+    )
     args = parser.parse_args()
     reports = [
         audit(
@@ -3148,6 +3154,7 @@ def main() -> None:
             theme_policy=args.theme_policy,
             font_policy=args.font_policy,
             format_contract_path=args.format_contract,
+            allow_unresolved_markers=args.allow_unresolved_markers,
         )
         for path in args.pptx
     ]

@@ -65,6 +65,95 @@
     "finalPptxColorGateRequired": true,
     "userClarificationRequired": false
   },
+  "certifiedLayoutContract": {
+    "registrySchemaVersion": "ksib-certified-layout-registry/1.0",
+    "renderPlanInputSchemaVersion": "ksib-render-plan-input/1.0",
+    "renderPlanSchemaVersion": "ksib-render-plan/1.0",
+    "layoutFidelityGateSchemaVersion": "ksib-layout-fidelity-gate/1.0",
+    "policy": "certified-core-first",
+    "userClarificationRequired": false,
+    "customLayoutRequiresApproval": true,
+    "certifiedLayouts": [
+      {
+        "layoutId": "executiveSummary",
+        "variants": [
+          "three-pillar-standard"
+        ]
+      },
+      {
+        "layoutId": "singleExhibit",
+        "variants": [
+          "full-width-chart",
+          "full-width-table"
+        ]
+      },
+      {
+        "layoutId": "evidenceInsight",
+        "variants": [
+          "bottom-panel-standard",
+          "right-panel-standard",
+          "right-panel-subtitle"
+        ]
+      },
+      {
+        "layoutId": "tableInsight",
+        "variants": [
+          "right-panel-standard"
+        ]
+      },
+      {
+        "layoutId": "sideBySide",
+        "variants": [
+          "balanced"
+        ]
+      },
+      {
+        "layoutId": "structuredComparison",
+        "variants": [
+          "four-column",
+          "three-column"
+        ]
+      },
+      {
+        "layoutId": "matrix2x2",
+        "variants": [
+          "quadrant-standard"
+        ]
+      },
+      {
+        "layoutId": "issueTree",
+        "variants": [
+          "three-branch"
+        ]
+      },
+      {
+        "layoutId": "problemSolutionMap",
+        "variants": [
+          "three-row"
+        ]
+      },
+      {
+        "layoutId": "processValueChain",
+        "variants": [
+          "five-stage",
+          "four-stage"
+        ]
+      },
+      {
+        "layoutId": "phasePlaybook",
+        "variants": [
+          "four-stage",
+          "three-stage"
+        ]
+      },
+      {
+        "layoutId": "recommendationRoadmap",
+        "variants": [
+          "four-phase"
+        ]
+      }
+    ]
+  },
   "taskTypeQuestion": {
     "question_id": "task_type",
     "applies_to_modes": [

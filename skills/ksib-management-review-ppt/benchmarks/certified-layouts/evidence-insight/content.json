@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "ksib-certified-render-content/2.0",
+  "slides": [
+    {
+      "slide": 1,
+      "storylineId": "GOLDEN-EI-SPARSE",
+      "layoutId": "evidenceInsight",
+      "header": "I-1｜稀疏容量",
+      "title": "[占位] 单一证据已足以支持优先判断",
+      "subtitle": null,
+      "source": "数据来源：[占位] 脱敏基准数据；仅用于确定性版式回归",
+      "slotContent": {
+        "mainExhibit": { "componentId": "native-chart", "categories": ["路径A", "路径B", "路径C"], "values": [18, 31, 52], "seriesName": "指数", "focusIndex": 2, "valueFormat": "integer" },
+        "insightTitle": "管理含义",
+        "insightLead": "[占位] 资源优先投向路径C",
+        "insightItems": ["先验证最强证据对应的关键动作", "其余路径保持为中性参照"]
+      }
+    },
+    {
+      "slide": 2,
+      "storylineId": "GOLDEN-EI-STANDARD",
+      "layoutId": "evidenceInsight",
+      "header": "I-2｜标准容量",
+      "title": "[占位] 路径D形成唯一可执行焦点",
+      "subtitle": null,
+      "source": "数据来源：[占位] 脱敏基准数据；百分比仅用于格式验证",
+      "slotContent": {
+        "mainExhibit": { "componentId": "native-chart", "categories": ["路径A", "路径B", "路径C", "路径D"], "values": [0.18, 0.27, 0.39, 0.57], "seriesName": "占比", "focusIndex": 3, "valueFormat": "percent-0" },
+        "insightTitle": "管理含义",
+        "insightLead": "[占位] 路径D应成为首轮行动焦点",
+        "insightItems": ["优先投入可被直接验证的动作", "保留整数百分比展示口径", "复核后再扩大资源投入"]
+      }
+    },
+    {
+      "slide": 3,
+      "storylineId": "GOLDEN-EI-MAX",
+      "layoutId": "evidenceInsight",
+      "header": "I-3｜最大容量",
+      "title": "[占位] 六项证据仍应收敛到一个结论",
+      "subtitle": "[占位] 范围：六项脱敏样本｜口径：整数指数",
+      "source": "数据来源：[占位] 脱敏基准数据；仅用于最大容量与Subtitle变体回归",
+      "slotContent": {
+        "mainExhibit": { "componentId": "native-chart", "categories": ["样本A", "样本B", "样本C", "样本D", "样本E", "样本F"], "values": [16, 21, 28, 34, 43, 61], "seriesName": "指数", "focusIndex": 5, "valueFormat": "integer" },
+        "insightTitle": "管理含义",
+        "insightLead": "[占位] 样本F形成最强证据，行动应围绕其验证",
+        "insightItems": ["先确认高差异是否来自可复制机制而非短期波动", "把中性样本保留为基线，不追加无证据的彩色分类", "若解释仍超出当前容量，应拆页而非缩小字号"]
+      }
+    }
+  ]
+}

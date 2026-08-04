@@ -1,0 +1,35 @@
+{
+  "reviewedBy": "Codex benchmark visual QA",
+  "reviewedAt": "2026-08-04T07:45:00Z",
+  "checks": {
+    "fullSizeReview": true,
+    "noOverlap": true,
+    "noClipping": true,
+    "noUnexpectedWrap": true,
+    "footerAndPageNumber": true,
+    "chartDataAndSources": true
+  },
+  "slideReviews": [
+    {
+      "slide": 1,
+      "renderFile": "slide-01.png",
+      "passed": true,
+      "issues": [],
+      "notes": "逐页全尺寸检查：稀疏容量，分类标签、数值标签、洞察内边距和底部留白正常。"
+    },
+    {
+      "slide": 2,
+      "renderFile": "slide-02.png",
+      "passed": true,
+      "issues": [],
+      "notes": "逐页全尺寸检查：标准容量，整数百分比、单点橙色焦点和三条洞察正常。"
+    },
+    {
+      "slide": 3,
+      "renderFile": "slide-03.png",
+      "passed": true,
+      "issues": [],
+      "notes": "逐页全尺寸检查：最大容量与Subtitle变体，六项标签、文字换行和底部净距正常。"
+    }
+  ]
+}

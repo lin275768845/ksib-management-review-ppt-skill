@@ -11,6 +11,10 @@ export const DEFAULT_CONTRACT_PATH = path.resolve(HERE, "../references/intake-co
 export const CONTRACT_VERSION = "ksib-intake-contract/1.1";
 export const PAGE_INTENT_CONTRACT_VERSION = "ksib-page-intent-contract/1.0";
 export const THEME_COLOR_CONTRACT_VERSION = "ksib-theme-color-contract/1.0";
+export const CERTIFIED_LAYOUT_REGISTRY_VERSION = "ksib-certified-layout-registry/1.0";
+export const RENDER_PLAN_INPUT_VERSION = "ksib-render-plan-input/1.0";
+export const RENDER_PLAN_VERSION = "ksib-render-plan/1.0";
+export const LAYOUT_FIDELITY_GATE_VERSION = "ksib-layout-fidelity-gate/1.0";
 export const REPORT_VERSION = "ksib-intake-gate/1.0";
 const REQUIRED_QUESTION_FIELDS = [
   "question_id",
@@ -285,6 +289,30 @@ export function validateContract(contract) {
   }
   if (contract?.themeColorContract?.schemaVersion !== THEME_COLOR_CONTRACT_VERSION) {
     errors.push({ rule: "theme_color_contract_version_invalid", expected: THEME_COLOR_CONTRACT_VERSION, actual: contract?.themeColorContract?.schemaVersion ?? null });
+  }
+  const certifiedLayoutContract = contract?.certifiedLayoutContract;
+  for (const [field, expected] of [
+    ["registrySchemaVersion", CERTIFIED_LAYOUT_REGISTRY_VERSION],
+    ["renderPlanInputSchemaVersion", RENDER_PLAN_INPUT_VERSION],
+    ["renderPlanSchemaVersion", RENDER_PLAN_VERSION],
+    ["layoutFidelityGateSchemaVersion", LAYOUT_FIDELITY_GATE_VERSION],
+  ]) {
+    if (certifiedLayoutContract?.[field] !== expected) {
+      errors.push({ rule: "certified_layout_contract_version_invalid", field, expected, actual: certifiedLayoutContract?.[field] ?? null });
+    }
+  }
+  if (certifiedLayoutContract?.userClarificationRequired !== false || certifiedLayoutContract?.customLayoutRequiresApproval !== true) {
+    errors.push({ rule: "certified_layout_contract_policy_invalid" });
+  }
+  const certifiedLayouts = certifiedLayoutContract?.certifiedLayouts;
+  const certifiedLayoutIds = Array.isArray(certifiedLayouts) ? certifiedLayouts.map((item) => item?.layoutId).filter(Boolean) : [];
+  const certifiedVariantCount = Array.isArray(certifiedLayouts) ? certifiedLayouts.reduce((total, item) => total + (Array.isArray(item?.variants) ? item.variants.length : 0), 0) : 0;
+  if (!Array.isArray(certifiedLayouts)
+    || certifiedLayoutIds.length !== 12
+    || new Set(certifiedLayoutIds).size !== certifiedLayoutIds.length
+    || certifiedVariantCount !== 18
+    || !certifiedLayouts.some((item) => item?.layoutId === "evidenceInsight" && item?.variants?.includes("right-panel-standard") && item?.variants?.includes("right-panel-subtitle") && item?.variants?.includes("bottom-panel-standard"))) {
+    errors.push({ rule: "certified_layout_contract_registry_missing" });
   }
   if (!Array.isArray(pageIntentContract?.requiredFields) || !pageIntentContract.requiredFields.length) {
     errors.push({ rule: "page_intent_required_fields_missing" });

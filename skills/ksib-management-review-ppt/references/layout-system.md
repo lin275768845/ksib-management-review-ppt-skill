@@ -26,6 +26,8 @@
 
 每个canonical Layout都必须解析到Renderer合同。`layout-matrix.json`中的Layout专属`rendererContract`优先；未单独覆盖时继承`global.rendererDefaults`，canonical Renderer名称等于canonical Layout名。内容门禁会逐页输出`storylineId`、provider、canonicalRenderer、允许的fallbackRenderer和原生可编辑要求；任何一项缺失都阻断构建。Release Manifest按`storylineId`绑定实际Renderer；使用fallback必须以版本化usage文件逐页证明该Renderer在合同允许范围内并记录原因。
 
+Layout Matrix只锁定语义类别、容量和Renderer接口，不等于正文几何已经认证。只有`certified-layout-registry.json`登记的Layout／Variant才可称为Certified Layout。当前Certified Core覆盖12类MBB高频正文Layout、18个固定Variant；它们必须在Storyline Lock后生成Render Plan，使用固定Slot和字体角色，并通过`ksib-layout-fidelity-gate/1.0`。完整流程见`certified-layout-system.md`。
+
 每个非豁免Layout还必须声明非空`requiredFields[]`，至少包含Action Title与该Layout的主体证据锚点。只写`slideType`和标题、主体为空，或整个`slides[]`为空，均由内容门禁阻断。
 
 Layout不自行决定页面是否可豁免，必须同时满足`slideRole`合同。`cover`只允许`cover`；`toc`、`agenda`、`section`、`sectionDivider`和styleboard只允许`navigator`；`appendixDivider`只允许`appendix`，附录内容Layout除`appendix`外仅接受Matrix登记的`methodology`、`scope_boundary`或`legal_disclaimer`等边界角色；其余Layout只接受Matrix登记的实质内容角色。导航与章节Layout已在Matrix中正式注册，不得用未登记别名或把实质内容塞入导航页以绕过Evidence与语义门禁。
@@ -70,7 +72,7 @@ Layout不自行决定页面是否可豁免，必须同时满足`slideRole`合同
 
 ## 4. Mck与BCG增强Layout合同
 
-每页只选择一个主Layout。Mck `references/layout-matrix.yaml` 是通用真相源；`bcg-layout-patterns.md` 提供证据型增强；KSIB `layout-matrix.json` 负责业务别名、增强Layout与机读校验。
+每页只选择一个主Layout。Mck `references/layout-matrix.yaml` 是通用方法和容量参考；`bcg-layout-patterns.md` 提供证据型增强；KSIB `layout-matrix.json` 负责业务别名、增强Layout与机读校验；`certified-layout-registry.json`负责已认证正文结构的精确Region、Slot和Variant。
 
 若页面需要“证据→洞见”“阶段打法”“问题→解法”“多模式流程”“分层运营模型”“战略与支撑能力”或“角色演进”，可选择 `bcg-layout-patterns.md` 定义的增强Layout。增强Layout仍使用Mck安全边距、动态间距、正文容量和KSIB视觉系统，不复刻BCG视觉皮肤。
 
@@ -111,7 +113,7 @@ Layout不自行决定页面是否可豁免，必须同时满足`slideRole`合同
 - 禁止卡片套卡片、每段文字一个容器和大面积圆角卡片墙。
 - 同类页面共享所选Header模式的坐标、标题基线、Subtitle基线、主体起点、来源和页码位置。
 - 同类页面必须共享同一个机读Chrome Profile；不得在一个Deck中并存两套“几乎一样”的小矩形、页眉文字、标题区或脚注样式。
-- 相邻页面原则上不重复同一Layout；连续论证页面需要同构时可由用户指令覆盖。
+- 不为了表面多样性强制相邻页面更换Layout。不同市场、客群、支柱或阶段采用同构证据时，连续复用同一Certified Layout有助于比较；只阻止没有证明逻辑的机械重复，并在Render Plan中保留选择理由。
 - 留白不是空洞面积，而是Mck固定边距、0.35 in栏距、0.15 in框内边距、主体与底栏默认0.30 in净距和清晰层级之间的间隔。
 - 结果页优先一张主证据；图表、表格或事实区域应直接标注关键发现，不把全部洞见挪到远离证据的底部。
 - 参考Deck先抽取功能类型和内容Schema，再复用几何；不以逐页截图模仿替代Layout判断。

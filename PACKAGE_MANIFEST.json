@@ -1,6 +1,6 @@
 {
   "packageName": "KSIB_PPT_Skill",
-  "packageVersion": "2026.08.04-v4.5",
+  "packageVersion": "2026.08.04-v5.1.4",
   "generatedDate": "2026-08-04",
   "distributionNotice": "DISTRIBUTION_NOTICE.md",
   "primarySkill": "ksib-management-review-ppt",
@@ -40,6 +40,16 @@
       "name": "KSIB-MBB-FORMAT-6P-V1",
       "path": "skills/ksib-management-review-ppt/benchmarks/format-golden-deck",
       "role": "format-native-editability-regression"
+    },
+    {
+      "name": "KSIB-EVIDENCE-INSIGHT-CERTIFIED-3P-V1",
+      "path": "skills/ksib-management-review-ppt/benchmarks/certified-layouts/evidence-insight",
+      "role": "deterministic-layout-sparse-standard-maximum-regression"
+    },
+    {
+      "name": "KSIB-CERTIFIED-CORE-36P-V2",
+      "path": "skills/ksib-management-review-ppt/benchmarks/certified-layouts/core-library",
+      "role": "twelve-layout-eighteen-variant-sparse-standard-maximum-regression"
     }
   ],
   "intakeContract": {
@@ -70,8 +80,52 @@
     "extractor": "skills/ksib-management-review-ppt/scripts/extract_pptx_theme_colors.py",
     "validator": "skills/ksib-management-review-ppt/scripts/validate_theme_usage.mjs"
   },
+  "certifiedLayoutContract": {
+    "registrySchemaVersion": "ksib-certified-layout-registry/1.0",
+    "registry": "skills/ksib-management-review-ppt/references/certified-layout-registry.json",
+    "renderPlanInputSchemaVersion": "ksib-render-plan-input/1.0",
+    "renderPlanSchemaVersion": "ksib-render-plan/1.0",
+    "resolver": "skills/ksib-management-review-ppt/scripts/resolve_render_plan.mjs",
+    "contentSchemaVersion": "ksib-certified-render-content/2.0",
+    "contentSchema": "skills/ksib-management-review-ppt/references/certified-render-content.schema.json",
+    "renderer": "skills/ksib-management-review-ppt/scripts/render_certified_layout.mjs",
+    "layoutFidelityGateSchemaVersion": "ksib-layout-fidelity-gate/1.0",
+    "validator": "skills/ksib-management-review-ppt/scripts/validate_layout_fidelity.py",
+    "certifiedLayouts": [
+      "executiveSummary",
+      "singleExhibit",
+      "evidenceInsight",
+      "tableInsight",
+      "sideBySide",
+      "structuredComparison",
+      "matrix2x2",
+      "issueTree",
+      "problemSolutionMap",
+      "processValueChain",
+      "phasePlaybook",
+      "recommendationRoadmap"
+    ],
+    "certifiedVariantCount": 18,
+    "certifiedRendererComponents": [
+      "native-chart",
+      "native-table",
+      "editable-composite-panels",
+      "native-connectors"
+    ]
+  },
+  "powerpointMasterContract": {
+    "schemaVersion": "ksib-powerpoint-master/1.0",
+    "templateVersion": "1.0.4",
+    "contract": "skills/ksib-management-review-ppt/references/powerpoint-master-contract.json",
+    "template": "skills/ksib-management-review-ppt/templates/KSIB_MBB_Master_v1.0.potx",
+    "layoutLibrary": "skills/ksib-management-review-ppt/templates/KSIB_MBB_Layout_Library_v1.0.pptx",
+    "builder": "skills/ksib-management-review-ppt/scripts/build_powerpoint_master.mjs",
+    "validator": "skills/ksib-management-review-ppt/scripts/validate_powerpoint_master.py",
+    "foundationalProfileCount": 8,
+    "designTokensVersion": "ksib-design-tokens/1.3"
+  },
   "validationBaseline": {
-    "automatedRegressionCount": 301,
+    "automatedRegressionCount": 339,
     "layoutMatrixVersion": 11,
     "layoutCount": 36,
     "proofShapeCount": 8
