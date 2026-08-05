@@ -7,7 +7,7 @@ ffb68cb3cadb8be2e41dfe8480e1797c5f1c3b5dd4d00094814e1e483d7fc63c  ./skills/ksib-
 b5726d3ec9335a09c124469eca039523847a6b0f08a083efaefd002b83326600  ./skills/ksib-management-review-ppt/benchmarks/certified-layouts/core-library/.gitignore
 0c0f06f6d51e0bbebbde2958bb080ae7c338a8ad747803717fd3d18b67bb4e8c  ./skills/ksib-management-review-ppt/benchmarks/certified-layouts/core-library/README.md
 1e0bced1ab4b7ed8ebd2454f27d5d2ad702b47a4a6edbf727de4928bb850321b  ./skills/ksib-management-review-ppt/benchmarks/certified-layouts/core-library/build.mjs
-a0c6bf20d130fab8c494a5bc0a7fb46691679a88e65b6f779e90d31a875aef1c  ./skills/ksib-management-review-ppt/benchmarks/certified-layouts/core-library/fixtures.mjs
+c529302d34871f6ac96d740be3aee1c7e060600fcc26a32f2f4eec2b910305c0  ./skills/ksib-management-review-ppt/benchmarks/certified-layouts/core-library/fixtures.mjs
 b5726d3ec9335a09c124469eca039523847a6b0f08a083efaefd002b83326600  ./skills/ksib-management-review-ppt/benchmarks/certified-layouts/evidence-insight/.gitignore
 37e031be7ce91448a2749539747f31c2d321a9a72d6783d927a4af9e6d50560d  ./skills/ksib-management-review-ppt/benchmarks/certified-layouts/evidence-insight/README.md
 c92f3adb6a92a934c6da88e630dce1c5d5b3b8c1c7598c7ae758a82211bdb60e  ./skills/ksib-management-review-ppt/benchmarks/certified-layouts/evidence-insight/build.mjs
@@ -121,7 +121,7 @@ ba2ae8ef58c702856b44e152ec27db0ee55a5f463874e130ed22fda1f0392b92  ./skills/ksib-
 f4b5cb1492d33d4ef90387e331290cc15a7c6c54013762ac15f8e4f4599b36db  ./skills/ksib-management-review-ppt/scripts/validate_intake.mjs
 9cc4a0acd9f630e52317d103215f56043336c1d7552a760b73121a679fdac19c  ./skills/ksib-management-review-ppt/scripts/validate_layout_fidelity.py
 40ac77816eebb3473898ce198fd6e2fde78c15aa0b60576a52c0f630a04c4e73  ./skills/ksib-management-review-ppt/scripts/validate_powerpoint_master.py
-897254c8e7cb1c81ff4c1977a7dfaa79d5f186664d8a5019addec121cf8a207a  ./skills/ksib-management-review-ppt/scripts/validate_powerpoint_render.py
+6e299bf0ee8506121ac17b2534680b6025b690eb4eaf4b6ee1a546253906d037  ./skills/ksib-management-review-ppt/scripts/validate_powerpoint_render.py
 16e74a84ae90360f046f4e021d90e0d052af5fbf1b342ca03ff9f1fa81ed77f6  ./skills/ksib-management-review-ppt/scripts/validate_storyline_gate.mjs
 80ee32271e1b50553ffcaf6dea0651a1a83459b383d3317655d4c4e8d2e2bf3e  ./skills/ksib-management-review-ppt/scripts/validate_storyline_handoff.mjs
 aa48b0d32f6b4fa9622e1baab171871d3031467a79ac486f91cacf1b3a4dae40  ./skills/ksib-management-review-ppt/scripts/validate_theme_usage.mjs

@@ -38,7 +38,12 @@ REQUIRED_SLIDE_CHECKS = (
     "numberDisplay",
     "layoutContract",
 )
-PHASE_FIELDS = ("title", "logic", "successCriterion", "action")
+PHASE_FIELDS = (
+    ("title", ("title",)),
+    ("logic", ("logic",)),
+    ("successCriterion", ("successCriterion", "criterion")),
+    ("action", ("action",)),
+)
 NON_LABEL_OBJECT_PREFIXES = (
     "action-title",
     "subtitle",
@@ -78,6 +83,10 @@ def add_error(errors: list[dict[str, Any]], rule: str, detail: str, **extra: Any
 
 
 def resolve_zip_target(source: str, target: str) -> str:
+    # OOXML relationship targets may be package-absolute (leading slash) or
+    # relative to the source part. Zip members never carry that leading slash.
+    if target.startswith("/"):
+        return posixpath.normpath(target).lstrip("/")
     return posixpath.normpath(posixpath.join(posixpath.dirname(source), target))
 
 
@@ -356,10 +365,11 @@ def audit_phase_playbooks(
 ) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for slide, payload in enumerate(content_slides(content), start=1):
-        layout = payload.get("layoutContract") or payload.get("slideType")
+        layout = payload.get("layoutContract") or payload.get("slideType") or payload.get("layoutId")
         if layout != "phasePlaybook":
             continue
-        phases = payload.get("phases") or []
+        slot_content = payload.get("slotContent") if isinstance(payload.get("slotContent"), dict) else {}
+        phases = payload.get("phases") or slot_content.get("phases") or []
         if not 3 <= len(phases) <= 4:
             add_error(errors, "phase_playbook_phase_count", "phasePlaybook必须包含3至4个阶段", slide=slide)
         objects, _ = slide_objects(archive, slide)
@@ -369,16 +379,18 @@ def audit_phase_playbooks(
             add_error(errors, "phase_playbook_render_contract_missing", "format-contract必须声明phasePlaybook逐字段渲染合同", slide=slide)
             rows = []
         by_field = {row.get("field"): row.get("objectNames") for row in rows if isinstance(row, dict)}
-        for field in PHASE_FIELDS:
-            names = by_field.get(f"phases[].{field}")
+        for canonical_field, aliases in PHASE_FIELDS:
+            row_field = next((alias for alias in aliases if f"phases[].{alias}" in by_field), None)
+            names = by_field.get(f"phases[].{row_field}") if row_field else None
             if not isinstance(names, list) or len(names) != len(phases):
-                add_error(errors, "phase_playbook_role_mapping_missing", f"phases[].{field}必须逐阶段绑定对象名", slide=slide)
+                alias_text = "或".join(f"phases[].{alias}" for alias in aliases)
+                add_error(errors, "phase_playbook_role_mapping_missing", f"{alias_text}必须逐阶段绑定对象名", slide=slide)
                 continue
             for index, (phase, name) in enumerate(zip(phases, names), start=1):
-                expected = normalize_text(phase.get(field))
+                expected = normalize_text(next((phase.get(alias) for alias in aliases if phase.get(alias)), ""))
                 actual = normalize_text(objects.get(str(name), ""))
                 if not expected or not actual or expected not in actual:
-                    add_error(errors, "phase_playbook_field_not_rendered", f"第{index}阶段{field}未在对象{name}中按合同渲染", slide=slide, objectName=name)
+                    add_error(errors, "phase_playbook_field_not_rendered", f"第{index}阶段{canonical_field}未在对象{name}中按合同渲染", slide=slide, objectName=name)
         records.append({"slide": slide, "phaseCount": len(phases), "contractDeclared": isinstance(contract, dict)})
     return records
 
@@ -515,6 +527,9 @@ def write_report(path: Path | None, report: dict[str, Any]) -> None:
 def self_test() -> None:
     # Synthetic Golden Deck: one intentionally bad chart plus one correctly
     # rendered phasePlaybook. It is deterministic and needs no Office runtime.
+    absolute_target = resolve_zip_target("ppt/slides/slide1.xml", "/ppt/slides/charts/chart1.xml")
+    if absolute_target != "ppt/slides/charts/chart1.xml":
+        raise RuntimeError(f"Absolute OOXML relationship target failed: {absolute_target}")
     with tempfile.TemporaryDirectory() as temporary:
         root = Path(temporary)
         pptx = root / "bad.pptx"
@@ -567,6 +582,38 @@ def self_test() -> None:
                 },
                 phase_valid_errors,
             )
+            certified_phases = [
+                {
+                    "title": phase["title"],
+                    "logic": phase["logic"],
+                    "criterion": phase["successCriterion"],
+                    "action": phase["action"],
+                }
+                for phase in phases
+            ]
+            certified_phase_errors: list[dict[str, Any]] = []
+            audit_phase_playbooks(
+                archive,
+                {"slides": [
+                    {"layoutId": "cover", "title": "封面"},
+                    {"layoutId": "phasePlaybook", "slotContent": {"phases": certified_phases}},
+                ]},
+                {
+                    "renderValidation": {
+                        "slides": [{
+                            "slide": 2,
+                            "layout": "phasePlaybook",
+                            "rows": [
+                                {"field": "phases[].title", "objectNames": [f"phase-{index}-title" for index in (1, 2, 3)]},
+                                {"field": "phases[].logic", "objectNames": [f"phase-{index}-logic" for index in (1, 2, 3)]},
+                                {"field": "phases[].criterion", "objectNames": [f"phase-{index}-criterion" for index in (1, 2, 3)]},
+                                {"field": "phases[].action", "objectNames": [f"phase-{index}-action" for index in (1, 2, 3)]},
+                            ],
+                        }]
+                    }
+                },
+                certified_phase_errors,
+            )
         rules = {item["rule"] for item in errors}
         phase_missing_rules = {item["rule"] for item in phase_missing_contract_errors}
         checks = {
@@ -580,6 +627,7 @@ def self_test() -> None:
             "smoothed_financial_time_series_blocks": "financial_line_smoothing_forbidden" in rules,
             "phase_playbook_contract_is_required": "phase_playbook_render_contract_missing" in phase_missing_rules,
             "complete_phase_playbook_golden_fixture_passes": not phase_valid_errors,
+            "certified_renderer_phase_playbook_shape_passes": not certified_phase_errors,
             "chart_audit_records_native_state": bool(charts and charts[0]["smoothed"]),
         }
         if not all(checks.values()):

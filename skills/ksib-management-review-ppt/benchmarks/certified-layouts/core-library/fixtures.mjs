@@ -113,16 +113,19 @@ function mapping(state, detailed) {
 }
 
 function process(state, variantId, count, items) {
-  const stages = Array.from({ length: count }, (_, index) => block(`阶段${index + 1}`, items, "关键动作"));
+  const stages = Array.from({ length: count }, (_, index) => ({
+    title: `${P} 阶段${index + 1}`,
+    items: Array.from({ length: items }, (_, itemIndex) => `动作${itemIndex + 1}｜验证`),
+  }));
   return common("processValueChain", variantId, state, "端到端流程以清晰交接点形成连续价值链", { stages, focusIndex: Math.floor(count / 2) }, Object.fromEntries(stages.map((_, index) => [`stage${index + 1}`, items + 1])));
 }
 
 function playbook(state, variantId, count) {
   const phases = Array.from({ length: count }, (_, index) => ({
     title: `${P} 阶段${index + 1}`,
-    logic: `共同逻辑：先验证第${index + 1}项核心假设`,
-    criterion: `判断标准：达到脱敏阈值${index + 1}`,
-    action: `行动：按证据推进下一阶段`,
+    logic: `共同逻辑：验证假设${index + 1}`,
+    criterion: `判断标准：达到阈值${index + 1}`,
+    action: `行动：证据通过后推进`,
   }));
   return common("phasePlaybook", variantId, state, "阶段打法按共同逻辑、标准和行动递进", {
     logicLabels: ["共同逻辑", "判断标准", "关键行动"], phases, focusIndex: 0,
